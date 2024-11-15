@@ -4,7 +4,6 @@ module.exports = {
     PASSWORD: process.env.DATABASE_PASSWORD,
     database:process.env.DATABASE_DB,
     port: process.env.PORT,
-    //    DATABASE:  "testzivi",
     dialect: 'mysql',
     pool: {
         max: 5,
