@@ -3,7 +3,7 @@ const sequelize = require('./index'); // ייבוא החיבור
 
 // יצירת מודל של טבלת משתמשים
 const User = sequelize.define('User', {
-  name: {
+  username: {
     type: DataTypes.STRING,
     allowNull: false
   },
