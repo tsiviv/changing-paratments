@@ -1,0 +1,35 @@
+/* current-apartment.css */
+.container {
+    max-width: 800px;
+    margin: 0 auto; /* מרכז את התוכן */
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    direction: rtl; /* כיוון טקסט מימין לשמאל */
+    text-align: right; /* יש למרכז את כל הטקסט מימין לשמאל */
+}
+
+h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 10px 0;
+    color: #555;
+}
+
+strong {
+    font-weight: bold;
+    color: #222;
+}
+
+/* הוספת עיצוב לשדות מידע */
+p span {
+    color: #007bff;
+    font-weight: normal;
+}

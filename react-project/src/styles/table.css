@@ -1,0 +1,24 @@
+.table-container {
+    width: 80%;
+    /* תופס 80% מהרוחב של הדף */
+    margin: 0 auto;
+    /* ממקם את הטבלה במרכז */
+    border: 1px solid #ccc;
+    /* מסגרת סביב הטבלה */
+    padding: 20px;
+    /* ריפוד פנימי */
+    border-radius: 10px;
+    /* פינות מעוגלות */
+    background-color: #fff;
+    /* צבע רקע לבן */
+    margin-top: 40px
+}
+.thead{
+    background-color: black;
+}
+.table-container .table {
+    width: 100%;
+    /* לוודא שהטבלה תופס את כל רוחב ה-container */
+    border-collapse: collapse;
+    /* מבטל רווחים בין תאים */
+}

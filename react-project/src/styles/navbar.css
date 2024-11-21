@@ -1,0 +1,24 @@
+/* CSS מותאם אישית */
+.custom-navbar{
+    height: 100%; /* גובה מותאם אישית (למשל 100px) */
+    background-color: #e56684; /* צבע רקע מותאם אישית */
+    padding: 20px 0; /* מרווחים פנימיים (padding) להגדלת הגובה */
+}
+
+
+.ul-padding{
+    padding-left: 20%;
+}
+ul {
+    text-align: center;
+    justify-content: center;
+    list-style-type: none; /* מסיר את הנקודות */
+    padding: 0; /* מסיר רווחים פנימיים */
+    margin: 0; /* מסיר רווחים חיצוניים */
+}
+ul li a {
+    text-decoration: none; /* מסיר את הקו תחתון מהקישורים */
+    color: inherit; /* שומר על הצבע המקורי של הטקסט */
+}
+/*  */
+
