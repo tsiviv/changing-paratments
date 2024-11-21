@@ -1,74 +1,104 @@
 const WantedApartment = require('../models/alternativePartmnets');
+const User = require('../models/users')
+const sequelize = require('../models/index');
 
 // קבלת כל הדירות שהמשתמשים מעוניינים בהם
 exports.getAllWantedApartments = async (req, res) => {
-  try {
-    const apartments = await WantedApartment.findAll({ include: 'requester' });
-    res.status(200).json(apartments);
-  } catch (error) {
-    res.status(500).json({ error: 'Error fetching wanted apartments' });
-  }
+    try {
+        const apartments = await WantedApartment.findAll();
+        res.status(200).json(apartments); // נשלח ישירות את הנתונים
+    } catch (error) {
+        console.error('Error fetching apartments:', error);
+        res.status(500).json({ error: 'Error fetching wanted apartments' });
+    }
 };
-exports.getWantedApartmentById = async (req, res) => {
+
+// קבלת דירה רצויה לפי ID של המשתמש
+exports.getWantedApartmentByUserId = async (req, res) => {
+    const userId = req.params.id;
     try {
-      const wantedApartment = await WantedApartment.findByPk(req.params.id);
-      if (!wantedApartment) {
-        return res.status(404).json({ message: 'Wanted apartment not found' });
-      }
-      res.json(wantedApartment);
+        const wantedApartment = await WantedApartment.findOne({ where: { userId } });
+        if (!wantedApartment) {
+            return res.status(404).json({ message: 'Wanted apartment not found' });
+        }
+        res.status(200).json(wantedApartment);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        console.error('Error fetching apartment by user ID:', error);
+        res.status(500).json({ error: error.message });
     }
-  };
+};exports.updateWantedApartment = async (req, res) => {
+    const t = await sequelize.transaction(); // יצירת טרנזקציה חדשה
   
-  // עדכון דירה רצויה
-  exports.updateWantedApartment = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const updated = await WantedApartment.update(req.body, { where: { id } });
-      if (updated[0] === 0) {
-        return res.status(404).json({ message: 'Wanted apartment not found' });
-      }
-      const updatedWantedApartment = await WantedApartment.findByPk(id);
-      res.json(updatedWantedApartment);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
-  // מחיקת דירה רצויה
-  exports.deleteWantedApartment = async (req, res) => {
     try {
       const { id } = req.params;
-      const deleted = await WantedApartment.destroy({ where: { id } });
-      if (deleted === 0) {
+      
+      // עדכון הדירה בתוך הטרנזקציה
+      const updatedRows = await WantedApartment.update(req.body, {
+        where: { id },
+        transaction: t, // העברת הטרנזקציה
+      });
+  
+      if (updatedRows[0] === 0) {
         return res.status(404).json({ message: 'Wanted apartment not found' });
       }
-      res.json({ message: 'Wanted apartment deleted successfully' });
+  
+      const updatedApartment = await WantedApartment.findByPk(id, { transaction: t });
+      const user = await User.findByPk(updatedApartment.userId, { transaction: t });
+  
+      if (user) {
+        // עדכון ה-`updatedAt` של ה-User בתוך הטרנזקציה
+        user.updatedAt = new Date();
+        await user.save({ transaction: t });
+      }
+  
+      // התחייבות לשינויים בטרנזקציה
+      await t.commit();
+  console.log(user)
+      res.status(200).json(updatedApartment);
+  
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      // אם קרתה שגיאה, נסוגים מהשינויים בטרנזקציה
+      await t.rollback();
+      console.error('Error updating apartment:', error);
+      res.status(500).json({ error: error.message });
     }
   };
-  
+// מחיקת דירה רצויה
+exports.deleteWantedApartment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await WantedApartment.destroy({ where: { id } });
+
+        if (deleted === 0) {
+            return res.status(404).json({ message: 'Wanted apartment not found' });
+        }
+
+        res.status(200).json({ message: 'Wanted apartment deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting apartment:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // הוספת דירה לרשימת הדירות הרצויות
 exports.addWantedApartment = async (req, res) => {
-  const { userId, address, city, rooms, size, floor, price, status, hasParking, hasBalcony, hasElevator } = req.body;
-  try {
-    const newWantedApartment = await WantedApartment.create({
-      userId,
-      address,
-      city,
-      rooms,
-      size,
-      floor,
-      price,
-      status,
-      hasParking,
-      hasBalcony,
-      hasElevator
-    });
-    res.status(201).json(newWantedApartment);
-  } catch (error) {
-    res.status(500).json({ error: 'Error adding wanted apartment' });
-  }
+    const { userId, numberOfBeds, numberOfRooms, area, preferredSwapDate } = req.body;
+
+    if (!userId || !numberOfBeds || !numberOfRooms || !area) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    try {
+        const newWantedApartment = await WantedApartment.create({
+            userId,
+            numberOfBeds,
+            numberOfRooms,
+            area,
+            preferredSwapDate
+        });
+        res.status(201).json(newWantedApartment);
+    } catch (error) {
+        console.error('Error adding apartment:', error);
+        res.status(500).json({ error: error.message });
+    }
 };

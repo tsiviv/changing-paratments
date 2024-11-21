@@ -1,87 +1,61 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('./index');  // חיבור למסד הנתונים
+const sequelize = require('./index');
+const User = require('./users'); // ייבוא מודל המשתמש
 
-// יצירת המודל של דירות
+// יצירת המודל של דירות קיימות
 const Apartment = sequelize.define('Apartment', {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Users',  // קשר לטבלת המשתמשים
+      model: 'users', // שם הטבלה במודל המשתמשים
       key: 'id',
     },
-  },
-  address: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  city: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  district: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  type: {
-    type: DataTypes.STRING,
-    allowNull: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   },
   rooms: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  size: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  floor: {
+  beds: { 
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  totalFloors: {
+  mattresses: { 
     type: DataTypes.INTEGER,
-    allowNull: true,
+    allowNull: false,
   },
-  price: {
-    type: DataTypes.FLOAT,
-    allowNull: true,
+  floor: { 
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
-  status: {
+  city: { 
     type: DataTypes.STRING,
     allowNull: false,
   },
-  availableFrom: {
-    type: DataTypes.DATE,
-    allowNull: true,
+  address: { 
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  description: {
+  notes: { 
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  imageUrl: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  leaseTerm: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  hasParking: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  hasBalcony: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  hasElevator: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
 }, {
-  tableName: 'apartments', // שם הטבלה במסד הנתונים
-  timestamps: true,        // אם תרצה לכלול תאריכי יצירה ועדכון אוטומטיים
+  tableName: 'apartments',
+  timestamps: true,
+  hooks: {
+    beforeUpdate: async (apartment, options) => {
+      // מציאת המשתמש שמקושר לדירה
+      const user = await User.findByPk(apartment.userId);
+      if (user) {
+        // עדכון ה-`updatedAt` של ה-User
+        user.updatedAt = new Date();
+        await user.save();
+      }
+    },
+  },
 });
 
 module.exports = Apartment;

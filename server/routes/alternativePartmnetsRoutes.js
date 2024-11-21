@@ -1,10 +1,11 @@
 const express = require('express');
-const { getAllWantedApartments, addWantedApartment,getWantedApartmentById,updateWantedApartment,deleteWantedApartment } = require('../controllers/alternativePartmnetsControllers');
+const { getAllWantedApartments, addWantedApartment,getWantedApartmentByUserId,updateWantedApartment,deleteWantedApartment } = require('../controllers/alternativePartmnetsControllers');
 const router = express.Router();
-
+const {verifyToken} = require('../middleware/authMiddleware')
 router.get('/', getAllWantedApartments);
-router.post('/', addWantedApartment);
-router.get('/:id', getWantedApartmentById);
-router.put('/:id', updateWantedApartment);
+router.post('/',verifyToken, addWantedApartment);
+router.get('/:id', getWantedApartmentByUserId);
+router.put('/:id',verifyToken, updateWantedApartment);
 router.delete('/:id', deleteWantedApartment);
+
 module.exports = router;

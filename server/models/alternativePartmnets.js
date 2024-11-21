@@ -1,84 +1,49 @@
-// models/WantedApartment.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('./index');
+const User = require('./users'); // ייבוא מודל המשתמש
 
+// יצירת המודל של דירות רצויות להחלפה
 const WantedApartment = sequelize.define('WantedApartment', {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Users',
-      key: 'id'
+      model: 'users',
+      key: 'id',
     },
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    onUpdate: 'CASCADE',
   },
-  address: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  city: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  district: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  type: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  rooms: {
+  numberOfRooms: { 
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
-  size: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
-  floor: {
+  numberOfBeds: { 
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
-  totalFloors: {
-    type: DataTypes.INTEGER,
-    allowNull: true
-  },
-  price: {
-    type: DataTypes.FLOAT,
-    allowNull: true
-  },
-  status: {
+  area: { 
     type: DataTypes.STRING,
-    allowNull: false
-  },
-  availableFrom: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  hasParking: {
-    type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: false
   },
-  hasBalcony: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
+  preferredSwapDate: { 
+    type: DataTypes.STRING,
+    allowNull: true,
   },
-  hasElevator: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  }
 }, {
   tableName: 'wanted_apartments',
-  timestamps: true
+  timestamps: true,
+  hooks: {
+    afterUpdate: async (wantedApartment, options) => {
+      // מציאת המשתמש שמקושר לדירה הרצויה להחלפה
+      const user = await User.findByPk(wantedApartment.userId);
+      if (user) {
+        // עדכון ה-`updatedAt` של ה-User
+        user.updatedAt = new Date();
+        await user.save();
+      }
+    },
+  },
 });
 
 module.exports = WantedApartment;

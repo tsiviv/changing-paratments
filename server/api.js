@@ -1,23 +1,24 @@
 const express = require('express');
 const sequelize = require('./models/index');
-const userRoutes = require('./routes/UserRoute'); // ייבוא המודל של משתמשים
-const OnwerParmtersRoutes = require('./routes/OnwerParmtersRoutes'); // ייבוא המודל של משתמשים
-const alternativePartmnetsRoutes = require('./routes/alternativePartmnetsRoutes'); // ייבוא המודל של משתמשים
-require('./models/associations'); // חשוב לייבא את ההגדרות לפני הסינכרון
+const userRoutes = require('./routes/UserRoute');
+const OnwerParmtersRoutes = require('./routes/OnwerParmtersRoutes');
+const alternativePartmnetsRoutes = require('./routes/alternativePartmnetsRoutes');
+require('./models/associations');
 const path = require('path');
-const cors=require('cors')
+const cors = require('cors');
 const app = express();
 const session = require('express-session');
 require('dotenv').config();
+
 // הגדרת פורמט JSON בגוף הבקשות
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true
-  }));
+}));
 
 // סנכרון עם מסד הנתונים (יצירת הטבלה אם היא לא קיימת)
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
   .then(() => {
     console.log('User table synced!');
   })
@@ -31,9 +32,8 @@ const sessionConfig = {
     saveUninitialized: true,
     resave: true,
     secret: 'hachiku1'
-  };
+};
 app.use(session(sessionConfig));
-
 
 // יצירת משתמש חדש (לשלוח בקשה POST עם נתונים)
 app.use('/api/users', userRoutes);

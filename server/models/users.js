@@ -5,22 +5,20 @@ const sequelize = require('./index'); // ייבוא החיבור
 const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
-  
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
   },
-  
   password: {
     type: DataTypes.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+  },
 }, {
-  tableName: 'users',  // שם הטבלה במאגר הנתונים
-  timestamps: true     // אם תרצה לכלול תאריכי יצירה ועדכון אוטומטיים
+  tableName: 'users',
+  timestamps: true, // תאריכי יצירה ועדכון אוטומטיים
 });
 
 module.exports = User;

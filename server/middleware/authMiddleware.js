@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const fs =require('fs')
+const path=require('path')
 const verifyToken = (req, res, next) => {
     // קח את הטוקן מכותרת ה-Authorization
     const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1]; // חתוך את המילה "Bearer" מהכותרת
