@@ -2,48 +2,56 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('./index');
 const User = require('./users'); // ייבוא מודל המשתמש
 
-// יצירת המודל של דירות רצויות להחלפה
 const WantedApartment = sequelize.define('WantedApartment', {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users',
+      model: 'users', // הקשר עם טבלת המשתמשים
       key: 'id',
     },
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+    onUpdate: 'CASCADE', // עדכון אוטומטי בטבלה של המשתמש כאשר יש עדכון בטבלה הזו
   },
-  numberOfRooms: { 
+  numberOfRooms: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  numberOfBeds: { 
+  numberOfBeds: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  area: { 
+  area: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  preferredSwapDate: { 
+  preferredSwapDate: {
     type: DataTypes.STRING,
     allowNull: true,
   },
 }, {
   tableName: 'wanted_apartments',
-  timestamps: true,
-  hooks: {
-    afterUpdate: async (wantedApartment, options) => {
-      // מציאת המשתמש שמקושר לדירה הרצויה להחלפה
-      const user = await User.findByPk(wantedApartment.userId);
-      if (user) {
-        // עדכון ה-`updatedAt` של ה-User
-        user.updatedAt = new Date();
-        await user.save();
-      }
-    },
-  },
+  timestamps: true, // מאפשר עדכון אוטומטי של תאריך יצירה ועריכה
 });
 
-module.exports = WantedApartment;
+WantedApartment.addHook('afterUpdate', async (apartment, options) => {
+  console.log("Hook triggered before update");
+
+  // מציאת המשתמש שקשור לדירה
+  const user = await User.findByPk(apartment.userId);
+
+  if (user) {
+    // הגדלת מספר השינויים
+    user.changeCount += 1; 
+
+    try {
+      // שמירה של המודל לאחר הגדלת ה-`changeCount`
+      await user.save(); // אין צורך בשדה `updatedAt` - הוא יתעדכן אוטומטית
+      console.log("User change count updated:", user.changeCount);
+    } catch (error) {
+      console.error('Error saving user:', error);
+    }
+  }
+});
+
+module.exports =WantedApartment 

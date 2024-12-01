@@ -20,7 +20,7 @@ const UserProfile = () => {
             {isAuthenticated ?
                 (
                     <div>
-                        <h3>hello {user.username}</h3>
+                        <h3>hello {user?.username}</h3>
                         <CurrentApartment />
                         <CurrentDesireApartment />
                         <CurrentpersonallDetails />

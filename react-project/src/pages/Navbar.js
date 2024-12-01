@@ -16,6 +16,7 @@ import axios from 'axios';
 import { setuser } from '../features/Users';
 import { setdesireApartment } from '../features/desirePartment';
 import { setApartment } from '../features/partment';
+import SendMessage from './ModalMessage';
 function NavbarHead() {
     const ModalShowDetails = useSelector((state) => state.user.ModalShowDetails); // השתמש ברידוסר הנכון
     const ModalShow = useSelector((state) => state.user.ModalShow); // השתמש ברידוסר הנכון
@@ -23,7 +24,7 @@ function NavbarHead() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [errorMessage, setErrorMessage] = useState('');
-
+    const [show, setShow] = useState(false)
     // API key שלך מ-OpenAI
 
     const addOrUpdate = () => {
@@ -55,7 +56,7 @@ function NavbarHead() {
     // קריאה לפונקציה ב-useEffect, כמו כן השתמש בפונקציה async בתוך useEffect
     useEffect(() => {
         const fetchUserProfile = async () => {
-            if(!parseJwt(token)){
+            if (!parseJwt(token)) {
                 logout_generall()
                 return
             }
@@ -132,6 +133,10 @@ function NavbarHead() {
                                                 <i className="fas fa-sign-out-alt"></i> יציאה
                                             </Link>
                                         </li>
+                                        <li>
+                                            <i class="fas fa-comment-dots" onClick={() => setShow(true)}></i>
+                                        </li>
+
                                     </>
                                 ) : (
                                     <>
@@ -145,6 +150,9 @@ function NavbarHead() {
                                                 <i className="fas fa-user-plus"></i> הרשמה
                                             </Link>
                                         </li>
+                                        <li>
+                                            <i class="fas fa-comment-dots" onClick={() => setShow(true)}></i>
+                                        </li>
                                     </>
                                 )}
                             </ul>
@@ -155,7 +163,10 @@ function NavbarHead() {
             <MyVerticallyCenteredModal
                 show={ModalShow}
                 onHide={() => dispatch(setModalShow())}
-            /></>
+            />
+            <SendMessage setShow={setShow} show={show}></SendMessage>
+        </>
+
     );
 }
 

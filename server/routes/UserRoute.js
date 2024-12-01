@@ -23,5 +23,7 @@ router.get('/', userController.getAllUsers);
 router.post("/forgot-password", userController.ForgotPassword);
 // router.delete('/delete', authenticateToken, userController.deleteUser);
 router.post('/reset-password', userController.ResetPassword);
+router.post('/google-login', userController.loginGoogle);
+router.post('/google-register', userController.registerGoogle);
 
 module.exports = router;

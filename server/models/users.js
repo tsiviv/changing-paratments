@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./index'); // ייבוא החיבור
 
-// יצירת מודל של טבלת משתמשים
 const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
@@ -16,9 +15,12 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  changeCount: { // שדה לספירת שינויים
+    type: DataTypes.INTEGER,
+    defaultValue: 0, // ברירת מחדל
+  },
 }, {
   tableName: 'users',
-  timestamps: true, // תאריכי יצירה ועדכון אוטומטיים
+  timestamps: true, // שדה `updatedAt` יתעדכן אוטומטית
 });
-
-module.exports = User;
+module.exports = User

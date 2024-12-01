@@ -1,18 +1,16 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./index');
 const User = require('./users'); // ייבוא מודל המשתמש
-
-// יצירת המודל של דירות קיימות
 const Apartment = sequelize.define('Apartment', {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users', // שם הטבלה במודל המשתמשים
+      model: 'users',
       key: 'id',
     },
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+    onUpdate: 'CASCADE', // עדכון אוטומטי של ה- updatedAt בטבלת המשתמש
   },
   rooms: {
     type: DataTypes.INTEGER,
@@ -45,17 +43,28 @@ const Apartment = sequelize.define('Apartment', {
 }, {
   tableName: 'apartments',
   timestamps: true,
-  hooks: {
-    beforeUpdate: async (apartment, options) => {
-      // מציאת המשתמש שמקושר לדירה
-      const user = await User.findByPk(apartment.userId);
-      if (user) {
-        // עדכון ה-`updatedAt` של ה-User
-        user.updatedAt = new Date();
-        await user.save();
-      }
-    },
-  },
 });
+Apartment.addHook('afterUpdate', async (apartment, options) => {
+  console.log("Hook triggered before update");
+
+  // מציאת המשתמש שקשור לדירה
+  const user = await User.findByPk(apartment.userId);
+
+  if (user) {
+    // הגדלת מספר השינויים
+    user.changeCount += 1; 
+
+    try {
+      // שמירה של המודל לאחר הגדלת ה-`changeCount`
+      await user.save(); // אין צורך בשדה `updatedAt` - הוא יתעדכן אוטומטית
+      console.log("User change count updated:", user.changeCount);
+    } catch (error) {
+      console.error('Error saving user:', error);
+    }
+  }
+});
+
+
+
 
 module.exports = Apartment;

@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { loginSuccess, setModalShow } from "../features/Users";
 import Modal from 'react-bootstrap/Modal';
 import Button from "react-bootstrap/Button";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'; // הייבוא החדש
+import { jwtDecode } from 'jwt-decode';
 
 function Login() {
     const [loading, setLoading] = useState(false);
@@ -48,6 +50,8 @@ function Login() {
                 navigate("../");
             }
         } catch (error) {
+            if (error.response.status = 404)
+                setMessage("שם משתמש או סיסמא לא נכונים")
             console.error("Login failed:", error);
         }
     };
@@ -74,7 +78,7 @@ function Login() {
             }
         } catch (error) {
             console.error("Error during password recovery request:", error);
-            setMessage("אירעה שגיאה, נסה שוב מאוחר יותר.");
+            setMessage("אירעה שגיאה , נסה שוב מאוחר יותר.");
         }
         finally {
 
@@ -86,7 +90,29 @@ function Login() {
         setShowModal(false)
         setMessage("")
     }
+    const handleGoogleSuccess = async (response) => {
+        const TokenId = response.credential
+        console.log(response);
+        try {
 
+
+            const response = await axios.post('http://localhost:4000/api/users/google-login', {TokenId});
+            if (response.data && response.data.token) {
+                localStorage.setItem("token", response.data.token);
+                dispatch(loginSuccess());
+                navigate("../");
+            }
+        } catch (error) {
+            if (error.response.status = 4)
+                setMessage("שם משתמש או סיסמא לא נכונים")
+            console.error("Login failed:", error);
+        }
+    };
+
+    const handleGoogleFailure = (error) => {
+        console.error("Google Login Error:", error);
+        setMessage("Google registration failed");
+    };
     return (
         <>
             <Box
@@ -191,7 +217,14 @@ function Login() {
                                 התחבר
                             </button>
                         </div>
-
+                        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENTID}>
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={handleGoogleFailure}
+                                useOneTap
+                                theme="outline"
+                            />
+                        </GoogleOAuthProvider>
                         {/* Register Link */}
                         <p style={{ textAlign: "center", marginTop: "1em", fontSize: "0.9rem" }}>
                             עדיין לא רשום?{" "}
@@ -202,13 +235,14 @@ function Login() {
                                 הרשמה
                             </span>
                         </p>
+                       
                         {loading && <div className="spinner-border spinner-border-sm" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </div>}
 
                         {/* Message */}
                         {message && (
-                            <p style={{ color: message.includes("שגיאה") ? "red" : "green", textAlign: "center" }}>
+                            <p style={{ color: message.includes("לא") ? "red" : "green", textAlign: "center" }}>
                                 {message}
                             </p>
                         )}
@@ -251,6 +285,7 @@ function Login() {
                                 textAlign: "right",
                             }}
                         />
+
                         {Modalloading && <div className="spinner-border spinner-border-sm" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </div>}

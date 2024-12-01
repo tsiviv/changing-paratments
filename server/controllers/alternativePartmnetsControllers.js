@@ -1,6 +1,5 @@
 const WantedApartment = require('../models/alternativePartmnets');
-const User = require('../models/users')
-const sequelize = require('../models/index');
+
 
 // קבלת כל הדירות שהמשתמשים מעוניינים בהם
 exports.getAllWantedApartments = async (req, res) => {
@@ -26,43 +25,32 @@ exports.getWantedApartmentByUserId = async (req, res) => {
         console.error('Error fetching apartment by user ID:', error);
         res.status(500).json({ error: error.message });
     }
-};exports.updateWantedApartment = async (req, res) => {
-    const t = await sequelize.transaction(); // יצירת טרנזקציה חדשה
-  
+}; exports.updateWantedApartment = async (req, res) => {
+
+
+    const { id } = req.params;
+    const { preferredSwapDate, area, numberOfBeds, numberOfRooms, userId } = req.body
+    // עדכון הדירה בתוך הטרנזקציה
     try {
-      const { id } = req.params;
-      
-      // עדכון הדירה בתוך הטרנזקציה
-      const updatedRows = await WantedApartment.update(req.body, {
-        where: { id },
-        transaction: t, // העברת הטרנזקציה
-      });
-  
-      if (updatedRows[0] === 0) {
-        return res.status(404).json({ message: 'Wanted apartment not found' });
-      }
-  
-      const updatedApartment = await WantedApartment.findByPk(id, { transaction: t });
-      const user = await User.findByPk(updatedApartment.userId, { transaction: t });
-  
-      if (user) {
-        // עדכון ה-`updatedAt` של ה-User בתוך הטרנזקציה
-        user.updatedAt = new Date();
-        await user.save({ transaction: t });
-      }
-  
-      // התחייבות לשינויים בטרנזקציה
-      await t.commit();
-  console.log(user)
-      res.status(200).json(updatedApartment);
-  
+        const apartment = await WantedApartment.findByPk(id);
+        if (apartment) {
+            // עדכון הפרטים לפי הנתונים שהתקבלו בבקשה
+            apartment.preferredSwapDate = preferredSwapDate ?? apartment.preferredSwapDate;
+            apartment.area = area ?? apartment.area;
+            apartment.numberOfBeds = numberOfBeds ?? apartment.numberOfBeds;
+            apartment.numberOfRooms = numberOfRooms ?? apartment.numberOfRooms;
+
+            await apartment.save();
+
+            res.status(200).json(apartment); // שליחת הדירה המעודכנת
+        } else {
+            res.status(404).json({ error: 'Wanted apartment not found' });
+        }
     } catch (error) {
-      // אם קרתה שגיאה, נסוגים מהשינויים בטרנזקציה
-      await t.rollback();
-      console.error('Error updating apartment:', error);
-      res.status(500).json({ error: error.message });
+        console.error('Error updating apartment:', error);
+        res.status(500).json({ error: 'Error updating wanted apartment', details: error.message });
     }
-  };
+}
 // מחיקת דירה רצויה
 exports.deleteWantedApartment = async (req, res) => {
     try {

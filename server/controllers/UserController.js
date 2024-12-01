@@ -8,7 +8,102 @@ const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto'); // כדי ליצור קוד חד-פעמי
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
 
+async function verifyToken(idToken) {
+    const ticket = await client.verifyIdToken({
+        idToken: idToken,
+        audience: process.env.GOOGLE_CLIENTID
+    });
+    const payload = ticket.getPayload();
+    return payload; // מחזיר את המידע של המשתמש
+} exports.loginGoogle = async (req, res) => {
+    const { TokenId } = req.body;
+    console.log(TokenId)
+
+    try {
+        // אימות ה-idToken עם גוגל
+        const user = await verifyToken(TokenId);
+        console.log(user)
+        const email = user.email; // המייל של המשתמש שמתקבל מהטוקן
+        console.log(email)
+        // חפש אם כבר קיים משתמש עם המייל הזה במסד הנתונים
+        const existingUser = await User.findOne({ where: { email } });
+
+        if (existingUser) {
+            // אם קיים, אפשר ליצור JWT חדש ולשלוח אותו ללקוח
+            const privateKey = fs.readFileSync(path.join(__dirname, '../private.key'), 'utf8');
+            const token = jwt.sign({ id: existingUser.id, email: existingUser.email }, privateKey, {
+                algorithm: 'RS256',
+                expiresIn: process.env.JWT_EXPIRES_IN,
+            });
+
+            // החזרת JWT למשתמש
+            return res.status(200).json({
+                status: 'success',
+                message: 'Logged in successfully',
+                token:token,
+            });
+        } else {
+            // אם אין משתמש כזה, אתה יכול ליצור משתמש חדש או להחזיר שגיאה
+            return res.status(404).json({
+                status: 'error',
+                message: 'User not found. Please register first.',
+            });
+        }
+    } catch (error) {
+        console.error('שגיאה באימות:', error);
+        res.status(400).json({ message: 'Authentication failed' });
+    }
+};
+
+// נתיב להרשמה (ניתן להוסיף פה לוגיקה להוספת המשתמש למסד נתונים)
+exports.registerGoogle = async (req, res) => {
+
+    const { TokenId } = req.body;
+    console.log(TokenId)
+
+    try {
+        // אימות ה-idToken עם גוגל
+        const user = await verifyToken(TokenId);
+        console.log(user)
+        const email = user.email
+        const username = user.name
+        const password = user.sub
+        const existingUser = await User.findOne({ where: { email } });
+
+        if (existingUser) {
+            // אם המשתמש כבר קיים, התחבר אותו
+            return res.status(409).json({ message: 'המשתמש כבר קיים', user: existingUser });
+        }
+
+        // אם המשתמש לא קיים, הרשם משתמש חדש
+        // יצירת משתמש חדש
+        const newUser = await User.create({
+            username,
+            email,
+            password,
+        });
+        const privateKey = fs.readFileSync(path.join(__dirname, '../private.key'), 'utf8');
+
+        const token = jwt.sign({ id: newUser.id, email: newUser.email }, privateKey, {
+            algorithm: 'RS256',
+            expiresIn: process.env.JWT_EXPIRES_IN,
+        });
+
+        // החזרת JWT למשתמש
+        return res.status(200).json({
+            status: 'success',
+            message: 'Logged in successfully',
+            token: token,
+        });
+    }
+    catch (err) {
+        console.error('Error during registration:', err);
+        res.status(500).json({ message: 'שגיאה במהלך הרישום' });
+    }
+}
 // רישום משתמש חדש
 exports.registerUser = async (req, res) => {
     console.log('Request Body:', req.body);
@@ -161,7 +256,7 @@ exports.getUserById = async (req, res) => {
         console.error('Error fetching user:', error);
         res.status(500).json({ status: 'error', message: 'Server error during user retrieval', details: error.message });
     }
-};exports.getAllUsers = async (req, res) => {
+}; exports.getAllUsers = async (req, res) => {
     try {
         // מביאים רק משתמשים שיש להם דירות ב-Apartments
         const users = await User.findAll({
@@ -179,7 +274,6 @@ exports.getUserById = async (req, res) => {
             ]
         });
 
-        console.log(users);
         res.status(200).json(users);
     } catch (error) {
         console.error('Error fetching users:', error);
