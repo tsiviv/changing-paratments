@@ -3,32 +3,38 @@ import { useState, useEffect } from 'react';
 
 const AlertComponent = ({ message, showAlert, setShowAlert }) => {
 
-    // useEffect(() => {
-    //     if (showAlert) {
-    //         // משתמש ב-bootbox כדי להציג הודעה כמודל
-    //         var alert = bootbox.alert({
-    //             message: message, // המסר להודעה
-    //             size: 'medium', // גודל המודל
-    //             backdrop: true, // מאפשר קישוט במודל
-    //             centerVertical: true // שומר את המודל במרכז הדף
-    //         });
+    useEffect(() => {
 
-    //         // מראה את המודל
-    //         alert.show();
+        if (showAlert) {
 
-    //         // מחכה ל-4 שניות (4000 מילישניות) לפני הסתרת המודל
-    //         setTimeout(function() {
-    //             alert.modal('hide');
-    //             setShowAlert(false); // הסתר את ה-Alert אחרי חצי שניה
-    //         }, 4000);
-    //     }
-        
-    //     return () => clearTimeout(alert); // מניעת זיכרון מיותר
-    // }, [showAlert, message, setShowAlert]);
+            setTimeout(function () {
+                setShowAlert(false); // הסתר את ה-Alert אחרי חצי שניה
+            }, 700);
+        }
+
+        return () => clearTimeout(alert); // מניעת זיכרון מיותר
+    }, [showAlert, message, setShowAlert]);
 
     return (
         <>
-        {console.log("show",showAlert)}
+        {showAlert&&
+            <div
+                style={{
+                    position: 'fixed',
+                    top: '20%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    backgroundColor: '#f8d7da',
+                    color: '#721c24',
+                    padding: '1rem',
+                    borderRadius: '8px',
+                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                    zIndex: 9999,
+                    textAlign: 'center',
+                }}
+            >
+                {message}
+            </div>}
             {/* {showAlert && (
                 // זה מודל `bootbox` ולא `div.alert`
                 <div id="bootbox-alert" className="bootbox modal fade show" role="dialog">

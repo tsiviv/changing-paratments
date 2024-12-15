@@ -8,7 +8,7 @@
     margin: 0 auto;
     /* מרכז את התוכן */
     padding: 30px;
-    background: #f1f1f1 !important;
+    /* background: #f1f1f1 !important; */
 
     /* background: #fff  !important; */
     border-radius: 8px;
@@ -76,4 +76,16 @@ strong {
 p span {
     color: #007bff;
     font-weight: normal;
+}
+.container.color-body{
+    background: #f3efef !important;
+}
+.color-weakblack{
+    background: #686767 !important;
+}
+.custom-hover:hover {
+    background: #525151 !important;
+}
+input.text-primary {
+    color: blue !important;
 }

@@ -60,6 +60,7 @@ const ApartmentForm = (props) => {
             })
         }
     }, [Apartment, desireApartment]);
+    
     useEffect(() => {
 
         console.log("useefe", Apartment)
@@ -148,6 +149,9 @@ const ApartmentForm = (props) => {
                     preferredSwapDate: "",
                     userId: ""
                 });
+                setTimeout(() => {
+                    dispatch(setModalShow());
+                }, 1000);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
                 setShowAlert(true)
@@ -183,6 +187,9 @@ const ApartmentForm = (props) => {
                     notes: "",
                     userId: parseJwt(token)?.id
                 });
+                setTimeout(() => {
+                    dispatch(setModalShow());
+                }, 1000);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
                 setShowAlert(true)
@@ -336,7 +343,9 @@ const ApartmentForm = (props) => {
                     preferredSwapDate: desireApartment?.preferredSwapDate,
                     userId: parseJwt(token).id
                 });
-                dispatch(setModalShow());
+                setTimeout(() => {
+                    dispatch(setModalShow());
+                }, 1000);
             } else {
 
                 setMessage('שגיאה בשליחת הפרטים.');
@@ -377,7 +386,9 @@ const ApartmentForm = (props) => {
                     userId: parseJwt(token).id
                 });
 
-                dispatch(setModalShow());
+                setTimeout(() => {
+                    dispatch(setModalShow());
+                }, 1000);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
                 setShowAlert(true)
@@ -414,17 +425,19 @@ const ApartmentForm = (props) => {
                 centered
                 className="custom-modal "
             >
-                <Modal.Header closeButton className='color-body d-flex align-items-center justify-content-center'>
-                    <Modal.Title className="w-100 text-center header">טופס עדכון דירה</Modal.Title>
+                <Modal.Header closeButton className=' d-flex align-items-center justify-content-center'
+                    style={{ borderBottom: 'none' }}
+                >
+                    <Modal.Title className="w-100 text-center header fw-bold">טופס עדכון דירה</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className='color-body ps-4 pe-4'>
-                    <Container className=' mt-0'>
+                <Modal.Body className=' ps-4 pe-4 '>
+                    <Container className=' mt-0 color-body'>
                         <Form onSubmit={handleSubmit}>
                             <Row className="d-flex align-items-start">
                                 {/* First Form: Current Apartment */}
                                 {/* Second Form: Desired Apartment */}
                                 <Col md={12}>
-                                    <h4 className='text-end'>פרטי דירה מבוקשת (אינך חייב למלא פרטי דירה מבוקשת)</h4>
+                                    <h4 className='text-end fw-bold'>פרטי דירה מבוקשת (אינך חייב למלא פרטי דירה מבוקשת)</h4>
                                     <Row className="d-flex align-items-start ">
                                         {/* First Form: Current Apartment */}
                                         {/* Second Form: Desired Apartment */}
@@ -433,8 +446,9 @@ const ApartmentForm = (props) => {
                                             <Form.Group className="text-end mb-3" controlId="area">
                                                 <Form.Label className='label'>אזור רצוי</Form.Label>
                                                 <Form.Control
+                                                    autoComplete="off"
                                                     type="text"
-                                                    className='text-end'
+                                                    className='text-end text-primary'
                                                     placeholder="הזן כתובת רצויה"
                                                     name="area"
                                                     value={formDataDesired.area}
@@ -446,8 +460,9 @@ const ApartmentForm = (props) => {
                                             <Form.Group className="text-end mb-3" controlId="numberOfRooms">
                                                 <Form.Label className='label'>מספר חדרים רצוי</Form.Label>
                                                 <Form.Control
+                                                    autoComplete="off"
                                                     type="number"
-                                                    className='text-end'
+                                                    className='text-end text-primary'
                                                     placeholder="הזן מספר חדרים רצוי"
                                                     name="numberOfRooms"
                                                     value={formDataDesired.numberOfRooms}
@@ -461,7 +476,8 @@ const ApartmentForm = (props) => {
                                                 <Form.Label className='label'>מספר מיטות</Form.Label>
                                                 <Form.Control
                                                     type="number"
-                                                    className='text-end'
+                                                    autoComplete="off"
+                                                    className='text-end text-primary'
                                                     placeholder="הזן מספר מיטות"
                                                     name="numberOfBeds"
                                                     value={formDataDesired.numberOfBeds}
@@ -473,7 +489,9 @@ const ApartmentForm = (props) => {
                                             <Form.Group className="text-end mb-3" controlId="preferredSwapDate">
                                                 <Form.Label className='label'>תאריך מועדף להחלפה</Form.Label>
                                                 <Form.Control
-                                                    className='text-end'
+                                                    autoComplete="off"
+                                                    className='text-end text-primary'
+                                                    style={{ color: 'blue' }}
                                                     type="text"
                                                     name="preferredSwapDate"
                                                     value={formDataDesired.preferredSwapDate}
@@ -485,7 +503,7 @@ const ApartmentForm = (props) => {
                                     </Row>
                                 </Col>
                                 <Col md={12}>
-                                    <h4 className='text-end mt-3'>פרטי הדירה הקיימת</h4>
+                                    <h4 className='text-end mt-3 fw-bold'>פרטי הדירה הקיימת</h4>
                                     <Row className="d-flex align-items-start mt-2">
                                         {/* First Form: Current Apartment */}
                                         {/* Second Form: Desired Apartment */}
@@ -493,8 +511,9 @@ const ApartmentForm = (props) => {
                                             <Form.Group className="text-end mb-3" controlId="address">
                                                 <Form.Label className='label'>כתובת הדירה</Form.Label>
                                                 <Form.Control
+                                                    autoComplete="off"
                                                     type="text"
-                                                    className='text-end'
+                                                    className='text-end text-primary'
                                                     placeholder="הזן כתובת"
                                                     name="address"
                                                     value={formDataCurrent.address}
@@ -506,21 +525,23 @@ const ApartmentForm = (props) => {
                                             <Form.Group className="text-end mb-3" controlId="rooms">
                                                 <Form.Label className='label'>מספר חדרים</Form.Label>
                                                 <Form.Control
-                                                    className='text-end'
+                                                    className='text-end text-primary'
                                                     type="number"
                                                     placeholder="הזן מספר חדרים"
                                                     name="rooms"
                                                     value={formDataCurrent.rooms}
                                                     onChange={handleChangeCurrent}
                                                     required
+                                                    autoComplete="off"
                                                 />
                                             </Form.Group>
 
                                             <Form.Group className="text-end mb-3" controlId="beds">
                                                 <Form.Label className='label'>מספר מיטות</Form.Label>
                                                 <Form.Control
+                                                    autoComplete="off"
                                                     type="number"
-                                                    className='text-end'
+                                                    className='text-end text-primary'
                                                     placeholder="הזן מספר מיטות"
                                                     name="beds"
                                                     value={formDataCurrent.beds}
@@ -534,7 +555,8 @@ const ApartmentForm = (props) => {
                                                 <Form.Label className='label'>קומה</Form.Label>
                                                 <Form.Control
                                                     type="number"
-                                                    className='text-end'
+                                                    autoComplete="off"
+                                                    className='text-end text-primary'
                                                     placeholder="הזן קומה"
                                                     name="floor"
                                                     value={formDataCurrent.floor}
@@ -546,12 +568,13 @@ const ApartmentForm = (props) => {
                                             <Form.Group className="text-end mb-3" controlId="city">
                                                 <Form.Label className='label'>עיר</Form.Label>
                                                 <Form.Control
+                                                    autoComplete="off"
                                                     type="text"
                                                     placeholder="הזן עיר"
                                                     name="city"
                                                     value={formDataCurrent.city}
                                                     onChange={handleChangeCurrent}
-                                                    className='text-end'
+                                                    className='text-end text-primary'
                                                     required
                                                 />
                                                 {cityError && <p className="text-danger text-end">{cityError}</p>}
@@ -561,7 +584,7 @@ const ApartmentForm = (props) => {
                                                 <Form.Label className='label'>מזרונים</Form.Label>
                                                 <Form.Control
                                                     type="text"
-                                                    className='text-end'
+                                                    className='text-end text-primary'
                                                     placeholder="הזן מזרונים"
                                                     name="mattresses"
                                                     value={formDataCurrent.mattresses}
@@ -575,9 +598,10 @@ const ApartmentForm = (props) => {
                                         <Form.Group className="text-center mb-3" controlId="notes">
                                             <Form.Label className='label'>הערות</Form.Label>
                                             <Form.Control
+                                                autoComplete="off"
                                                 as="textarea"
                                                 rows={3}
-                                                className="text-end w-100"
+                                                className="text-end w-100 text-primary"
                                                 placeholder="הזן הערות"
                                                 name="notes"
                                                 value={formDataCurrent.notes}
@@ -594,20 +618,21 @@ const ApartmentForm = (props) => {
                                 <Button
                                     type="submit"
                                     disabled={!isFormValid}
-                                    className="w-50 py-2 custom-button color-black"
+                                    className="w-50 color-black custom-hover"
+                                    style={{ border: 'none' }}
                                 >
                                     עדכן פרטים
                                 </Button></div>
                         </Form>
                     </Container>
 
-
-                </Modal.Body>
-                <Modal.Footer className='color-body'>
-                    <Button variant="primary" onClick={deleteDesirApatment} disabled={!Apartment?.address} >
+                    {console.log(desireApartment)
+                    }                </Modal.Body>
+                <Modal.Footer style={{ borderTop: 'none' }}>
+                    <Button className='color-weakblack custom-hover' style={{ border: 'none' }} onClick={deleteDesirApatment} disabled={!desireApartment?.preferredSwapDate} >
                         מחק שירה מבוקשת
                     </Button>
-                    <Button variant="primary" onClick={deletecurrentApartment} disabled={desireApartment?.numberOfBeds || !Apartment?.address} >
+                    <Button className='color-weakblack custom-hover' style={{ border: 'none' }} onClick={deletecurrentApartment} disabled={desireApartment?.numberOfBeds || !Apartment?.address} >
                         מחק דירה שברשותי
                     </Button>
                 </Modal.Footer>
