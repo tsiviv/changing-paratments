@@ -1,5 +1,4 @@
 const WantedApartment = require('../models/OnwerPartments');
-const User=require('../models/users')
 // יצירת דירה חדשה
 exports.createWantedApartment = async (req, res) => {
   const {
@@ -86,6 +85,7 @@ exports.deleteWantedApartment = async (req, res) => {
     const apartment = await WantedApartment.findByPk(id);
     if (apartment) {
       await apartment.destroy();
+      console.log("delete")
       res.status(200).json({ message: 'Wanted apartment deleted successfully' });
     } else {
       res.status(404).json({ error: 'Wanted apartment not found' });

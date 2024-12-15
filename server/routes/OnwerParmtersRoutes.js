@@ -6,6 +6,7 @@ const router = express.Router();
 
 // יצירת דירה חדשה
 router.post('/',verifyToken, ApartmentController.createWantedApartment);
+router.delete('/:id',verifyToken, ApartmentController.deleteWantedApartment);
 
 // קריאת כל הדירות
 router.get('/', ApartmentController.getAllWantedApartments);
@@ -17,6 +18,5 @@ router.get('/:id', ApartmentController.getWantedApartmentById);
 router.put('/:id',verifyToken, ApartmentController.updateWantedApartment);
 
 // מחיקת דירה לפי ID
-router.delete('/:id', ApartmentController.deleteWantedApartment);
 
 module.exports = router;

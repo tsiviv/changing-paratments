@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
+import '../styles/table.css';
 
 function MultiSelectDropdown({ options, selectedOptions, setSelectedOptions, label }) {
     const handleCheckboxChange = (option) => {
@@ -15,29 +16,32 @@ function MultiSelectDropdown({ options, selectedOptions, setSelectedOptions, lab
 
     return (
         <DropdownButton
-            id="dropdown-multiselect"
-            title={label}
-            variant="outline-secondary"
-            className="w-100 text-end" // יישור לימין
-            align="end" // יישור תפריט הקונטקסט לימין
-            dir="rtl" // כיוון הכתיבה מימין לשמאל
-        >
-            <Dropdown.ItemText className="text-end">
-                <strong>בחר אפשרויות:</strong>
-            </Dropdown.ItemText>
+        id="dropdown-multiselect"
+        title={label}
+        className="text-end"
+        align="end"
+        dir="rtl"
+        container="body"
+    >
+        <Dropdown.ItemText className="text-end">
+            <strong>בחר אפשרויות:</strong>
+        </Dropdown.ItemText>
+        <div className="dropdown-menu-options" dir='rtl'>
             {options.map((option, index) => (
                 <div key={index} className="d-flex align-items-center justify-content-end mx-2" dir="rtl">
                     <Form.Check
                         type="checkbox"
                         checked={selectedOptions.includes(option)}
                         onChange={() => handleCheckboxChange(option)}
-                        className="me-2" // מרחק בין תיבת הבחירה לכיתוב
-                        style={{ marginRight: '5px' }} // מרחק נוסף מימין
+                        className="me-2"
+                        dir='rtl'
                     />
-                    <label>{option}</label> {/* הכיתוב מופיע אחרי תיבת הבחירה */}
+                    <label dir='rtl'>{option}</label>
                 </div>
             ))}
-        </DropdownButton>
+        </div>
+    </DropdownButton>
+    
     );
 }
 

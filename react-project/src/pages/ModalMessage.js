@@ -1,49 +1,90 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import { AiOutlineMessage } from 'react-icons/ai'; // ספריית אייקונים פופולרית
+import { Modal, Button, Form, Spinner } from 'react-bootstrap';
+import { AiOutlineMessage } from 'react-icons/ai';
+import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
+import { setModalShow } from '../features/Users';
 
 function SendMessage({ show, setShow }) {
-    const [message, setMessage] = useState(""); // אחסון ההודעה
-    const [username, setUsername] = useState(""); // שם השולח
-    const [successMessage, setSuccessMessage] = useState(""); // הודעת הצלחה
+    const [message, setMessage] = useState("");
+    const [username, setUsername] = useState("");
+    const [rating, setRating] = useState(5);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errors, setErrors] = useState({ username: "", message: "" });
+    const [isLoading, setIsLoading] = useState(false);
 
-    // פתיחה וסגירה של המודל
     const handleShow = () => setShow(true);
     const handleClose = () => {
         setShow(false);
         setSuccessMessage("");
+        setErrors({ username: "", message: "" });
+        console.log("כבר נכנסתי לפסק הזמן");
+        console.log("כבר נכנסתי לפסק הזמן");
+
     };
 
-    // שליחת ההודעה
+    const validateField = (fieldName, value) => {
+        if (fieldName === "username" && !value.trim()) {
+            return "שדה זה הינו חובה.";
+        }
+        if (fieldName === "message" && !value.trim()) {
+            return "שדה זה הינו חובה.";
+        }
+        return "";
+    };
+
+    const handleInputChange = (fieldName, value) => {
+        if (fieldName === "username") {
+            setUsername(value);
+        } else if (fieldName === "message") {
+            setMessage(value);
+        }
+
+        // עדכון השגיאה של השדה לפי המצב החדש
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [fieldName]: validateField(fieldName, value),
+        }));
+    };
+
     const handleSendMessage = async () => {
-        if (!message.trim() || !username.trim()) {
-            alert("אנא מלאו את כל השדות.");
+        const newErrors = {
+            username: validateField("username", username),
+            message: validateField("message", message),
+        };
+
+        if (newErrors.username || newErrors.message) {
+            setErrors(newErrors);
             return;
         }
 
+        setErrors({});
+        setIsLoading(true);
         try {
-            const response = await axios.post("http://localhost:4000/api/MessageRoutes", { username, message });
+            const response = await axios.post("http://localhost:4000/api/MessageRoutes", { username, message, rating });
             if (response.status === 201) {
                 setSuccessMessage("הודעתך נשלחה בהצלחה!");
                 setMessage("");
                 setUsername("");
+                setRating(5);
             } else {
                 setSuccessMessage("שגיאה בשליחת ההודעה. נסו שוב מאוחר יותר.");
             }
         } catch (error) {
-            if (error.response?.status === 400) {
-                setSuccessMessage("חסר שדות");
-                return;
-            }
             console.error("Error sending message:", error);
             setSuccessMessage("שגיאה בשליחת ההודעה.");
+        } finally {
+            setIsLoading(false);
+            setTimeout(() => {
+                console.log("Sd/fdg")
+                handleClose()
+            }, 500);
         }
     };
 
     return (
         <div>
-            {/* אייקון לפתיחת המודל */}
             <div
                 style={{
                     position: "fixed",
@@ -61,19 +102,36 @@ function SendMessage({ show, setShow }) {
                 <AiOutlineMessage size={30} />
             </div>
 
-            {/* מודל לשליחת ההודעה */}
             <Modal show={show} onHide={handleClose} centered>
-                <Modal.Header style={{ direction: "rtl", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Modal.Title style={{ flex: 1, textAlign: "center" }}>שלח הודעה למערכת</Modal.Title>
+                <Modal.Header
+                    style={{
+                        direction: "rtl",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
+                    }}
+                >
+                    <Modal.Title
+                        style={{
+                            flexGrow: 1,
+                            textAlign: "center",
+                            marginRight: "40px",
+                        }}
+                    >
+                        שלח הודעה למערכת
+                    </Modal.Title>
                     <button
                         type="button"
                         className="btn-close"
                         onClick={handleClose}
                         aria-label="Close"
-                        style={{ position: "absolute", right: "10px" }}
+                        style={{
+                            position: "absolute",
+                            right: "10px",
+                        }}
                     ></button>
                 </Modal.Header>
-
 
                 <Modal.Body style={{ direction: "rtl", textAlign: "right" }}>
                     <Form>
@@ -83,10 +141,12 @@ function SendMessage({ show, setShow }) {
                                 type="text"
                                 placeholder="הכנס שם"
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={(e) => handleInputChange("username", e.target.value)}
+                                isInvalid={!!errors.username}
                                 required
                                 style={{ textAlign: "right" }}
                             />
+                            <Form.Text className="text-danger">{errors.username}</Form.Text>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="message">
                             <Form.Label>תוכן ההודעה</Form.Label>
@@ -95,20 +155,42 @@ function SendMessage({ show, setShow }) {
                                 rows={4}
                                 placeholder="כתוב את ההודעה שלך כאן"
                                 value={message}
-                                onChange={(e) => setMessage(e.target.value)}
+                                onChange={(e) => handleInputChange("message", e.target.value)}
+                                isInvalid={!!errors.message}
                                 required
                                 style={{ textAlign: "right" }}
                             />
+                            <Form.Text className="text-danger">{errors.message}</Form.Text>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>דרג את האתר</Form.Label>
+                            <div>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <FaStar
+                                        key={star}
+                                        size={30}
+                                        color={star <= (hoverRating || rating) ? "#ffc107" : "#e4e5e9"}
+                                        onMouseEnter={() => setHoverRating(star)}
+                                        onMouseLeave={() => setHoverRating(0)}
+                                        onClick={() => setRating(star)}
+                                        style={{ cursor: "pointer" }}
+                                    />
+                                ))}
+                            </div>
                         </Form.Group>
                     </Form>
                     {successMessage && <p className="text-success">{successMessage}</p>}
                 </Modal.Body>
-                <Modal.Footer style={{ direction: "rtl", justifyContent: "space-between" }}>
+                <Modal.Footer style={{ direction: "rtl" }}>
                     <Button variant="secondary" onClick={handleClose}>
                         סגור
                     </Button>
-                    <Button variant="primary" onClick={handleSendMessage}>
-                        שלח הודעה
+                    <Button
+                        variant="primary"
+                        onClick={handleSendMessage}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Spinner animation="border" size="sm" /> : "שלח הודעה"}
                     </Button>
                 </Modal.Footer>
             </Modal>

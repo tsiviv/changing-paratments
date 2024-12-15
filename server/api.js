@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const sequelize = require('./models/index');
 const userRoutes = require('./routes/UserRoute');
 const OnwerParmtersRoutes = require('./routes/OnwerParmtersRoutes');
@@ -9,7 +10,6 @@ const path = require('path');
 const cors = require('cors');
 const app = express();
 const session = require('express-session');
-require('dotenv').config();
 
 // הגדרת פורמט JSON בגוף הבקשות
 app.use(express.json());

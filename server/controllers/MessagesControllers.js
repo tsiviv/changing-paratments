@@ -4,18 +4,19 @@ const nodemailer = require('nodemailer');
 
 // קבלת כל הדירות שהמשתמשים מעוניינים בהם
 exports.postMessage = async (req, res) => {
-    const { username, message } = req.body;
-    console.log(username, message)
-    if (!username || !message) {
+    const { username, message ,rating} = req.body;
+    console.log(username, message,rating)
+    if (!username || !message||!rating) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
         const newWantedApartment = await Message.create({
             message,
+            rating,
             username
         });
-        console.log(await SendEmail(`שם: ${newWantedApartment.username} ההודעה: ${newWantedApartment.message} תאריך: ${newWantedApartment.createdAt}` ))
+        console.log(await SendEmail(`שם: ${newWantedApartment.username} ההודעה: ${newWantedApartment.message} תאריך: ${newWantedApartment.createdAt}: דרוג${rating}` ))
         res.status(201).json(newWantedApartment);
     } catch (error) {
         console.error('Error adding apartment:', error);

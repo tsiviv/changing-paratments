@@ -52,21 +52,22 @@ exports.getWantedApartmentByUserId = async (req, res) => {
     }
 }
 // מחיקת דירה רצויה
-exports.deleteWantedApartment = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await WantedApartment.destroy({ where: { id } });
+exports.
+    deleteWantedApartment = async (req, res) => {
+        try {
+            const { id } = req.params;
+            const deleted = await WantedApartment.destroy({ where: { id } });
 
-        if (deleted === 0) {
-            return res.status(404).json({ message: 'Wanted apartment not found' });
+            if (deleted === 0) {
+                return res.status(404).json({ message: 'Wanted apartment not found' });
+            }
+
+            res.status(200).json({ message: 'Wanted apartment deleted successfully' });
+        } catch (error) {
+            console.error('Error deleting apartment:', error);
+            res.status(500).json({ error: error.message });
         }
-
-        res.status(200).json({ message: 'Wanted apartment deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting apartment:', error);
-        res.status(500).json({ error: error.message });
-    }
-};
+    };
 
 // הוספת דירה לרשימת הדירות הרצויות
 exports.addWantedApartment = async (req, res) => {

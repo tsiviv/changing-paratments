@@ -96,7 +96,7 @@ function Login() {
         try {
 
 
-            const response = await axios.post('http://localhost:4000/api/users/google-login', {TokenId});
+            const response = await axios.post('http://localhost:4000/api/users/google-login', { TokenId });
             if (response.data && response.data.token) {
                 localStorage.setItem("token", response.data.token);
                 dispatch(loginSuccess());
@@ -185,6 +185,7 @@ function Login() {
                         {/* Buttons */}
                         <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
                             <button
+                                disabled={loading}
                                 type="button"
                                 onClick={forgotPassword}
                                 style={{
@@ -201,6 +202,7 @@ function Login() {
                                 שכחתי סיסמה
                             </button>
                             <button
+                                disabled={loading}
                                 type="button"
                                 onClick={checkuser}
                                 style={{
@@ -235,7 +237,7 @@ function Login() {
                                 הרשמה
                             </span>
                         </p>
-                       
+
                         {loading && <div className="spinner-border spinner-border-sm" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </div>}

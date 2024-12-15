@@ -10,7 +10,12 @@ const Message = sequelize.define('Message', {
   username: {
     type: DataTypes.TEXT,
     allowNull: false
+  },
+  rating: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   }
+  
 }, {
   tableName: 'messages',
   timestamps: true

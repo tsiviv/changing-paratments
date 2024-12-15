@@ -269,7 +269,6 @@ exports.getUserById = async (req, res) => {
                 {
                     model: alternativePartmnets,
                     as: 'WantedApartments',
-                    required: false // לא חובה שיהיו דירות WantedApartments
                 }
             ]
         });

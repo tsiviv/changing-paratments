@@ -7,15 +7,34 @@ const CurrentApartment = () => {
     console.log(Apartment);
 
     return (
-        <div className="container">
-            <h3>הדירה שאני מחפש</h3>
-            <p><strong>כתובת רצויה:</strong> <span>{Apartment?.address}</span></p>
-            <p><strong>מספר חדרים:</strong> <span>{Apartment?.rooms}</span></p>
-            <p><strong>מספר מיטות:</strong> <span>{Apartment?.beds}</span></p>
-            <p><strong>קומה:</strong> <span>{Apartment?.floor}</span></p>
-            <p><strong>עיר:</strong> <span>{Apartment?.city}</span></p>
-            <p><strong>מספר מזרנים:</strong> <span>{Apartment?.mattresses}</span></p>
-            <p><strong>הערות:</strong> <span>{Apartment?.notes}</span></p>
+        <div className="row mb-3 mt-3">
+            <div className='email '>הדירה שברשותי</div>
+            <div className="col-md-6">
+                <div className="row">
+                    <div className="d-flex flex-column">
+                        <p><div>כתובת רצויה</div></p>
+                        <p className="value"><span>{Apartment?.address}</span></p>
+                        <p><div>מספר חדרים</div></p>
+                        <p className="value"><span>{Apartment?.rooms}</span></p>
+                        <p><div>קומה</div></p>
+                        <p className="value"><span>{Apartment?.floor}</span></p>
+                    </div>
+                </div>
+            </div>
+            <div className="col-md-6">
+                <div className="row">
+                    <div className="d-flex flex-column">
+                        <p><div>עיר</div></p>
+                        <p className="value"><span>{Apartment?.city}</span></p>
+                        <p><div>מספר מיטות</div></p>
+                        <p className="value"><span>{Apartment?.beds}</span></p>
+                        <p><div>מספר מזרנים</div></p>
+                        <p className="value"><span>{Apartment?.mattresses}</span></p>
+                        <p><div>הערות</div></p>
+                        <p ><span>{Apartment?.notes}</span></p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

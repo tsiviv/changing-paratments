@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import UserProfile from './pages/personallArea';
 import NavbarHead from './pages/Navbar';
 import ResetPassword from './pages/ResetPassword';
+import './styles/app.css'
 function App() {
   const store = configureStore({
       reducer: rootReducer,

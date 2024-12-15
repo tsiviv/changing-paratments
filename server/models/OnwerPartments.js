@@ -6,6 +6,7 @@ const Apartment = sequelize.define('Apartment', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
+      
       model: 'users',
       key: 'id',
     },

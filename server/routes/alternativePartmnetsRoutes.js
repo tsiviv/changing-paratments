@@ -6,6 +6,6 @@ router.get('/', getAllWantedApartments);
 router.post('/',verifyToken, addWantedApartment);
 router.get('/:id', getWantedApartmentByUserId);
 router.put('/:id',verifyToken, updateWantedApartment);
-router.delete('/:id', deleteWantedApartment);
+router.delete('/:id',verifyToken, deleteWantedApartment);
 
 module.exports = router;

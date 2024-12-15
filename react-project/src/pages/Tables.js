@@ -3,26 +3,28 @@ import { Table, Button, Row, Col, Form, Collapse, Accordion } from 'react-bootst
 import '../styles/table.css';
 import MultiSelectDropdown from './MultOptions';
 import config from '../config';
+
 function FilterableTable({ users }) {
     const [newUser, setNewUser] = useState([]);
-    const [expandedRow, setExpandedRow] = useState(null); // לשמור על השורה המורחבת
-    const [sortColumn, setSortColumn] = useState("updatedAt"); // העמודה הנוכחית למיון
-    const [sortDirection, setSortDirection] = useState('asc'); // כיוון המיון ('asc' או 'desc')
-    const [hoveredColumn, setHoveredColumn] = useState(null); // מצב אם העכבר מעל כותרת עמודה
-    const [selectedCities, setSelectedCities] = useState([]); // ערים שנבחרו לסינון
-    const [selectedRooms, setSelectedRooms] = useState([]); // סינון לפי מספר חדרים
-    const [selectedBeds, setSelectedBeds] = useState([]); // סינון לפי מספר מיטות
+    const [expandedRow, setExpandedRow] = useState(null); // Track the expanded row
+    const [sortColumn, setSortColumn] = useState("updatedAt"); // Current sorting column
+    const [sortDirection, setSortDirection] = useState('asc'); // Sort direction ('asc' or 'desc')
+    const [hoveredColumn, setHoveredColumn] = useState(null); // Column hover state
+    const [selectedCities, setSelectedCities] = useState([]); // Filter for selected cities
+    const [selectedRooms, setSelectedRooms] = useState("הכל"); // Filter for selected rooms
+    const [selectedBeds, setSelectedBeds] = useState("הכל"); // Filter for selected beds
 
     const cleanOptions = () => {
-        setSelectedBeds([])
-        setSelectedCities([])
-        setSelectedRooms([])
-    }
-    // רשימת ערים אפשריות
-    const cities = config.cities
-    const numbers = config.numbers
+        setSelectedBeds();
+        setSelectedCities([]);
+        setSelectedRooms();
+    };
 
-    // פונקציה לעדכון timezone
+    // List of possible cities and numbers
+    const cities = config.cities;
+    const numbers = config.numbers;
+
+    // Format date to include timezone
     const dateTimepzone = (date) => {
         const dateObj = new Date(date);
         return dateObj.toLocaleString('he-IL', {
@@ -37,42 +39,42 @@ function FilterableTable({ users }) {
         });
     };
 
-    // סינון לפי ערים שנבחרו
-    // סינון לפי עיר
+    // Filter by selected city
     const filterByCity = (user) => {
-        if (selectedCities.length === 0) return true; // אם לא נבחרו ערים, הצג את כל המשתמשים
+        if (selectedCities.length == 0) return true; // Show all if no cities selected
         if (selectedCities.includes("הכל")) return true;
         return selectedCities.includes(user.city);
     };
 
-    // סינון לפי מספר חדרים
+    // Filter by selected rooms
     const filterByRooms = (user) => {
-        if (selectedRooms.length === 0) return true; // אם לא נבחרו חדרים, הצג את כל המשתמשים
-        if (selectedRooms.includes("הכל")) return true;
-        if (selectedRooms.includes("יותר מ 12")) return user.rooms > 12;
-        return selectedRooms.includes(user.rooms); // ממירים למחרוזת כדי להתאים לערכים שנבחרו
+        if (!selectedRooms) return true; // Show all if no rooms selected
+        if (selectedRooms == "הכל") return true;
+        if (selectedRooms == "מספר חדרים נדרש") return true;
+        if (selectedRooms == "יותר מ 12") return user.rooms >= 12;
+        return user.rooms >= selectedRooms; // Check if user.beds is greater than the selected number
     };
 
-    // סינון לפי מספר מיטות
+    // Filter by selected beds
     const filterByBeds = (user) => {
-        if (selectedBeds.includes("יותר מ 12")) console.log("good!")
-        if (selectedBeds.length === 0) return true; // אם לא נבחרו מיטות, הצג את כל המשתמשים
-        if (selectedBeds.includes("הכל")) return true;
-        if (selectedBeds.includes("יותר מ 12")) return user.beds > 12;
-        return selectedBeds.includes(user.beds); // ממירים למחרוזת כדי להתאים לערכים שנבחרו
+        if (!selectedBeds) return true; // Show all if no beds selected
+        if (selectedBeds == "הכל") return true;
+        if (selectedRooms == "מספר מיטות נדרש") return true;
+        if (selectedBeds == "יותר מ 12") return user.beds >= 12;
+        console.log(selectedBeds)
+        return user.beds >= selectedBeds; // Check if user.beds is greater than the selected number
     };
 
-    // פונקציית סינון כוללת
+    // Combined filter function
     const filterUsers = (formattedUsers) => {
         const arr = formattedUsers.filter((user) => filterByCity(user) && filterByRooms(user) && filterByBeds(user));
-        console.log(arr)
-        return arr
+        console.log(arr);
+        return arr;
     };
-
 
     useEffect(() => {
         if (!users || users.length === 0) {
-            setNewUser([]); // אם אין משתמשים, שים מערך ריק
+            setNewUser([]); // If no users, set empty array
             return;
         }
 
@@ -92,15 +94,15 @@ function FilterableTable({ users }) {
             area: e.WantedApartments?.[0]?.area,
             notes: e.Apartments?.[0]?.notes,
         }));
-        console.log("useefect")
+        console.log("useefect");
 
-        // סינון המשתמשים לפי הערים ומספר חדרים ומיטות
+        // Filter users by selected city, rooms, and beds
         const filteredUsers = filterUsers(formattedUsers);
 
         setNewUser(filteredUsers);
-    }, [users, selectedCities, selectedRooms, selectedBeds]); // נוסיף את selectedRooms ו-selectedBeds כדי לעדכן את המשתמשים כל פעם שהסינונים משתנים
+    }, [users, selectedCities, selectedRooms, selectedBeds]); // Include selectedRooms and selectedBeds to update users when filters change
 
-    // פונקציה למיון
+    // Sort function
     const handleSort = (column) => {
         const newDirection = sortColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';
         setSortColumn(column);
@@ -126,61 +128,79 @@ function FilterableTable({ users }) {
     return (
         <>
             <div className="table-container">
-                {/* שורת חיפוש וסינון */}
+                {/* Search and filter row */}
 
-
-                {/* הסינונים - יופיעו רק אם נלחץ על "הראה סינונים" */}
-
-                <div className="filter-container">
-                    <div className="d-flex justify-content-center mb-3 align-items-center">
-                        <MultiSelectDropdown
-                            options={cities}
-                            selectedOptions={selectedCities}
-                            setSelectedOptions={setSelectedCities}
-                            label="בחר ערים רצויות להחלפה"
-                        />
-                        <MultiSelectDropdown
-                            options={numbers}
-                            selectedOptions={selectedRooms}
-                            setSelectedOptions={setSelectedRooms}
-                            label="מספר חדרים נדרש"
-                        />
-                        <MultiSelectDropdown
-                            options={numbers}
-                            selectedOptions={selectedBeds}
-                            setSelectedOptions={setSelectedBeds}
-                            label="מספר מיטות נדרש"
-                        />
-                        <Button onClick={cleanOptions}>נקה בחירה</Button>
-                    </div>
-
-                    {/* טבלה */}
-                </div>
-
-
-                {/* הטבלה */}
                 <Table className="table table-striped table-hover">
                     <thead className="thead">
-                        <tr className="text-end">
-                            {[
-                                { label: 'תאריך', key: 'updatedAt' },
-                                { label: 'עיר', key: 'city' },
-                                { label: 'שכונה', key: 'address' },
-                                { label: 'קומה', key: 'floor' },
-                                { label: 'מס חדרים', key: 'rooms' },
-                                { label: 'מס מיטות', key: 'beds' },
-                                { label: 'מזרונים', key: 'mattresses' },
-                                { label: 'תאריכים מועדפים', key: 'preferredSwapDate' },
-                                { label: 'אזור מועדף', key: 'area' },
-                                { label: 'מס מיטות נדרש', key: 'numberOfBeds' },
-                                { label: 'מס חדרים נדרש', key: 'numberOfRooms' },
+                        <tr class="table-header-extra">
+                            <th colspan="11" className="p-2 table-header-extra" scope="row"><div className="table-header-extra d-flex justify-content-around align-items-center m-0">
+
+                                <Form.Group className="me-2 d-flex align-items-center ">
+                                    <Form.Select
+                                        aria-label="מספר חדרים נדרש"
+                                        value={selectedRooms}
+                                        onChange={(e) => setSelectedRooms(e.target.value)}
+                                        className="w-auto"
+                                        dir='rtl'
+                                    >
+                                        {numbers.map((e) => (
+                                            <option key={e} value={e}>
+                                                {e}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                    <Form.Label className='ms-2 mb-0 text-white'>מספר חדרים נדרש</Form.Label>
+                                </Form.Group>
+
+                                <Form.Group className="me-2 d-flex align-items-center ">
+                                    <Form.Select
+                                        aria-label="מספר מיטות נדרש"
+                                        value={selectedBeds}
+                                        onChange={(e) => setSelectedBeds(e.target.value)}
+                                        className="w-auto"
+                                        dir='rtl'
+                                    >
+                                        {numbers.map((e) => (
+                                            <option key={e} value={e}>
+                                                {e}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                    <Form.Label className="mb-0 ms-2 text-white">מספר מיטות נדרש</Form.Label>
+                                </Form.Group>
+
+                                <MultiSelectDropdown
+                                    options={cities}
+                                    selectedOptions={selectedCities}
+                                    setSelectedOptions={setSelectedCities}
+                                    label="בחר ערים רצויות להחלפה"
+                                    className="me-2"
+                                    dir='rtl'
+                                />
+                                <Button onClick={cleanOptions} >נקה בחירה</Button>
+                            </div>
+                            </th>
+                        </tr>
+                        <tr className="text-end p-2 table-dark">
+                            {[{ label: 'מס חדרים נדרש', key: 'numberOfRooms' },
+                            { label: 'מס מיטות נדרש', key: 'numberOfBeds' },
+                            { label: 'אזור מועדף', key: 'area' },
+                            { label: 'תאריכים מועדפים', key: 'preferredSwapDate' },
+                            { label: 'מזרונים', key: 'mattresses' },
+                            { label: 'מס מיטות', key: 'beds' },
+                            { label: 'מס חדרים', key: 'rooms' },
+                            { label: 'קומה', key: 'floor' },
+                            { label: 'שכונה', key: 'address' },
+                            { label: 'עיר', key: 'city' },
+                            { label: 'תאריך', key: 'updatedAt' },
                             ].map(({ label, key }) => (
                                 <th
                                     key={key}
                                     className="sortable-column"
                                     onClick={() => handleSort(key)}
-                                    onMouseEnter={() => setHoveredColumn(key)}  // עדכון כשהעכבר נכנס לכותרת
-                                    onMouseLeave={() => setHoveredColumn(null)}  // עדכון כשהעכבר יוצא מכותרת
+                                    onMouseEnter={() => setHoveredColumn(key)}
+                                    onMouseLeave={() => setHoveredColumn(null)}
+                                    style={['numberOfRooms', 'numberOfBeds', 'area', 'preferredSwapDate'].includes(key) ? { fontSize: '0.8rem' } : {}}
                                 >
                                     {label}{' '}
                                     {sortColumn === key && (
@@ -197,21 +217,25 @@ function FilterableTable({ users }) {
                         {newUser.map((e, index) => (
                             <React.Fragment key={index}>
                                 <tr className="text-end">
-                                    <td>{e.updatedAt}</td>
-                                    <td>{e.city}</td>
-                                    <td>{e.address}</td>
-                                    <td>{e.floor}</td>
-                                    <td>{e.rooms}</td>
-                                    <td>{e.beds}</td>
-                                    <td>{e.mattresses}</td>
-                                    <td>{e.preferredSwapDate}</td>
-                                    <td>{e.area}</td>
-                                    <td>{e.numberOfBeds}</td>
                                     <td>{e.numberOfRooms}</td>
+                                    <td>{e.numberOfBeds}</td>
+                                    <td>{e.area}</td>
+                                    <td>{e.preferredSwapDate}</td>
+                                    <td>{e.mattresses}</td>
+                                    <td>{e.beds}</td>
+                                    <td>{e.rooms}</td>
+                                    <td>{e.floor}</td>
+                                    <td>{e.address}</td>
+                                    <td>{e.city}</td>
+                                    <td>{e.updatedAt}</td>
                                     <td>
                                         <Button
+                                            onClick={() =>
+                                                setExpandedRow(
+                                                    expandedRow === index ? null : index
+                                                )
+                                            }
                                             variant="outline-primary"
-                                            onClick={() => setExpandedRow(expandedRow === index ? null : index)}
                                         >
                                             {expandedRow === index ? '-' : '+'}
                                         </Button>

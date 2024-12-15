@@ -1,24 +1,47 @@
-/* .table-container {
-    width: 80%;
-    margin: 0 auto;
-    border: 1px solid #ccc;
+/* מיכל הטבלה */
+.table-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* הטבלה בחלק העליון */
+    align-items: center;
+    min-height: 100vh; /* המיכל יתפוס את כל גובה המסך */
     padding: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    margin-top: 40px
-} */
-
-.thead {
-    background-color: black;
+    background-color: #f9f9f9;
 }
-
-.table-container .table {
+.table {
+    background-color: #f9f9f9;
     width: 100%;
-    /* לוודא שהטבלה תופס את כל רוחב ה-container */
+    max-width: 1200px; /* הגבלת רוחב */
+    margin-top: 20px;
     border-collapse: collapse;
-    /* מבטל רווחים בין תאים */
+    border-radius: 8px;
+    overflow: hidden; /* עיגול קצוות */
+    padding: 30px;
 }
 
-.filter-container {
-    background-color: black;
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: right;
+    border: 1px solid #ddd;
+}
+
+.table-header-extra{
+    background-color: rgba(103, 113, 120, 1) !important;
+   margin: 0 !important; /* הסרת מרווחים */
+   padding: 0 !important; /* הסרת ריווחים פנימיים */
+}
+
+
+.dropdown-menu-options {
+    max-height: 300px;
+    overflow-y: auto;
+    position: relative;
+}
+
+th.sortable-column {
+    padding-right: 20px; /* ריווח לחיצים */
+    white-space: nowrap; /* מניעת שורה חדשה */
+    min-width: 120px; /* רוחב מינימלי */
 }
