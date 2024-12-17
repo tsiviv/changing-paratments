@@ -151,13 +151,14 @@ const ApartmentForm = (props) => {
                 });
                 setTimeout(() => {
                     dispatch(setModalShow());
-                }, 1000);
+                }, 1200);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
                 setShowAlert(true)
 
             }
         } catch (error) {
+            if(error.response)
             if (error.response.status = 403) {
                 setMessage("התחבר שוב לחשבונך")
                 setShowAlert(true)
@@ -189,12 +190,13 @@ const ApartmentForm = (props) => {
                 });
                 setTimeout(() => {
                     dispatch(setModalShow());
-                }, 1000);
+                }, 1200);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
                 setShowAlert(true)
             }
         } catch (error) {
+            if(error.response)
             if (error.response.status = 403) {
                 setMessage("התחבר שוב לחשבונך")
                 setShowAlert(true)
@@ -283,6 +285,7 @@ const ApartmentForm = (props) => {
                 setShowAlert(true)
             }
         } catch (error) {
+            if(error.response)
             if (error.response.status = 403) {
                 setMessage("התחבר שוב לחשבונך")
                 setShowAlert(true)
@@ -316,6 +319,7 @@ const ApartmentForm = (props) => {
             }
         } catch (error) {
             console.error('Error:', error);
+            if(error.response)
             if (error.response.status = 403) {
                 setMessage("התחבר שוב לחשבונך")
                 setShowAlert(true)
@@ -352,6 +356,7 @@ const ApartmentForm = (props) => {
                 setShowAlert(true)
             }
         } catch (error) {
+            if(error.response)
             if (error.response.status = 403) {
                 setMessage("התחבר שוב לחשבונך")
                 setShowAlert(true)
