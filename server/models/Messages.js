@@ -14,6 +14,8 @@ const Message = sequelize.define('Message', {
   rating: {
     type: DataTypes.INTEGER,
     allowNull: false,
+
+
   }
   
 }, {

@@ -197,7 +197,7 @@ function Register() {
                         הרשמה
                     </button>
 
-                    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENTID}>
+                    <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
                         <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={handleGoogleFailure}
