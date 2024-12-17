@@ -1,22 +1,15 @@
 {
-  "rewrites": [
+  "projects": [
     {
-      "source": "/api/:path*",
-      "destination": "https://changing-paratments-gqhf-msgcxzsl2-tsivis-projects-6ddb86b5.vercel.app/api/:path*"
+      "src": "./react-project",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
     },
     {
-      "source": "/:path*",
-      "destination": "https://www.my-awesome-site.com/:path*"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/:path*",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
+      "src": "./server",
+      "use": "@vercel/node"
     }
   ]
 }
