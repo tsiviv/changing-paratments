@@ -219,6 +219,7 @@ function Login() {
                                 התחבר
                             </button>
                         </div>
+                        {console.log('482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com')}
                         <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
                             <GoogleLogin
                                 onSuccess={handleGoogleSuccess}
