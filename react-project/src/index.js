@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 // import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'; // React-Bootstrap-Table CSS
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
