@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,9 @@ function PersonallDetails(props) {
   const [isFormValid, setIsFormValid] = useState(true);
   const token = localStorage.getItem('token');
   const dispatch = useDispatch();
+
+  const usernameRef = useRef(null);
+  const emailRef = useRef(null);
 
   const validateEmail = (email) =>
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
@@ -71,35 +74,51 @@ function PersonallDetails(props) {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && isFormValid) {
+      handleUpdate();
+    } else if (e.key === 'ArrowDown') {
+      // למעבר לשדה הבא
+      if (document.activeElement === usernameRef.current) {
+        emailRef.current.focus();
+      }
+    } else if (e.key === 'ArrowUp') {
+      // למעבר לשדה הקודם
+      if (document.activeElement === emailRef.current) {
+        usernameRef.current.focus();
+      }
+    }
+  };
+
   return (
     <Modal
       {...props}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      dir="rtl"    >
-      <Modal.Header className='d-flex justify-content-between'
-                >
-                    <Modal.Title
-                        style={{
-                            flexGrow: 1,
-                            textAlign: "center",
-                            marginRight: "40px",
-                        }}
-                    >
-                      עדכון פרטים אישיים
-                    </Modal.Title>
-                    <button
-                        type="button"
-                        className="btn-close"
-                        onClick={props.onHide}
-                        aria-label="Close"
-                        style={{
-                            position: "absolute",
-                            right: "10px",
-                        }}
-                    ></button>
-                </Modal.Header>
+      dir="rtl"
+    >
+      <Modal.Header className="d-flex justify-content-between">
+        <Modal.Title
+          style={{
+            flexGrow: 1,
+            textAlign: 'center',
+            marginRight: '40px',
+          }}
+        >
+          עדכון פרטים אישיים
+        </Modal.Title>
+        <button
+          type="button"
+          className="btn-close"
+          onClick={props.onHide}
+          aria-label="Close"
+          style={{
+            position: 'absolute',
+            right: '10px',
+          }}
+        ></button>
+      </Modal.Header>
 
       <Modal.Body>
         <Form className="text-end">
@@ -112,6 +131,8 @@ function PersonallDetails(props) {
               value={dataUser.username}
               onChange={handleChangeCurrent}
               dir="rtl"
+              onKeyDown={handleKeyDown}  // תמיכה בהקשות מקלדת
+              ref={usernameRef}           // מתייחס לשדה הזה
             />
           </Form.Group>
 
@@ -124,13 +145,14 @@ function PersonallDetails(props) {
               value={dataUser.email}
               onChange={handleChangeCurrent}
               dir="rtl"
+              onKeyDown={handleKeyDown}  // תמיכה בהקשות מקלדת
+              ref={emailRef}             // מתייחס לשדה הזה
             />
             {emailError && (
               <span style={{ color: 'red', fontSize: '0.8rem' }}>{emailError}</span>
             )}
           </Form.Group>
-          <div className='d-flex justify-content-between mt-5'>
-
+          <div className="d-flex justify-content-between mt-5">
             <Button onClick={handleUpdate} disabled={!isFormValid}>
               עדכון פרופיל
             </Button>
@@ -139,9 +161,7 @@ function PersonallDetails(props) {
             </Button>
           </div>
         </Form>
-
       </Modal.Body>
-
     </Modal>
   );
 }

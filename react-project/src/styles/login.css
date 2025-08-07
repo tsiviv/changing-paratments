@@ -77,6 +77,14 @@ label {
   font-weight: 600;
   color: rgb(34, 34, 34);
 } */
-h1{
-    background-color:rgb(153, 163, 163);
+/* הקפדה על ניגודיות בכותרות */
+h1, .Auth-form-title, .login-form-title {
+  background-color: #4a4a4a; /* צבע כהה */
+  color: #ffffff; /* טקסט בהיר לניגודיות טובה */
+  padding: 10px;
+  text-align: center;
+}
+
+.cursor-pointer1 {
+    cursor: pointer;
 }

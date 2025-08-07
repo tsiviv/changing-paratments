@@ -10,6 +10,7 @@ const path = require('path');
 const cors = require('cors');
 const app = express();
 const session = require('express-session');
+const multer = require('multer');
 
 // הגדרת פורמט JSON בגוף הבקשות
 app.use(express.json());
@@ -35,6 +36,29 @@ const sessionConfig = {
   secret: 'hachiku1'
 };
 app.use(session(sessionConfig));
+
+
+
+// הגדרת אחסון הקבצים
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../react-project/public', 'uploads'));
+  },
+  filename: (req, file, cb) => {
+    console.log(file.originalname)
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+// ניהול בקשת POST להעלאת קובץ
+app.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('לא נבחר קובץ.');
+  }
+  res.status(200).send('הקובץ הועלה בהצלחה.');
+});
 
 // יצירת משתמש חדש (לשלוח בקשה POST עם נתונים)
 app.use('/api/users', userRoutes);

@@ -14,7 +14,7 @@ const CurrentpersonallDetails = () => {
     return (
         <div>
             <div className='d-flex flex-column ms-5'><div className='email'>מייל</div> <div className='email-value'>{user?.email}</div></div>
-            <div className='link color-linear' onClick={() => dispatch(setModalShowDetails())}>
+            <div className='link ' onClick={() => dispatch(setModalShowDetails())}>
                 עדכן פרטים אישיים
             </div>
             <PersonallDetails

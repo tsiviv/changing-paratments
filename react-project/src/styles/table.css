@@ -1,47 +1,91 @@
-/* מיכל הטבלה */
-.table-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* הטבלה בחלק העליון */
-    align-items: center;
-    min-height: 100vh; /* המיכל יתפוס את כל גובה המסך */
-    padding: 20px;
-    background-color: #f9f9f9;
-}
-.table {
-    background-color: #f9f9f9;
-    width: 100%;
-    max-width: 1200px; /* הגבלת רוחב */
-    margin-top: 20px;
-    border-collapse: collapse;
-    border-radius: 8px;
-    overflow: hidden; /* עיגול קצוות */
-    padding: 30px;
+/* תצוגת הקומפוננטה הכללית */
+.cards-view-container {
+  display: flex;
+  padding: 5rem;
+  gap: 2rem;
+  direction: rtl;
+  flex-wrap: wrap;
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
 }
 
-
-.table th,
-.table td {
-    padding: 12px;
-    text-align: right;
-    border: 1px solid #ddd;
+/* סינון צדדי */
+.sidebar-filters {
+  width: 250px;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
 }
 
-.table-header-extra{
-    background-color: rgba(103, 113, 120, 1) !important;
-   margin: 0 !important; /* הסרת מרווחים */
-   padding: 0 !important; /* הסרת ריווחים פנימיים */
+/* רשימת הקלפים */
+.cards-wrapper {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 3.5rem;
 }
 
+/* כל קלף */
+.card-box {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+  line-height: 1.5;
 
-.dropdown-menu-options {
-    max-height: 300px;
-    overflow-y: auto;
-    position: relative;
 }
 
-th.sortable-column {
-    padding-right: 20px; /* ריווח לחיצים */
-    white-space: nowrap; /* מניעת שורה חדשה */
-    min-width: 120px; /* רוחב מינימלי */
+.card-box:hover {
+  transform: translateY(-5px);
+}
+
+.card-box h5 {
+  margin-bottom: 0.5rem;
+  color: #1d3557;
+  font-weight: 900;
+}
+
+.card-box p {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.card-box strong {
+  color: #2b2d42;
+}
+
+.card-box a {
+  margin-top: 1rem;
+  align-self: flex-start;
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.card-box a:hover {
+  color: #0056b3;
+}
+
+/* כפתור נקה סינון */
+.sidebar-filters button {
+  width: 100%;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.sidebar-filters button:hover {
+  background-color: #5a6268;
 }

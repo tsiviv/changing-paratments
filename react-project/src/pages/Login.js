@@ -22,6 +22,8 @@ function Login() {
     const [showModal, setShowModal] = useState(false); // שליטה במודל
     const [resetCode, setResetCode] = useState("")
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const [showPassword, setShowPassword] = useState(true);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setModalloading(true);
@@ -115,198 +117,145 @@ function Login() {
     };
     return (
         <>
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    minHeight: "90vh",
-                    background: "linear-gradient(135deg, #eaf4fc, #f5fcff)",
-                    fontFamily: "'Roboto', sans-serif",
-                    fontSize: "1rem",
-                    color: "#333"
-                }}
-            >
-                <div className="login-page" style={{ maxWidth: "400px", width: "100%" }}>
-                    <form
-                        className="login-form"
-                        style={{
-                            padding: "2em",
-                            background: "#fff",
-                            borderRadius: "8px",
-                            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                        }}
-                    >
-                        <h2 style={{ textAlign: "center", marginBottom: "1em", color: "#4A90E2" }}>התחברות</h2>
+          <Box
+    sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        minHeight: "90vh",
+        background: "linear-gradient(135deg, #eaf4fc, #f5fcff)",
+        fontFamily: "'Roboto', sans-serif",
+        fontSize: "1.25rem", // הגדל את גודל הגופן
+        color: "#333",
+        overflow:"hidden"
+    }}
+>
+    <div className="login-page" style={{ maxWidth: "500px", width: "100%" }}> {/* הגדל את הרוחב המקסימלי */}
+        <form
+            className="login-form"
+            style={{
+                padding: "3em", // הגדל את המרווח הפנימי
+                background: "#fff",
+                borderRadius: "8px",
+                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)", // הגדל את הצל
+            }}
+        >
+            <h2 style={{ textAlign: "center", marginBottom: "1.5em", color: "#4A90E2" }}>התחברות</h2> {/* הגדל את הרווחים סביב הכותרת */}
 
-                        {/* Email Field */}
-                        <div style={{ position: "relative", marginBottom: "1.5em", textAlign: "right" }}>
-                            <label style={{ position: "absolute", top: "50%", left: "10px", transform: "translateY(-50%)", color: "#4A90E2" }}>
-                                <i className="fas fa-envelope"></i>
-                            </label>
-                            <input
-                                type="email"
-                                placeholder="מייל"
-                                value={email}
-                                onChange={(e) => setemail(e.target.value)}
-                                style={{
-                                    width: "100%",
-                                    padding: "10px 10px 10px 40px",
-                                    border: "1px solid #ddd",
-                                    borderRadius: "5px",
-                                    fontSize: "1rem",
-                                    textAlign: "right", // יישור הטקסט לימין
-                                }}
-                            />
-                        </div>
+            {/* שדה המייל */}
+            <div style={{ position: "relative", marginBottom: "2em", textAlign: "right" }}>
+                <label style={{ position: "absolute", top: "50%", left: "10px", transform: "translateY(-50%)", color: "#4A90E2" }}>
+                    <i className="fas fa-envelope"></i>
+                </label>
+                <input
+                    type="email"
+                    placeholder="מייל"
+                    value={email}
+                    onChange={(e) => setemail(e.target.value)}
+                    style={{
+                        width: "100%",
+                        padding: "15px 15px 15px 50px", // הגדל את הגובה והמילוי
+                        border: "1px solid #ddd",
+                        borderRadius: "5px",
+                        fontSize: "1.25rem", // הגדל את גודל הגופן
+                        textAlign: "right",
+                    }}
+                />
+            </div>
 
-                        {/* Password Field */}
-                        <div style={{ position: "relative", marginBottom: "1.5em", textAlign: "right" }}>
-                            <label style={{ position: "absolute", top: "50%", left: "10px", transform: "translateY(-50%)", color: "#4A90E2" }}>
-                                <i className="fas fa-lock"></i>
-                            </label>
-                            <input
-                                type="password"
-                                placeholder="סיסמה"
-                                value={password}
-                                onChange={(e) => setpassword(e.target.value)}
-                                style={{
-                                    width: "100%",
-                                    padding: "10px 10px 10px 40px",
-                                    border: "1px solid #ddd",
-                                    borderRadius: "5px",
-                                    fontSize: "1rem",
-                                    textAlign: "right", // יישור הטקסט לימין
-                                }}
-                            />
-                        </div>
+            {/* שדה הסיסמה */}
+            <div style={{ position: "relative", marginBottom: "2em", textAlign: "right" }}>
+                <label style={{ position: "absolute", top: "50%", left: "10px", transform: "translateY(-50%)", color: "#4A90E2" }}>
+                    <i className="fas fa-lock cursor-pointer1" onClick={() => setShowPassword(!showPassword)}></i>
+                </label>
+                <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="סיסמה"
+                    value={password}
+                    onChange={(e) => setpassword(e.target.value)}
+                    style={{
+                        width: "100%",
+                        padding: "15px 15px 15px 50px", // הגדל את הגובה והמילוי
+                        border: "1px solid #ddd",
+                        borderRadius: "5px",
+                        fontSize: "1.25rem", // הגדל את גודל הגופן
+                        textAlign: "right",
+                    }}
+                />
+            </div>
 
-                        {/* Buttons */}
-                        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
-                            <button
-                                disabled={loading}
-                                type="button"
-                                onClick={forgotPassword}
-                                style={{
-                                    flex: 1,
-                                    padding: "0.75rem",
-                                    backgroundColor: "#4A90E2",
-                                    color: "#fff",
-                                    border: "none",
-                                    borderRadius: "5px",
-                                    cursor: "pointer",
-                                    fontSize: "1rem",
-                                }}
-                            >
-                                שכחתי סיסמה
-                            </button>
-                            <button
-                                disabled={loading}
-                                type="button"
-                                onClick={checkuser}
-                                style={{
-                                    flex: 1,
-                                    padding: "0.75rem",
-                                    backgroundColor: "#4A90E2",
-                                    color: "#fff",
-                                    border: "none",
-                                    borderRadius: "5px",
-                                    cursor: "pointer",
-                                    fontSize: "1rem",
-                                }}
-                            >
-                                התחבר
-                            </button>
-                        </div>
+            {/* כפתורים */}
+            <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}> {/* הגדל את המרווח בין הכפתורים */}
+                <button
+                    disabled={loading}
+                    type="button"
+                    onClick={forgotPassword}
+                    style={{
+                        flex: 1,
+                        padding: "1rem",
+                        backgroundColor: "#4A90E2",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        fontSize: "1.25rem", // הגדל את גודל הגופן
+                    }}
+                >
+                    שכחתי סיסמה
+                </button>
+                <button
+                    disabled={loading}
+                    type="button"
+                    onClick={checkuser}
+                    style={{
+                        flex: 1,
+                        padding: "1rem",
+                        backgroundColor: "#4A90E2",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        fontSize: "1.25rem", // הגדל את גודל הגופן
+                    }}
+                >
+                    התחבר
+                </button>
+            </div>
 
-                        {console.log('482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com')}
-                        <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
-                            <GoogleLogin
-                                onSuccess={handleGoogleSuccess}
-                                onError={handleGoogleFailure}
-                                useOneTap
-                                theme="outline"
-                            />
-                        </GoogleOAuthProvider>
-                        {/* Register Link */}
-                        <p style={{ textAlign: "center", marginTop: "1em", fontSize: "0.9rem" }}>
-                            עדיין לא רשום?{" "}
-                            <span
-                                onClick={register}
-                                style={{ color: "#4A90E2", cursor: "pointer", textDecoration: "underline" }}
-                            >
-                                הרשמה
-                            </span>
-                        </p>
+            <GoogleOAuthProvider clientId="482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com">
+                <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleFailure}
+                    useOneTap
+                    theme="outline"
+                />
+            </GoogleOAuthProvider>
+            {/* לינק להרשמה */}
+            <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "1rem" }}>
+                עדיין לא רשום?{" "}
+                <span
+                    onClick={register}
+                    style={{ color: "#4A90E2", cursor: "pointer", textDecoration: "underline" }}
+                >
+                    הרשמה
+                </span>
+            </p>
 
-                        {loading && <div className="spinner-border spinner-border-sm" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </div>}
+            {loading && <div className="spinner-border spinner-border-sm" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>}
 
-                        {/* Message */}
-                        {message && (
-                            <p style={{ color: message.includes("לא") ? "red" : "green", textAlign: "center" }}>
-                                {message}
-                            </p>
-                        )}
-                    </form>
-                </div>
-            </Box>
-            {/* Reset Password Modal */}
-            <Modal show={showModal} onHide={closemodal} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>שחזור סיסמה</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>
-                        <input
-                            type="number"
-                            placeholder="הכנס קוד שחזור"
-                            value={resetCode}
-                            onChange={(e) => setResetCode(e.target.value)}
-                            style={{
-                                width: "100%",
-                                marginBottom: "1rem",
-                                padding: "10px",
-                                border: "1px solid #ddd",
-                                borderRadius: "5px",
-                                fontSize: "1rem",
-                                textAlign: "right",
-                            }}
-                        />
-                        <input
-                            type="password"
-                            placeholder="סיסמה חדשה"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            style={{
-                                width: "100%",
-                                padding: "10px",
-                                border: "1px solid #ddd",
-                                borderRadius: "5px",
-                                fontSize: "1rem",
-                                textAlign: "right",
-                            }}
-                        />
+            {/* הודעה */}
+            {message && (
+                <p style={{ color: message.includes("לא") ? "red" : "green", textAlign: "center" }}>
+                    {message}
+                </p>
+            )}
+        </form>
+    </div>
+</Box>
 
-                        {Modalloading && <div className="spinner-border spinner-border-sm" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </div>}
-                        {Modalmessage && <p style={{ color: Modalmessage.includes("לא") ? "red" : "green", textAlign: "center" }}>
-                            {Modalmessage}
-                        </p>}
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={closemodal}>
-                        ביטול
-                    </Button>
-                    <Button variant="primary" onClick={handleSubmit}>
-                        עדכן סיסמה
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </>
     );
 }

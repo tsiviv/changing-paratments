@@ -1,12 +1,18 @@
 /* CSS מותאם אישית */
 .custom-navbar {
     /* position: fixed; */
-    top: 0; /* או bottom: 0 אם רוצים להצמיד מלמטה */
-    left: 0; /* או right: 0 אם רוצים להצמיד מימין */
-    z-index: 1000; /* לקביעת סדר הציור של ה-<div> מעל אלמנטים אחרים */
-    width: 100%; /* לכיסוי כל רוחב הדף */
-    background-color: #fff; /* צבע הרקע הרצוי */
-    padding: 10px 0; /* מספק מרווח סביב ה-<div> */
+    top: 0;
+    /* או bottom: 0 אם רוצים להצמיד מלמטה */
+    left: 0;
+    /* או right: 0 אם רוצים להצמיד מימין */
+    z-index: 1000;
+    /* לקביעת סדר הציור של ה-<div> מעל אלמנטים אחרים */
+    width: 100%;
+    /* לכיסוי כל רוחב הדף */
+    background-color: #fff;
+    /* צבע הרקע הרצוי */
+    padding: 10px 0;
+    /* מספק מרווח סביב ה-<div> */
 }
 
 .ul-padding {
@@ -15,16 +21,47 @@
 
 ul {
     text-align: center;
-    list-style-type: none; /* מסיר את הנקודות */
-    padding: 0; /* מסיר רווחים פנימיים */
-    margin: 0; /* מסיר רווחים חיצוניים */
+    list-style-type: none;
+    /* מסיר את הנקודות */
+    padding: 0;
+    /* מסיר רווחים פנימיים */
+    margin: 0;
+    /* מסיר רווחים חיצוניים */
 }
 
 ul li a {
-    text-decoration: none; /* מסיר את הקו תחתון מהקישורים */
-    color: inherit; /* שומר על הצבע המקורי של הטקסט */
+    text-decoration: none;
+    /* מסיר את הקו תחתון מהקישורים */
+    color: inherit;
+    /* שומר על הצבע המקורי של הטקסט */
 }
-.color-linear{
-    color: linear-gradient(360deg, #262626 0%, #464646 100%) !important;
+
+.color-linear {
+    background: linear-gradient(360deg, #262626 0%, #464646 100%) !important;
+    border: none !important;
+    border-radius: 15px !important;
+
+}
+
+.cursor-pointer1 {
+    cursor: pointer;
+}
+
+.header {
+    font-size: 3rem !important;
+}
+
+.head-nav {
+    padding-left: 8rem;
+    padding-right: 8rem;
+}
+.header2 {
+    font-size: 1rem !important;
+}
+
+.font-color-linear {
+    background: linear-gradient(360deg, #262626 0%, #464646 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 
 }
