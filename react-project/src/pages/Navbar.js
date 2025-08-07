@@ -94,7 +94,6 @@ function NavbarHead() {
             <Navbar className="custom-navbar shadow p-3  bg-body rounded" expand="lg" dir="rtl">
                 <Navbar.Collapse className="w-100 head-nav">
                     <Form inline className="d-flex w-100">
-                        {/* חלק ראשון של ה-Navbar, מקבל קצת פחות משני שלישים */}
                         <div className="d-flex " style={{ width: '65%', gap: '40px' }}>
                             <ul className="navbar-nav justify-content-start align-items-center">
                                 <li className="nav-item">
@@ -114,10 +113,7 @@ function NavbarHead() {
                             </div>
                         </div>
 
-                        {/* חלק שני של ה-Navbar, מקבל קצת יותר משליש */}
                         <div className="d-flex justify-content-start" style={{ width: '35%', gap: '40px' }}>
-
-
                             <ul className="navbar-nav d-flex align-items-center" style={{ gap: '80px' }}>
                                 {isAuthenticated ? (
                                     <>
@@ -130,7 +126,11 @@ function NavbarHead() {
                                                 tabIndex="0"
                                             >
                                                 <i className="fas fa-plus mb-2"></i>
-                                                <span>הוספה או עדכון</span>
+                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
+                                                    <span style={{ fontWeight: 700, color: '#1d3557' }}>
+                                                        הוספת דירה<br />או עדכון
+                                                    </span>
+                                                </div>
                                             </div>
                                         </li>
                                         <li className="nav-item ">

@@ -29,13 +29,12 @@ exports.getWantedApartmentByUserId = async (req, res) => {
 
 
     const { id } = req.params;
-    const { preferredSwapDate, area, numberOfBeds, numberOfRooms, userId } = req.body
+    const { area, numberOfBeds, numberOfRooms, userId } = req.body
     // עדכון הדירה בתוך הטרנזקציה
     try {
         const apartment = await WantedApartment.findByPk(id);
         if (apartment) {
             // עדכון הפרטים לפי הנתונים שהתקבלו בבקשה
-            apartment.preferredSwapDate = preferredSwapDate ?? apartment.preferredSwapDate;
             apartment.area = area ?? apartment.area;
             apartment.numberOfBeds = numberOfBeds ?? apartment.numberOfBeds;
             apartment.numberOfRooms = numberOfRooms ?? apartment.numberOfRooms;
@@ -71,7 +70,7 @@ exports.
 
 // הוספת דירה לרשימת הדירות הרצויות
 exports.addWantedApartment = async (req, res) => {
-    const { userId, numberOfBeds, numberOfRooms, area, preferredSwapDate } = req.body;
+    const { userId, numberOfBeds, numberOfRooms, area } = req.body;
 
     if (!userId || !numberOfBeds || !numberOfRooms || !area) {
         return res.status(400).json({ message: 'Missing required fields' });
@@ -83,7 +82,6 @@ exports.addWantedApartment = async (req, res) => {
             numberOfBeds,
             numberOfRooms,
             area,
-            preferredSwapDate
         });
         res.status(201).json(newWantedApartment);
     } catch (error) {

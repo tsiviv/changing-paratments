@@ -89,3 +89,6 @@ p span {
 input.text-primary {
     color: blue !important;
 }
+.h-date{
+    font-size: calc(1.275rem + .1vw);
+}

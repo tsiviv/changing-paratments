@@ -18,7 +18,6 @@ const ApartmentForm = (props) => {
     const [cityError, setCityError] = useState("");
     const [showAlert, setShowAlert] = useState(false)
     const [message, setMessage] = useState("")
-    console.log("console", Apartment?.address)
     const [formDataCurrent, setFormDataCurrent] = useState({
         address: Apartment?.address || '',
         rooms: Apartment?.rooms || '',
@@ -27,17 +26,16 @@ const ApartmentForm = (props) => {
         city: Apartment?.city || '',
         mattresses: Apartment?.mattresses || '',
         notes: Apartment?.notes || '',
+        preferredSwapDate: Apartment?.preferredSwapDate,
         userId: parseJwt(token)?.id
     });
 
 
 
-    console.log("sososoos", formDataCurrent, Apartment);
     const [formDataDesired, setFormDataDesired] = useState({
         numberOfRooms: desireApartment?.numberOfRooms,
         numberOfBeds: desireApartment?.numberOfBeds,
         area: desireApartment?.area,
-        preferredSwapDate: desireApartment?.preferredSwapDate,
         userId: parseJwt(token)?.id
     });
     useEffect(() => {
@@ -49,18 +47,18 @@ const ApartmentForm = (props) => {
                 floor: Apartment.floor,
                 city: Apartment.city,
                 mattresses: Apartment.mattresses,
-                notes: Apartment.notes
+                notes: Apartment.notes,
+                preferredSwapDate: Apartment?.preferredSwapDate,
             });
             setFormDataDesired({
                 numberOfRooms: desireApartment?.numberOfRooms,
                 numberOfBeds: desireApartment?.numberOfBeds,
                 area: desireApartment?.area,
-                preferredSwapDate: desireApartment?.preferredSwapDate,
                 userId: parseJwt(token)?.id
             })
         }
     }, [Apartment, desireApartment]);
-    
+
     useEffect(() => {
 
         console.log("useefe", Apartment)
@@ -76,24 +74,21 @@ const ApartmentForm = (props) => {
             city: Apartment?.city,
             mattresses: Apartment?.mattresses,
             notes: Apartment?.notes,
-            userId: parseJwt(token)?.id
+            userId: parseJwt(token)?.id,
+            preferredSwapDate: Apartment?.preferredSwapDate,
         })
         setFormDataDesired({
             numberOfRooms: desireApartment?.numberOfRooms,
             numberOfBeds: desireApartment?.numberOfBeds,
             area: desireApartment?.area,
-            preferredSwapDate: desireApartment?.preferredSwapDate,
             userId: parseJwt(token)?.id
         })
     }, [navigate, token]);
     const isAnyFieldFilled = () => {
-        console.log(formDataDesired.area)
         return (
             formDataDesired.area ||
             formDataDesired.numberOfRooms ||
-            formDataDesired.numberOfBeds ||
-            formDataDesired.preferredSwapDate
-        );
+            formDataDesired.numberOfBeds);
     };
     function parseJwt(token) {
         if (!token) {
@@ -146,7 +141,6 @@ const ApartmentForm = (props) => {
                     numberOfRooms: "",
                     numberOfBeds: "",
                     area: "",
-                    preferredSwapDate: "",
                     userId: ""
                 });
                 setTimeout(() => {
@@ -158,12 +152,12 @@ const ApartmentForm = (props) => {
 
             }
         } catch (error) {
-            if(error.response)
-            if (error.response.status = 403) {
-                setMessage("התחבר שוב לחשבונך")
-                setShowAlert(true)
-                return
-            }
+            if (error.response)
+                if (error.response.status = 403) {
+                    setMessage("התחבר שוב לחשבונך")
+                    setShowAlert(true)
+                    return
+                }
             console.error('Error:', error);
         }
     }
@@ -183,6 +177,7 @@ const ApartmentForm = (props) => {
                     rooms: "",
                     beds: "",
                     floor: "",
+                    preferredSwapDate: "",
                     city: "",
                     mattresses: "",
                     notes: "",
@@ -196,18 +191,18 @@ const ApartmentForm = (props) => {
                 setShowAlert(true)
             }
         } catch (error) {
-            if(error.response)
-            if (error.response.status = 403) {
-                setMessage("התחבר שוב לחשבונך")
-                setShowAlert(true)
-                return
-            }
+            if (error.response)
+                if (error.response.status = 403) {
+                    setMessage("התחבר שוב לחשבונך")
+                    setShowAlert(true)
+                    return
+                }
             console.error('Error:', error);
         }
     }
     const handleChangeCurrent = (e) => {
         const { name, value } = e.target;
-
+        console.log(name, value,"S")
         if (name === "city") {
             setFormDataCurrent({ ...formDataCurrent, [name]: value });
 
@@ -220,49 +215,22 @@ const ApartmentForm = (props) => {
                 setIsFormValid(true); // עדכון שהטופס תקין
             }
         } else {
-            setFormDataCurrent({ ...formDataCurrent, [name]: value });
+
+            setFormDataCurrent((prevState) => ({
+                ...prevState,
+                [name]: name === "preferredSwapDate" ? Number(value) : value
+            }));
         }
     };
     const handleChangeDesired = (e) => {
         const { name, value } = e.target;
-        setFormDataDesired({ ...formDataDesired, [name]: value });
+
+        setFormDataDesired((prevState) => ({
+            ...prevState,
+            [name]: name === "preferredSwapDate" ? Number(value) : value
+        }));
     };
-    const openaiApiKey = process.env.REACT_APP_OPENAI_API_KEY
-    // פונקציה לשלוח את ההערה ל-OpenAI API
-    const checkForRentalOrMoney = async (text) => {
-        try {
-            const response = await axios.post(
-                'https://api.openai.com/v1/chat/completions', // נתיב חדש לשירות Chat GPT
-                {
-                    model: 'gpt-3.5-turbo', // מודל עדכני יותר
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'השתמש בשפה העברית.'
-                        },
-                        {
-                            role: 'user',
-                            content: `האם יש בהערה הבאה איזכור של השכרה או כסף? אם כן, השב 'כן'. אם לא, השב 'לא': ${text}`
-                        }
-                    ],
-                    max_tokens: 60,
-                    temperature: 0.2,
-                },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${openaiApiKey}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            const result = response.data.choices[0].message.content.trim(); // שים לב לשינוי במבנה התשובה
-            console.log(result);
-            return result.toLowerCase() === 'כן';
-        } catch (error) {
-            console.error('Error checking text:', error);
-            return false;
-        }
-    };
+
 
     const updateDesirePartemnt = async () => {
         try {
@@ -277,7 +245,6 @@ const ApartmentForm = (props) => {
                     numberOfRooms: desireApartment?.numberOfRooms,
                     numberOfBeds: desireApartment?.numberOfBeds,
                     area: desireApartment?.area,
-                    preferredSwapDate: desireApartment?.preferredSwapDate,
                     userId: parseJwt(token).id
                 });
             } else {
@@ -285,12 +252,12 @@ const ApartmentForm = (props) => {
                 setShowAlert(true)
             }
         } catch (error) {
-            if(error.response)
-            if (error.response.status = 403) {
-                setMessage("התחבר שוב לחשבונך")
-                setShowAlert(true)
-                return
-            }
+            if (error.response)
+                if (error.response.status = 403) {
+                    setMessage("התחבר שוב לחשבונך")
+                    setShowAlert(true)
+                    return
+                }
             console.error('Error:', error);
             setMessage(' בעדכון הדירה הרצויה אירעה שגיאה.');
             setShowAlert(true)
@@ -310,7 +277,6 @@ const ApartmentForm = (props) => {
                     numberOfRooms: desireApartment?.numberOfRooms,
                     numberOfBeds: desireApartment?.numberOfBeds,
                     area: desireApartment?.area,
-                    preferredSwapDate: desireApartment?.preferredSwapDate,
                     userId: parseJwt(token).id
                 });
             } else {
@@ -319,17 +285,18 @@ const ApartmentForm = (props) => {
             }
         } catch (error) {
             console.error('Error:', error);
-            if(error.response)
-            if (error.response.status = 403) {
-                setMessage("התחבר שוב לחשבונך")
-                setShowAlert(true)
-                return
-            }
+            if (error.response)
+                if (error.response.status = 403) {
+                    setMessage("התחבר שוב לחשבונך")
+                    setShowAlert(true)
+                    return
+                }
             setMessage('בהוספת הדירה הרצויה אירעה שגיאה.');
             setShowAlert(true)
         }
     }
     const updateCurrentPartemnt = async () => {
+        console.log(formDataCurrent)
         try {
             const responseCurrent = await axios.put(`http://localhost:4000/api/OnwerParmters/${Apartment.id}`, formDataCurrent, {
                 headers: {
@@ -344,7 +311,6 @@ const ApartmentForm = (props) => {
                     numberOfRooms: desireApartment?.numberOfRooms,
                     numberOfBeds: desireApartment?.numberOfBeds,
                     area: desireApartment?.area,
-                    preferredSwapDate: desireApartment?.preferredSwapDate,
                     userId: parseJwt(token).id
                 });
                 setTimeout(() => {
@@ -356,12 +322,12 @@ const ApartmentForm = (props) => {
                 setShowAlert(true)
             }
         } catch (error) {
-            if(error.response)
-            if (error.response.status = 403) {
-                setMessage("התחבר שוב לחשבונך")
-                setShowAlert(true)
-                return
-            }
+            if (error.response)
+                if (error.response.status = 403) {
+                    setMessage("התחבר שוב לחשבונך")
+                    setShowAlert(true)
+                    return
+                }
             console.error('Error:', error);
             setMessage('אירעה שגיאה. בעדכון דירה נוכחית');
             setShowAlert(true)
@@ -387,6 +353,7 @@ const ApartmentForm = (props) => {
                     floor: Apartment?.floor,
                     city: Apartment?.city,
                     mattresses: Apartment?.mattresses,
+                    preferredSwapDate: Apartment?.preferredSwapDate,
                     notes: Apartment?.notes,
                     userId: parseJwt(token).id
                 });
@@ -405,8 +372,6 @@ const ApartmentForm = (props) => {
         }
     }
     const handleSubmit = async (e) => {
-        console.log()
-        // console.log(await checkForRentalOrMoney(formDataCurrent.notes))
         e.preventDefault();
         if (!token) {
             setMessage("פג תוקף התחבר שוב")
@@ -435,18 +400,46 @@ const ApartmentForm = (props) => {
                 >
                     <Modal.Title className="w-100 text-center header fw-bold">טופס עדכון דירה</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className=' ps-4 pe-4 '>
+                <Modal.Body className='ps-4 pe-4' style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <Container className=' mt-0 color-body'>
                         <Form onSubmit={handleSubmit}>
                             <Row className="d-flex align-items-start">
-                                {/* First Form: Current Apartment */}
-                                {/* Second Form: Desired Apartment */}
+                                <Form.Group className="text-end mb-3" controlId="preferredSwapDate">
+                                    <Form.Label className='text-end fw-bold  h-date'>בחר מועד החלפה</Form.Label>
+
+                                    <div>
+                                        <Form.Check
+                                            type="radio"
+                                            label="ראש השנה"
+                                            name="preferredSwapDate"
+                                            value={1}
+                                            checked={formDataCurrent.preferredSwapDate === 1}
+                                            onChange={handleChangeCurrent}
+                                            className="mb-2"
+                                            required
+                                        />
+                                        <Form.Check
+                                            type="radio"
+                                            label="יום כיפור"
+                                            name="preferredSwapDate"
+                                            value={2}
+                                            checked={formDataCurrent.preferredSwapDate === 2}
+                                            onChange={handleChangeCurrent}
+                                            className="mb-2"
+                                        />
+                                        <Form.Check
+                                            type="radio"
+                                            label="שניהם"
+                                            name="preferredSwapDate"
+                                            value={3}
+                                            checked={formDataCurrent.preferredSwapDate === 3}
+                                            onChange={handleChangeCurrent}
+                                        />
+                                    </div>
+                                </Form.Group>
                                 <Col md={12}>
                                     <h4 className='text-end fw-bold'>פרטי דירה מבוקשת (אינך חייב למלא פרטי דירה מבוקשת)</h4>
                                     <Row className="d-flex align-items-start ">
-                                        {/* First Form: Current Apartment */}
-                                        {/* Second Form: Desired Apartment */}
-                                        {console.log("SAD", formDataCurrent.address)}
                                         <Col md={6}>
                                             <Form.Group className="text-end mb-3" controlId="area">
                                                 <Form.Label className='label'>אזור רצוי</Form.Label>
@@ -490,41 +483,27 @@ const ApartmentForm = (props) => {
                                                     required={isAnyFieldFilled()}
                                                 />
                                             </Form.Group>
-
-                                            <Form.Group className="text-end mb-3" controlId="preferredSwapDate">
-                                                <Form.Label className='label'>תאריך מועדף להחלפה</Form.Label>
-                                                <Form.Control
-                                                    autoComplete="off"
-                                                    className='text-end text-primary'
-                                                    style={{ color: 'blue' }}
-                                                    type="text"
-                                                    name="preferredSwapDate"
-                                                    value={formDataDesired.preferredSwapDate}
-                                                    onChange={handleChangeDesired}
-                                                    required={isAnyFieldFilled()}
-                                                />
-                                            </Form.Group>
                                         </Col>
                                     </Row>
                                 </Col>
                                 <Col md={12}>
                                     <h4 className='text-end mt-3 fw-bold'>פרטי הדירה הקיימת</h4>
                                     <Row className="d-flex align-items-start mt-2">
-                                        {/* First Form: Current Apartment */}
-                                        {/* Second Form: Desired Apartment */}
+
                                         <Col md={6}>
-                                            <Form.Group className="text-end mb-3" controlId="address">
-                                                <Form.Label className='label'>כתובת הדירה</Form.Label>
+                                            <Form.Group className="text-end mb-3" controlId="city">
+                                                <Form.Label className='label'>עיר</Form.Label>
                                                 <Form.Control
                                                     autoComplete="off"
                                                     type="text"
-                                                    className='text-end text-primary'
-                                                    placeholder="הזן כתובת"
-                                                    name="address"
-                                                    value={formDataCurrent.address}
+                                                    placeholder="הזן עיר"
+                                                    name="city"
+                                                    value={formDataCurrent.city}
                                                     onChange={handleChangeCurrent}
+                                                    className='text-end text-primary'
                                                     required
                                                 />
+                                                {cityError && <p className="text-danger text-end">{cityError}</p>}
                                             </Form.Group>
 
                                             <Form.Group className="text-end mb-3" controlId="rooms">
@@ -556,6 +535,20 @@ const ApartmentForm = (props) => {
                                             </Form.Group>
                                         </Col>
                                         <Col md={6}>
+                                            <Form.Group className="text-end mb-3" controlId="address">
+                                                <Form.Label className='label'>כתובת הדירה</Form.Label>
+                                                <Form.Control
+                                                    autoComplete="off"
+                                                    type="text"
+                                                    className='text-end text-primary'
+                                                    placeholder="הזן כתובת"
+                                                    name="address"
+                                                    value={formDataCurrent.address}
+                                                    onChange={handleChangeCurrent}
+                                                    required
+                                                />
+                                            </Form.Group>
+
                                             <Form.Group className="text-end mb-3" controlId="floor">
                                                 <Form.Label className='label'>קומה</Form.Label>
                                                 <Form.Control
@@ -570,20 +563,7 @@ const ApartmentForm = (props) => {
                                                 />
                                             </Form.Group>
 
-                                            <Form.Group className="text-end mb-3" controlId="city">
-                                                <Form.Label className='label'>עיר</Form.Label>
-                                                <Form.Control
-                                                    autoComplete="off"
-                                                    type="text"
-                                                    placeholder="הזן עיר"
-                                                    name="city"
-                                                    value={formDataCurrent.city}
-                                                    onChange={handleChangeCurrent}
-                                                    className='text-end text-primary'
-                                                    required
-                                                />
-                                                {cityError && <p className="text-danger text-end">{cityError}</p>}
-                                            </Form.Group>
+
 
                                             <Form.Group className="text-end mb-3" controlId="mattresses">
                                                 <Form.Label className='label'>מזרונים</Form.Label>
@@ -631,11 +611,10 @@ const ApartmentForm = (props) => {
                         </Form>
                     </Container>
 
-                    {console.log(desireApartment)
-                    }                </Modal.Body>
+                </Modal.Body>
                 <Modal.Footer style={{ borderTop: 'none' }}>
-                    <Button className='color-weakblack custom-hover' style={{ border: 'none' }} onClick={deleteDesirApatment} disabled={!desireApartment?.preferredSwapDate} >
-                        מחק שירה מבוקשת
+                    <Button className='color-weakblack custom-hover' style={{ border: 'none' }} onClick={deleteDesirApatment} disabled={!desireApartment?.numberOfRooms} >
+                        מחק דירה מבוקשת
                     </Button>
                     <Button className='color-weakblack custom-hover' style={{ border: 'none' }} onClick={deletecurrentApartment} disabled={desireApartment?.numberOfBeds || !Apartment?.address} >
                         מחק דירה שברשותי

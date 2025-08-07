@@ -1,10 +1,10 @@
 /* תצוגת הקומפוננטה הכללית */
 .cards-view-container {
   display: flex;
+  align-items: flex-start; /* חשוב כדי שהסינון לא ימתח את הקלפים */
   padding: 5rem;
   gap: 2rem;
   direction: rtl;
-  flex-wrap: wrap;
   font-family: 'Arial', sans-serif;
   background-color: #f8f9fa;
 }
@@ -21,13 +21,14 @@
   height: fit-content;
 }
 
-/* רשימת הקלפים */
 .cards-wrapper {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 3.5rem;
+  align-items: stretch; /* 💡 שים לב שזה כבר ברירת מחדל, אבל תוכל להוסיף */
 }
+
 
 /* כל קלף */
 .card-box {
@@ -60,6 +61,20 @@
 
 .card-box strong {
   color: #2b2d42;
+}
+.card-box.no-wanted-apartment {
+  border: 2px dashed #9A14B0;
+  background-color: #f3f0fa;
+}
+
+.card-box .no-wanted-label {
+  background-color: #fffdff;
+  color: white;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  margin: 1rem 0;
 }
 
 .card-box a {

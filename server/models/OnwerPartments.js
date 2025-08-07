@@ -6,7 +6,7 @@ const Apartment = sequelize.define('Apartment', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      
+
       model: 'users',
       key: 'id',
     },
@@ -17,29 +17,33 @@ const Apartment = sequelize.define('Apartment', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  beds: { 
+  beds: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  mattresses: { 
+  mattresses: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  floor: { 
+  floor: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  city: { 
+  city: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  address: { 
+  address: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  notes: { 
+  notes: {
     type: DataTypes.TEXT,
     allowNull: true,
+  },
+  preferredSwapDate: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
 }, {
   tableName: 'apartments',
@@ -53,7 +57,7 @@ Apartment.addHook('afterUpdate', async (apartment, options) => {
 
   if (user) {
     // הגדלת מספר השינויים
-    user.changeCount += 1; 
+    user.changeCount += 1;
 
     try {
       // שמירה של המודל לאחר הגדלת ה-`changeCount`

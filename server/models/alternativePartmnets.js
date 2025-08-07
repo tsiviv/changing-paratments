@@ -25,13 +25,10 @@ const WantedApartment = sequelize.define('WantedApartment', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  preferredSwapDate: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  
 }, {
   tableName: 'wanted_apartments',
-  timestamps: true, // מאפשר עדכון אוטומטי של תאריך יצירה ועריכה
+  timestamps: true, 
 });
 
 WantedApartment.addHook('afterUpdate', async (apartment, options) => {
@@ -42,7 +39,7 @@ WantedApartment.addHook('afterUpdate', async (apartment, options) => {
 
   if (user) {
     // הגדלת מספר השינויים
-    user.changeCount += 1; 
+    user.changeCount += 1;
 
     try {
       // שמירה של המודל לאחר הגדלת ה-`changeCount`
@@ -54,4 +51,4 @@ WantedApartment.addHook('afterUpdate', async (apartment, options) => {
   }
 });
 
-module.exports =WantedApartment 
+module.exports = WantedApartment 

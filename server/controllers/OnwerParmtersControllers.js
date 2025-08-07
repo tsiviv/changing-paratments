@@ -2,14 +2,14 @@ const WantedApartment = require('../models/OnwerPartments');
 // יצירת דירה חדשה
 exports.createWantedApartment = async (req, res) => {
   const {
-    userId, rooms, beds, mattresses, floor, city, address, notes
+    userId, rooms, beds, mattresses, floor, city, address, notes,preferredSwapDate
   } = req.body;
 
   console.log('Request Body:', req.body);
 
   try {
     const apartment = await WantedApartment.create({
-      userId, rooms, beds, mattresses, floor, city, address, notes
+      userId, rooms, beds, mattresses, floor, city, address, notes,preferredSwapDate
     });
     res.status(201).json(apartment); // שליחת הדירה שנוצרה ישירות
   } catch (error) {
@@ -49,8 +49,9 @@ exports.getWantedApartmentById = async (req, res) => {
 // עדכון דירה מבוקשת לפי ID
 exports.updateWantedApartment = async (req, res) => {
   const { id } = req.params;
+  console.log(req.body)
   const {
-    rooms, beds, mattresses, floor, city, address, notes
+    rooms, beds, mattresses, floor, city, address, notes,preferredSwapDate
   } = req.body;
 
   try {
@@ -64,6 +65,7 @@ exports.updateWantedApartment = async (req, res) => {
       apartment.city = city ?? apartment.city;
       apartment.address = address ?? apartment.address;
       apartment.notes = notes ?? apartment.notes;
+      apartment.preferredSwapDate = preferredSwapDate ?? apartment.preferredSwapDate;
 
       await apartment.save();
 
