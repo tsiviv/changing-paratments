@@ -12,9 +12,9 @@ const HeadPage = () => {
     cities: [],
     rooms: "הכל",
     beds: "הכל",
-    withWanted: true,
-    withoutWanted: true,
-    swapDates: [1, 2],
+    withWanted: false,
+    withoutWanted: false,
+    swapDates: [],
   });
 
   const baseURL = config.baseUrl;
