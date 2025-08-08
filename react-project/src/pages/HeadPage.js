@@ -6,15 +6,34 @@ import config from '../config';
 
 const HeadPage = () => {
   const [users, setUsers] = useState([]);
-  const [page, setPage] = useState(1); // עמוד נוכחי
-  const [totalPages, setTotalPages] = useState(1); // מספר עמודים כולל
-  const baseURL = config.baseUrl;
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({
+    cities: [],
+    rooms: "הכל",
+    beds: "הכל",
+    withWanted: true,
+    withoutWanted: true,
+    swapDates: [1, 2],
+  });
 
+  const baseURL = config.baseUrl;
   const ModalShow = useSelector((state) => state.user.ModalShow);
 
-  const fetchUsers = async (page) => {
+  const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${baseURL}users?page=${page}&limit=2`);
+      const res = await axios.get(`${baseURL}users`, {
+        params: {
+          page,
+          limit: 50,
+          cities: filters.cities.join(','),
+          rooms: filters.rooms,
+          beds: filters.beds,
+          withWanted: filters.withWanted,
+          withoutWanted: filters.withoutWanted,
+          swapDates: filters.swapDates.join(','),
+        },
+      });
       setUsers(res.data.data);
       setTotalPages(res.data.totalPages);
     } catch (err) {
@@ -23,8 +42,8 @@ const HeadPage = () => {
   };
 
   useEffect(() => {
-    fetchUsers(page);
-  }, [page, ModalShow]);
+    fetchUsers();
+  }, [page, ModalShow, filters]);
 
   const nextPage = () => {
     if (page < totalPages) setPage((prev) => prev + 1);
@@ -36,11 +55,11 @@ const HeadPage = () => {
 
   return (
     <div>
-      <FilterableTable users={users} />
+      <FilterableTable users={users} filters={filters} setFilters={setFilters} />
+      <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
       <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
-        <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
         <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
-        <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
+        <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
       </div>
     </div>
   );

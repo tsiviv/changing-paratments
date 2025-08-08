@@ -257,46 +257,81 @@ exports.getUserById = async (req, res) => {
         res.status(500).json({ status: 'error', message: 'Server error during user retrieval', details: error.message });
     }
 }; exports.getAllUsers = async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1; // ברירת מחדל עמוד 1
-        const limit = parseInt(req.query.limit) || 50; // ברירת מחדל 50
-        const offset = (page - 1) * limit;
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = (page - 1) * limit;
 
-        const { count, rows } = await User.findAndCountAll({
-            where: {}, // תנאים אם תרצה
-            offset,
-            limit,
-            include: [
-                {
-                    model: OnwerPartments,
-                    as: 'Apartments',
-                    required: true // רק משתמשים עם דירה
-                },
-                {
-                    model: alternativePartmnets,
-                    as: 'WantedApartments',
-                }
-            ],
-            order: [['updatedAt', 'DESC']] // לדוגמה: מהמעודכן לאחרון
-        });
+    const cities = req.query.cities ? req.query.cities.split(',') : [];
+    const minRooms = parseInt(req.query.minRooms);
+    const minBeds = parseInt(req.query.minBeds);
+    const hasWanted = req.query.hasWanted === 'true';
+    const noWanted = req.query.noWanted === 'true';
+    const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-        const totalPages = Math.ceil(count / limit);
-
-        res.status(200).json({
-            data: rows,
-            total: count,
-            page,
-            totalPages,
-        });
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({
-            status: 'error',
-            message: 'Server error during users retrieval',
-            details: error.message
-        });
+    const whereApartment = {};
+    if (cities.length && !cities.includes('הכל')) {
+      whereApartment.city = { [Op.in]: cities };
     }
+    if (!isNaN(minRooms)) {
+      whereApartment.rooms = { [Op.gte]: minRooms };
+    }
+    if (!isNaN(minBeds)) {
+      whereApartment.beds = { [Op.gte]: minBeds };
+    }
+    if (swapDates.length && !swapDates.includes(3)) {
+      whereApartment.preferredSwapDate = { [Op.in]: swapDates };
+    }
+
+    const whereUser = {}; // אם תצטרך בעתיד להוסיף פילטר על משתמש
+
+    const include = [
+      {
+        model: OnwerPartments,
+        as: 'Apartments',
+        required: true,
+        where: whereApartment,
+      }
+    ];
+
+    // תנאי לדירות מבוקשות
+    if (hasWanted || noWanted) {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false,
+      });
+    }
+
+    const allUsers = await User.findAndCountAll({
+      where: whereUser,
+      include,
+      distinct: true,
+      offset,
+      limit,
+      order: [['updatedAt', 'DESC']],
+    });
+
+    const filteredData = allUsers.rows.filter(user => {
+      const hasWantedApartment = user.WantedApartments?.length > 0;
+      return (
+        (hasWanted && hasWantedApartment) ||
+        (noWanted && !hasWantedApartment)
+      );
+    });
+
+    res.status(200).json({
+      data: filteredData,
+      total: allUsers.count,
+      totalPages: Math.ceil(allUsers.count / limit),
+    });
+
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ status: 'error', message: 'Server error during users retrieval', details: error.message });
+  }
 };
+
 
 exports.ForgotPassword = async (req, res) => {
 
