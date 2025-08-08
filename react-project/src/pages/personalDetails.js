@@ -3,6 +3,7 @@ import { Form, Button, Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalShowDetails } from '../features/Users';
+import config from '../config';
 
 function PersonallDetails(props) {
   const user = useSelector((state) => state.user.user);
@@ -14,6 +15,7 @@ function PersonallDetails(props) {
   const [isFormValid, setIsFormValid] = useState(true);
   const token = localStorage.getItem('token');
   const dispatch = useDispatch();
+    const baseURL=config.baseUrl
 
   const usernameRef = useRef(null);
   const emailRef = useRef(null);

@@ -4,9 +4,12 @@ import CurrentApartment from './cuurentApartment';
 import CurrentDesireApartment from './currentDesireApartment';
 import CurrentpersonallDetails from './currentpesonallDetails';
 import '../styles/personallArea.css'
+import config from '../config';
+
 const UserProfile = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated); // השתמש ברידוסר הנכון
     const user = useSelector((state) => state.user.user); // השתמש ברידוסר הנכון
+    const baseURL=config.baseUrl
 
 
     // פונקציה לפענוח טוקן JWT

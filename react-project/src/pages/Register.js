@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../features/Users";
+import config from '../config';
 
 function Register() {
     const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +16,7 @@ function Register() {
     const [touched, setTouched] = useState({});
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const baseURL=config.baseUrl
 
     // ולידציה של שדות הטופס
     const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);

@@ -17,6 +17,7 @@ import { setdesireApartment } from '../features/desirePartment';
 import { setApartment } from '../features/partment';
 import SendMessage from './ModalMessage';
 import '../styles/navbar.css';
+import config from '../config';
 
 function NavbarHead() {
     const ModalShowDetails = useSelector((state) => state.user.ModalShowDetails); // השתמש ברידוסר הנכון
@@ -26,6 +27,7 @@ function NavbarHead() {
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const token = localStorage.getItem('token');
+    const baseURL=config.baseUrl
 
     const addOrUpdate = () => {
         isAuthenticated ? dispatch(setModalShow()) : navigate('./Login');

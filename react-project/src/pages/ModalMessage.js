@@ -3,7 +3,7 @@ import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
-
+import config from '../config';
 function SendMessage({ show, setShow }) {
     const [message, setMessage] = useState("");
     const [username, setUsername] = useState("");
@@ -12,6 +12,7 @@ function SendMessage({ show, setShow }) {
     const [successMessage, setSuccessMessage] = useState("");
     const [errors, setErrors] = useState({ username: "", message: "" });
     const [isLoading, setIsLoading] = useState(false);
+    const baseURL=config.baseUrl
 
     const handleShow = () => setShow(true);
     const handleClose = () => {

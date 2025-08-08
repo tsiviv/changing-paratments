@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import config from '../config';
 
 const ResetPassword = () => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const resetCode = params.get('code');  // קבלת הקוד מתוך ה-URL
+    const baseURL=config.baseUrl
 
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');

@@ -8,7 +8,6 @@ import config from '../config';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import AlertComponent from './Alert';
-import config from '../config';
 
 const ApartmentForm = (props) => {
     const navigate = useNavigate()
