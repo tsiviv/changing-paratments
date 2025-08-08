@@ -14,7 +14,7 @@ const HeadPage = () => {
 
   const fetchUsers = async (page) => {
     try {
-      const res = await axios.get(`${baseURL}users?page=${page}&limit=50`);
+      const res = await axios.get(`${baseURL}users?page=${page}&limit=2`);
       setUsers(res.data.data);
       setTotalPages(res.data.totalPages);
     } catch (err) {
