@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FilterableCards from './FilterableCards';
+import FilterableTable from './Tables';
 import { useSelector } from 'react-redux';
 import config from '../config';
 
@@ -36,7 +36,7 @@ const HeadPage = () => {
 
   return (
     <div>
-      <FilterableCards users={users} />
+      <FilterableTable users={users} />
       <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
         <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
         <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
