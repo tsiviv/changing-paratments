@@ -203,14 +203,14 @@ function Register() {
                         הרשמה
                     </button>
 
-                    {/* <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
+                    <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
                         <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={handleGoogleFailure}
                             useOneTap
                             theme="outline"
                         />
-                    </GoogleOAuthProvider> */}
+                    </GoogleOAuthProvider>
 
                     {message && <p style={{ color: "red", textAlign: "center" }}>{message}</p>}
 
