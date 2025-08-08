@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
-import { setModalShow } from '../features/Users';
 
 function SendMessage({ show, setShow }) {
     const [message, setMessage] = useState("");

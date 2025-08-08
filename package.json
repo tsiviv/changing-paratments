@@ -4,6 +4,6 @@
   "private": true,
   "scripts": {
     "build": "cd react-project && npm install && npm run build",
-    "start": "cd server && npm install && npm start"
+    "start": "cd server && npm install && node api.js"
   }
 }

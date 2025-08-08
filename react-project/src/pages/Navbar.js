@@ -1,6 +1,5 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import '../styles/navbar.css';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux'; // שימוש ב-hook כדי לגשת ל-state הגלובלי

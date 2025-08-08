@@ -1,6 +1,6 @@
 // נשתמש בגרסה חדשה בה תצוגת הכרטיסים תחליף את הטבלה המסורתית
-import React, { useEffect, useState } from 'react';
-import { Button, Row, Col, Form } from 'react-bootstrap';
+import  { useEffect, useState } from 'react';
+import { Button,  Form } from 'react-bootstrap';
 import '../styles/table.css';
 import MultiSelectDropdown from './MultOptions';
 import config from '../config';

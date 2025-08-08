@@ -8,7 +8,6 @@ const UserProfile = () => {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated); // השתמש ברידוסר הנכון
     const user = useSelector((state) => state.user.user); // השתמש ברידוסר הנכון
 
-    const dispatch = useDispatch();
 
     // פונקציה לפענוח טוקן JWT
     return (

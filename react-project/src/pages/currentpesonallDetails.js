@@ -1,10 +1,8 @@
-import React from 'react';
 import { useSelector } from 'react-redux'; // שימוש ב-hook כדי לגשת ל-state הגלובלי
 import '../styles/ModalApartments.css'; // ייבוא קובץ ה-CSS
-import Button from 'react-bootstrap/Button';
 import PersonallDetails from './personalDetails';
 import { useDispatch } from 'react-redux';
-import { setModalShow, setModalShowDetails } from '../features/Users';
+import {  setModalShowDetails } from '../features/Users';
 
 const CurrentpersonallDetails = () => {
     const user = useSelector((state) => state.user.user); // השתמש ברידוסר הנכון
