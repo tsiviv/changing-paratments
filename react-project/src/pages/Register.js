@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../features/Users";
 import config from '../config';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'; // הייבוא החדש
 
 function Register() {
     const [showPassword, setShowPassword] = useState(false);
