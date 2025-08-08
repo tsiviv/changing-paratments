@@ -258,25 +258,43 @@ exports.getUserById = async (req, res) => {
     }
 }; exports.getAllUsers = async (req, res) => {
     try {
-        // מביאים רק משתמשים שיש להם דירות ב-Apartments
-        const users = await User.findAll({
+        const page = parseInt(req.query.page) || 1; // ברירת מחדל עמוד 1
+        const limit = parseInt(req.query.limit) || 50; // ברירת מחדל 50
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await User.findAndCountAll({
+            where: {}, // תנאים אם תרצה
+            offset,
+            limit,
             include: [
                 {
                     model: OnwerPartments,
                     as: 'Apartments',
-                    required: true // רק משתמשים שיש להם דירות
+                    required: true // רק משתמשים עם דירה
                 },
                 {
                     model: alternativePartmnets,
                     as: 'WantedApartments',
                 }
-            ]
+            ],
+            order: [['updatedAt', 'DESC']] // לדוגמה: מהמעודכן לאחרון
         });
 
-        res.status(200).json(users);
+        const totalPages = Math.ceil(count / limit);
+
+        res.status(200).json({
+            data: rows,
+            total: count,
+            page,
+            totalPages,
+        });
     } catch (error) {
         console.error('Error fetching users:', error);
-        res.status(500).json({ status: 'error', message: 'Server error during users retrieval', details: error.message });
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error during users retrieval',
+            details: error.message
+        });
     }
 };
 
