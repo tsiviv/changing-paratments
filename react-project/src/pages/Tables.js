@@ -59,7 +59,7 @@ function FilterableCards({ users }) {
     }
 
     const filterUsers = (users) => {
-        return users.filter(user => {
+        return users?.filter(user => {
             const cityMatch = selectedCities.length === 0 || selectedCities.includes("הכל") || selectedCities.includes(user.city);
             const roomMatch = selectedRooms === "הכל" || user.rooms >= selectedRooms;
             const bedMatch = selectedBeds === "הכל" || user.beds >= selectedBeds;
@@ -84,7 +84,7 @@ function FilterableCards({ users }) {
             return;
         }
 
-        const formattedUsers = users.map((e) => {
+        const formattedUsers = users?.map((e) => {
             const hasWantedApartment = e.WantedApartments && e.WantedApartments.length > 0;
 
             return {
