@@ -3,6 +3,7 @@ import axios from 'axios';
 import FilterableTable from './Tables';
 import { useSelector } from 'react-redux';
 import config from '../config';
+import DonationBox from './DonationBox';
 
 const HeadPage = () => {
   const [users, setUsers] = useState([]);
@@ -66,6 +67,7 @@ const HeadPage = () => {
         <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
         <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
       </div>
+       <DonationBox />
     </div>
   );
 };
