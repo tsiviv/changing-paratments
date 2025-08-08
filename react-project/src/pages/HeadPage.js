@@ -25,7 +25,7 @@ const HeadPage = () => {
       const res = await axios.get(`${baseURL}users`, {
         params: {
           page,
-          limit: 50,
+          limit: 2,
           cities: filters.cities.join(','),
           minRooms: filters.rooms === "הכל" ? undefined : filters.rooms,
           minBeds: filters.beds === "הכל" ? undefined : filters.beds,

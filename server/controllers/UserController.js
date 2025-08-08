@@ -24,7 +24,6 @@ async function verifyToken(idToken) {
     console.log(TokenId)
 
     try {
-        // אימות ה-idToken עם גוגל
         const user = await verifyToken(TokenId);
         console.log(user)
         const email = user.email; // המייל של המשתמש שמתקבל מהטוקן
