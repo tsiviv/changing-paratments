@@ -25,9 +25,9 @@ function FilterableCards({ users, filters, setFilters }) {
             cities: [],
             rooms: "הכל",
             beds: "הכל",
-            withWanted: true,
-            withoutWanted: true,
-            swapDates: [1, 2],
+            withWanted: false,
+            withoutWanted: false,
+            swapDates: [],
         });
     };
 
