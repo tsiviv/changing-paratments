@@ -62,7 +62,7 @@ function NavbarHead() {
             }
             const id = parseJwt(token).id;
             try {
-                const response = await axios.get(`http://localhost:4000/api/users/${id}`, {
+                const response = await axios.get(`${baseURL}users/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

@@ -59,7 +59,7 @@ function PersonallDetails(props) {
     const id = parseJwt(token)?.id;
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/users/${id}`,
+        `${baseURL}users/${id}`,
         dataUser,
         {
           headers: {

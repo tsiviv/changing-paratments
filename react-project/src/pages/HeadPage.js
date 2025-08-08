@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FilterableTable from './Tables';
 import { useSelector } from 'react-redux';
+import config from '../config';
 const HeadPage = () => {
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:4000/api',
+    baseURL: config.baseUrl,
     withCredentials: true,
   });
   const ModalShow = useSelector((state) => state.user.ModalShow); // השתמש ברידוסר הנכון

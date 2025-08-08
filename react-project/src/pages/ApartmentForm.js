@@ -8,6 +8,8 @@ import config from '../config';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import AlertComponent from './Alert';
+import config from '../config';
+
 const ApartmentForm = (props) => {
     const navigate = useNavigate()
     const token = localStorage.getItem('token');
@@ -29,7 +31,7 @@ const ApartmentForm = (props) => {
         preferredSwapDate: Apartment?.preferredSwapDate,
         userId: parseJwt(token)?.id
     });
-
+    const baseURL=config.baseUrl
 
 
     const [formDataDesired, setFormDataDesired] = useState({
@@ -128,7 +130,7 @@ const ApartmentForm = (props) => {
 
     const deleteDesirApatment = async () => {
         try {
-            const responseCurrent = await axios.delete(`http://localhost:4000/api/alternativePartmnetsRoutes/${desireApartment.id}`, {
+            const responseCurrent = await axios.delete(`${baseURL}alternativePartmnetsRoutes/${desireApartment.id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -163,7 +165,7 @@ const ApartmentForm = (props) => {
     }
     const deletecurrentApartment = async () => {
         try {
-            const responseCurrent = await axios.delete(`http://localhost:4000/api/OnwerParmters/${Apartment.id}`, formDataCurrent, {
+            const responseCurrent = await axios.delete(`${baseURL}OnwerParmters/${Apartment.id}`, formDataCurrent, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -202,7 +204,7 @@ const ApartmentForm = (props) => {
     }
     const handleChangeCurrent = (e) => {
         const { name, value } = e.target;
-        console.log(name, value,"S")
+        console.log(name, value, "S")
         if (name === "city") {
             setFormDataCurrent({ ...formDataCurrent, [name]: value });
 
@@ -234,7 +236,7 @@ const ApartmentForm = (props) => {
 
     const updateDesirePartemnt = async () => {
         try {
-            const responseCurrent = await axios.put(`http://localhost:4000/api/alternativePartmnetsRoutes/${desireApartment.id}`, formDataDesired, {
+            const responseCurrent = await axios.put(`${baseURL}alternativePartmnetsRoutes/${desireApartment.id}`, formDataDesired, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -266,7 +268,7 @@ const ApartmentForm = (props) => {
     const AddDesirePartemnt = async () => {
         console.log(formDataDesired)
         try {
-            const responseCurrent = await axios.post(`http://localhost:4000/api/alternativePartmnetsRoutes`, formDataDesired, {
+            const responseCurrent = await axios.post(`${baseURL}alternativePartmnetsRoutes`, formDataDesired, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -298,7 +300,7 @@ const ApartmentForm = (props) => {
     const updateCurrentPartemnt = async () => {
         console.log(formDataCurrent)
         try {
-            const responseCurrent = await axios.put(`http://localhost:4000/api/OnwerParmters/${Apartment.id}`, formDataCurrent, {
+            const responseCurrent = await axios.put(`${baseURL}OnwerParmters/${Apartment.id}`, formDataCurrent, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -337,7 +339,7 @@ const ApartmentForm = (props) => {
     const AddcurrentPartemnt = async () => {
         console.log(formDataCurrent)
         try {
-            const responseCurrent = await axios.post(`http://localhost:4000/api/OnwerParmters`, formDataCurrent, {
+            const responseCurrent = await axios.post(`${baseURL}OnwerParmters`, formDataCurrent, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

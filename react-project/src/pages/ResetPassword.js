@@ -16,7 +16,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:4000/api/users/reset-password', {
+      const response = await axios.post(`${baseURL}users/reset-password`, {
         code: resetCode,
         newPassword,
       });

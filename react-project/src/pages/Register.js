@@ -54,7 +54,7 @@ function Register() {
         console.log("re")
         const user = { username: name, email, password };
         try {
-            const response = await axios.post('http://localhost:4000/api/users/register', user);
+            const response = await axios.post(`${baseURL}register`, user);
             console.log(response)
             if (response?.status == 201) {
                 navigate('../Login');
@@ -76,7 +76,7 @@ function Register() {
     const handleGoogleSuccess = async (response) => {
         try {
             const TokenId = response.credential;
-            const serverResponse = await axios.post('http://localhost:4000/api/users/google-register', { TokenId });
+            const serverResponse = await axios.post(`${baseURL}users/google-register`, { TokenId });
             if (serverResponse.data?.token) {
                 localStorage.setItem("token", serverResponse.data.token);
                 dispatch(loginSuccess());

@@ -61,7 +61,7 @@ function SendMessage({ show, setShow }) {
         setErrors({});
         setIsLoading(true);
         try {
-            const response = await axios.post("http://localhost:4000/api/MessageRoutes", { username, message, rating });
+            const response = await axios.post(`${baseURL}MessageRoutes`, { username, message, rating });
             if (response.status === 201) {
                 setSuccessMessage("הודעתך נשלחה בהצלחה!");
                 setMessage("");

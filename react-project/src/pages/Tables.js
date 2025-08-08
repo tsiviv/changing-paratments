@@ -1,4 +1,3 @@
-// נשתמש בגרסה חדשה בה תצוגת הכרטיסים תחליף את הטבלה המסורתית
 import  { useEffect, useState } from 'react';
 import { Button,  Form } from 'react-bootstrap';
 import '../styles/table.css';
