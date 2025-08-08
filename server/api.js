@@ -12,6 +12,8 @@ const app = express();
 const session = require('express-session');
 const multer = require('multer');
 
+app.use(express.static(path.join(__dirname, '../react-project/build')));
+
 // הגדרת פורמט JSON בגוף הבקשות
 app.use(express.json());
 app.use(cors({
@@ -65,6 +67,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/OnwerParmters', OnwerParmtersRoutes);
 app.use('/api/alternativePartmnetsRoutes', alternativePartmnetsRoutes);
 app.use('/api/MessageRoutes', MessageRoutes);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../react-project/build', 'index.html'));
+});
 
 // הגדרת פורט של השרת
 const PORT = process.env.PORT || 4000;
