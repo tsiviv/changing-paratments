@@ -18,7 +18,6 @@ function Register() {
     const navigate = useNavigate();
     const baseURL=config.baseUrl
 
-    // ולידציה של שדות הטופס
     const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
     const validatePassword = (password) => password.length >= 6;
     const validateName = (name) => name.length > 2;
@@ -56,7 +55,7 @@ function Register() {
         console.log("re")
         const user = { username: name, email, password };
         try {
-            const response = await axios.post(`${baseURL}register`, user);
+            const response = await axios.post(`${baseURL}users/register`, user);
             console.log(response)
             if (response?.status == 201) {
                 navigate('../Login');
