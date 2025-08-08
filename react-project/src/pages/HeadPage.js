@@ -27,10 +27,10 @@ const HeadPage = () => {
           page,
           limit: 50,
           cities: filters.cities.join(','),
-          rooms: filters.rooms,
-          beds: filters.beds,
-          withWanted: filters.withWanted,
-          withoutWanted: filters.withoutWanted,
+          minRooms: filters.rooms === "הכל" ? undefined : filters.rooms,
+          minBeds: filters.beds === "הכל" ? undefined : filters.beds,
+          hasWanted: filters.withWanted,
+          noWanted: filters.withoutWanted,
           swapDates: filters.swapDates.join(','),
         },
       });
@@ -40,6 +40,11 @@ const HeadPage = () => {
       console.error("Failed to fetch users:", err);
     }
   };
+
+  useEffect(() => {
+    // אפס עמוד ל-1 כשמשתנים פילטרים
+    setPage(1);
+  }, [filters]);
 
   useEffect(() => {
     fetchUsers();
@@ -56,10 +61,10 @@ const HeadPage = () => {
   return (
     <div>
       <FilterableTable users={users} filters={filters} setFilters={setFilters} />
-      <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
       <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
-        <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
         <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
+        <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
+        <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
       </div>
     </div>
   );

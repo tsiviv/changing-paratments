@@ -258,10 +258,12 @@ exports.getUserById = async (req, res) => {
     }
 }; exports.getAllUsers = async (req, res) => {
   try {
+    // פאג'ינציה
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 50;
     const offset = (page - 1) * limit;
 
+    // פילטרים מהקליינט
     const cities = req.query.cities ? req.query.cities.split(',') : [];
     const minRooms = parseInt(req.query.minRooms);
     const minBeds = parseInt(req.query.minBeds);
@@ -269,6 +271,7 @@ exports.getUserById = async (req, res) => {
     const noWanted = req.query.noWanted === 'true';
     const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
+    // WHERE על הדירה
     const whereApartment = {};
     if (cities.length && !cities.includes('הכל')) {
       whereApartment.city = { [Op.in]: cities };
@@ -283,19 +286,36 @@ exports.getUserById = async (req, res) => {
       whereApartment.preferredSwapDate = { [Op.in]: swapDates };
     }
 
-    const whereUser = {}; // אם תצטרך בעתיד להוסיף פילטר על משתמש
+    const whereUser = {}; // במידה ותרצה להוסיף פילטרים על המשתמשים
 
+    // includes ל-Sequelize
     const include = [
       {
         model: OnwerPartments,
         as: 'Apartments',
-        required: true,
+        required: true, // רק מי שיש לו דירה
         where: whereApartment,
       }
     ];
 
-    // תנאי לדירות מבוקשות
-    if (hasWanted || noWanted) {
+    // תנאים לדירות מבוקשות
+    if (hasWanted && !noWanted) {
+      // רק מי שיש לו דירה מבוקשת
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: true,
+      });
+    } else if (!hasWanted && noWanted) {
+      // רק מי שאין לו דירה מבוקשת
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false,
+      });
+      whereUser['$WantedApartments.id$'] = null;
+    } else {
+      // גם וגם - נחזיר את כל המשתמשים
       include.push({
         model: alternativePartmnets,
         as: 'WantedApartments',
@@ -303,6 +323,7 @@ exports.getUserById = async (req, res) => {
       });
     }
 
+    // הבאת הנתונים מה-DB
     const allUsers = await User.findAndCountAll({
       where: whereUser,
       include,
@@ -312,25 +333,22 @@ exports.getUserById = async (req, res) => {
       order: [['updatedAt', 'DESC']],
     });
 
-    const filteredData = allUsers.rows.filter(user => {
-      const hasWantedApartment = user.WantedApartments?.length > 0;
-      return (
-        (hasWanted && hasWantedApartment) ||
-        (noWanted && !hasWantedApartment)
-      );
-    });
-
     res.status(200).json({
-      data: filteredData,
+      data: allUsers.rows,
       total: allUsers.count,
       totalPages: Math.ceil(allUsers.count / limit),
     });
 
   } catch (error) {
     console.error('Error fetching users:', error);
-    res.status(500).json({ status: 'error', message: 'Server error during users retrieval', details: error.message });
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error during users retrieval',
+      details: error.message
+    });
   }
 };
+
 
 
 exports.ForgotPassword = async (req, res) => {
