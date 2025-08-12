@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import MultiSelectDropdown from './MultOptions';
 import config from '../config';

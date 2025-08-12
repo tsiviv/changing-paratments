@@ -61,9 +61,7 @@ function Login() {
 
     const register = () => navigate("/register", { replace: false });
 
-    // פונקציה לשחזור סיסמה
     const forgotPassword = async () => {
-        // בדיקת תקינות המייל
         if (!emailRegex.test(email)) {
             setMessage("מייל לא תקין. נא להזין מייל תקני.");
             return;

@@ -497,7 +497,7 @@ const ApartmentForm = (props) => {
                                                 <Form.Control
                                                     autoComplete="off"
                                                     type="text"
-                                                    placeholder="הזן עיר"
+                                                    placeholder="הז1ן עיר"
                                                     name="city"
                                                     value={formDataCurrent.city}
                                                     onChange={handleChangeCurrent}

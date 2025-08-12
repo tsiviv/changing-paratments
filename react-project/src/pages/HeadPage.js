@@ -9,6 +9,7 @@ const HeadPage = () => {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     cities: [],
     rooms: "הכל",
@@ -23,6 +24,7 @@ const HeadPage = () => {
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(`${baseURL}users`, {
         params: {
           page,
@@ -39,11 +41,12 @@ const HeadPage = () => {
       setTotalPages(res.data.totalPages);
     } catch (err) {
       console.error("Failed to fetch users:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    // אפס עמוד ל-1 כשמשתנים פילטרים
     setPage(1);
   }, [filters]);
 
@@ -61,13 +64,22 @@ const HeadPage = () => {
 
   return (
     <div>
-      <FilterableTable users={users} filters={filters} setFilters={setFilters} />
-      <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
-        <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
-        <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
-        <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
-      </div>
-       <DonationBox />
+      <FilterableTable users={loading ? [] : users} filters={filters} setFilters={setFilters} />
+
+      {loading ? (
+        <div className="loader-overlay">
+          <div className="loader"></div>
+        </div>
+      ) : (
+        <>
+          <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
+            <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
+            <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
+            <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
+          </div>
+          <DonationBox />
+        </>
+      )}
     </div>
   );
 };
