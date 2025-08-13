@@ -19,7 +19,7 @@ exports.createWantedApartment = async (req, res) => {
 };
  exports.getAllApartmentCities = async(req, res)=> {
   try {
-    const apartments = await Apartment.findAll({
+    const apartments = await WantedApartment.findAll({
       attributes: ['city'], // רק השדה city
       raw: true,            // יחזיר אובייקטים פשוטים בלי עטיפות של Sequelize
     });
