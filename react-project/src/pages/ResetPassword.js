@@ -3,16 +3,19 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import config from '../config';
 import Box from "@mui/material/Box";
+import { useNavigate } from 'react-router-dom';
 
 const ResetPassword = () => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
-  const resetCode = params.get('code');  // קבלת הקוד מתוך ה-URL
+  const resetCode = params.get('code');
   const baseURL = config.baseUrl;
+  const navigate = useNavigate();
 
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +26,8 @@ const ResetPassword = () => {
         newPassword,
       });
       setMessage(response.data.message);
+      await sleep(2000);
+      navigate('../login');
     } catch (error) {
       setMessage(error.response?.data?.message || 'אירעה שגיאה');
     } finally {

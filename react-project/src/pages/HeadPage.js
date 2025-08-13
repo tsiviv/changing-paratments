@@ -63,7 +63,7 @@ const HeadPage = () => {
 
   useEffect(() => {
     getAllApartmentCities()
-  }, [])
+  }, [ModalShow])
 
   const nextPage = () => {
     if (page < totalPages) setPage((prev) => prev + 1);
