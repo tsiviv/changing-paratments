@@ -13,6 +13,7 @@ const session = require('express-session');
 const multer = require('multer');
 
 app.use(express.static(path.join(__dirname, '../react-project/build')));
+app.use(express.static(path.join(__dirname, '../react-project/public')));
 
 // הגדרת פורמט JSON בגוף הבקשות
 app.use(express.json());
