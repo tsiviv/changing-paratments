@@ -383,17 +383,11 @@ exports.ForgotPassword = async (req, res) => {
             return res.status(400).json({ message: 'שגיאה משתמש לא נמצא' });
         }
 
-        // יצירת קוד אקראי לשחזור סיסמה
         const resetCode = Math.floor(10000 + Math.random() * 90000).toString();
 
-        // שמירה זמנית של הקוד בזיכרון (session)
         req.session.resetCode = resetCode;
         req.session.resetCodeTime = Date.now();
 
-
-        // יצירת קישור לשחזור סיסמה
-
-        // שליחת המייל עם הלינק
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -407,11 +401,11 @@ exports.ForgotPassword = async (req, res) => {
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: user.email,
-            subject: 'שחזור סיסמה',
+            subject: 'שחזור סיסמא האכסניא',
             html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
             <p>שלום,</p>
-            <p>קיבלת בקשה לשחזור סיסמה.</p>
+            <p>קיבלנו בקשה לשחזור סיסמה.</p>
             <p>לחץ על הקישור הבא כדי לאפס את הסיסמה שלך:</p>
             <p><a href="${resetLink}" style="color: #1a73e8;">${resetLink}</a></p>
             <p>אם לא ביקשת לשחזר את הסיסמה, ניתן להתעלם מהודעה זו.</p>
