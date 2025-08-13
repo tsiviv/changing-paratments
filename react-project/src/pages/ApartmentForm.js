@@ -30,7 +30,7 @@ const ApartmentForm = (props) => {
         preferredSwapDate: Apartment?.preferredSwapDate,
         userId: parseJwt(token)?.id
     });
-    const baseURL=config.baseUrl
+    const baseURL = config.baseUrl
 
 
     const [formDataDesired, setFormDataDesired] = useState({
@@ -113,18 +113,9 @@ const ApartmentForm = (props) => {
         }
     }
     function validateCity(input) {
-        const inputLower = input.toLowerCase().trim(); // הופכים את המילה לאותיות קטנות
-        const inputWords = inputLower.split(/\s+/); // מפרקים את המשפט למילים לפי רווחים
-
-        // מחפשים אם לפחות אחת מהמילים של המשתמש קיימת במערך הערים
-        return inputWords.some(word =>
-            config.cities.some(city => {
-                const cityWords = city.toLowerCase().split(/\s+/); // מפרקים את שם העיר למילים
-                return cityWords.includes(word); // בודקים אם המילה קיימת ברשימת המילים של העיר
-            })
-        );
+        const inputTrimmed = input.trim()
+        return config.cities.some(city => city === inputTrimmed);
     }
-
 
 
     const deleteDesirApatment = async () => {

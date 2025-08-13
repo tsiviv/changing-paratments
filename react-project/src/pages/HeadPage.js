@@ -18,7 +18,8 @@ const HeadPage = () => {
     withoutWanted: false,
     swapDates: [],
   });
-
+  const cities = config.cities
+  const [citiesOptions, setcitiesOptions] = useState([])
   const baseURL = config.baseUrl;
   const ModalShow = useSelector((state) => state.user.ModalShow);
 
@@ -54,8 +55,9 @@ const HeadPage = () => {
     fetchUsers();
   }, [page, ModalShow, filters]);
 
-  const getAllApartmentCities = async() => {
-    const res= await axios.get(`${baseURL}OnwerParmters/city`)
+  const getAllApartmentCities = async () => {
+    const res = await axios.get(`${baseURL}OnwerParmters/city`)
+    setcitiesOptions(res.data)
     console.log(res)
   }
 
@@ -73,7 +75,7 @@ const HeadPage = () => {
 
   return (
     <div>
-      <FilterableTable users={loading ? [] : users} filters={filters} setFilters={setFilters} />
+      <FilterableTable citiesOptions={citiesOptions} users={loading ? [] : users} filters={filters} setFilters={setFilters} />
 
       {loading ? (
         <div className="loader-overlay">

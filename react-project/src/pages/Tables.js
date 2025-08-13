@@ -3,7 +3,7 @@ import MultiSelectDropdown from './MultOptions';
 import config from '../config';
 import '../styles/table.css';
 
-function FilterableCards({ users, filters, setFilters }) {
+function FilterableCards({ citiesOptions, users, filters, setFilters }) {
     const { cities, numbers } = config;
 
     const updateFilter = (key, value) => {
@@ -112,7 +112,7 @@ function FilterableCards({ users, filters, setFilters }) {
                 </Form.Group>
 
                 <MultiSelectDropdown
-                    options={cities}
+                    options={citiesOptions}
                     selectedOptions={filters.cities}
                     setSelectedOptions={(value) => updateFilter('cities', value)}
                     label="בחר ערים"

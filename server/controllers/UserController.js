@@ -402,12 +402,23 @@ exports.ForgotPassword = async (req, res) => {
             }
         });
 
+        const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
+
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: user.email,
             subject: 'שחזור סיסמה',
-            text: `שלום,\n\nל,  על  הבא:\n\n${resetCode}`
+            html: `
+        <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <p>שלום,</p>
+            <p>קיבלת בקשה לשחזור סיסמה.</p>
+            <p>לחץ על הקישור הבא כדי לאפס את הסיסמה שלך:</p>
+            <p><a href="${resetLink}" style="color: #1a73e8;">${resetLink}</a></p>
+            <p>אם לא ביקשת לשחזר את הסיסמה, ניתן להתעלם מהודעה זו.</p>
+        </div>
+    `
         };
+
 
         await transporter.sendMail(mailOptions);
 
