@@ -54,6 +54,15 @@ const HeadPage = () => {
     fetchUsers();
   }, [page, ModalShow, filters]);
 
+  const getAllApartmentCities = async() => {
+    const res= await axios.get(`${baseURL}OnwerParmters/city`)
+    console.log(res)
+  }
+
+  useEffect(() => {
+    getAllApartmentCities()
+  }, [])
+
   const nextPage = () => {
     if (page < totalPages) setPage((prev) => prev + 1);
   };

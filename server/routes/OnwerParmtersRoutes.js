@@ -10,6 +10,7 @@ router.delete('/:id',verifyToken, ApartmentController.deleteWantedApartment);
 
 // קריאת כל הדירות
 router.get('/', ApartmentController.getAllWantedApartments);
+router.get('/city', ApartmentController.getAllApartmentCities);
 
 // קריאת דירה לפי ID
 router.get('/:id', ApartmentController.getWantedApartmentById);

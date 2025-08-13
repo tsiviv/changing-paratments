@@ -17,6 +17,21 @@ exports.createWantedApartment = async (req, res) => {
     res.status(500).json({ error: 'Error creating wanted apartment', details: error.message });
   }
 };
+ exports.getAllApartmentCities = async(req, res)=> {
+  try {
+    const apartments = await Apartment.findAll({
+      attributes: ['city'], // רק השדה city
+      raw: true,            // יחזיר אובייקטים פשוטים בלי עטיפות של Sequelize
+    });
+
+    const uniqueCities = [...new Set(apartments.map(a => a.city))];
+
+    res.status(200).json(uniqueCities);
+  } catch (error) {
+    console.error('Error fetching apartment cities:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
 
 // קריאת כל הדירות המבוקשות
 exports.getAllWantedApartments = async (req, res) => {
