@@ -223,15 +223,13 @@ function Login() {
                             </button>
                         </div>
 
-                        <GoogleOAuthProvider clientId="482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com">
-                            <GoogleLogin
-                                onSuccess={handleGoogleSuccess}
-                                onError={handleGoogleFailure}
-                                theme="outline"
-                                useOneTap={false} 
-                                promptMomentNotification={() => { }} 
-                            />
-                        </GoogleOAuthProvider>
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleFailure}
+                            theme="outline"
+                            useOneTap={false}
+                        />
+
 
                         {/* לינק להרשמה */}
                         <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "1rem" }}>
