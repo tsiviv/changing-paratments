@@ -78,7 +78,7 @@ const config = {
         "רעננה",
         "שדרות",
         "שפרעם",
-        "תל אביב-יפו"
+        "תל אביב"
     ],
     numbers: ["הכל", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "יותר מ 12"],
     baseUrl: "https://changing-paratments-production.up.railway.app/api/"

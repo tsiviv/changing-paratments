@@ -488,7 +488,7 @@ const ApartmentForm = (props) => {
                                                 <Form.Control
                                                     autoComplete="off"
                                                     type="text"
-                                                    placeholder="הז1ן עיר"
+                                                    placeholder="הזן עיר"
                                                     name="city"
                                                     value={formDataCurrent.city}
                                                     onChange={handleChangeCurrent}
@@ -583,7 +583,6 @@ const ApartmentForm = (props) => {
                                                 name="notes"
                                                 value={formDataCurrent.notes}
                                                 onChange={handleChangeCurrent}
-                                                required
                                             />
                                         </Form.Group>
                                     </Col>
