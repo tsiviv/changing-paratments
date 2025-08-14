@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import axios from "axios";
@@ -17,7 +17,7 @@ function Register() {
     const [touched, setTouched] = useState({});
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const baseURL=config.baseUrl
+    const baseURL = config.baseUrl
 
     const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
     const validatePassword = (password) => password.length >= 6;
@@ -208,7 +208,8 @@ function Register() {
                         <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={handleGoogleFailure}
-                            useOneTap
+                            useOneTap={false}
+                            promptMomentNotification={() => { }} 
                             theme="outline"
                         />
                     </GoogleOAuthProvider>

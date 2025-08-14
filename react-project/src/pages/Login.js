@@ -53,8 +53,9 @@ function Login() {
                 navigate("../");
             }
         } catch (error) {
-            if (error.response.status == 404){
-                setMessage("שם משתמש או סיסמא לא נכונים")}
+            if (error.response.status == 404) {
+                setMessage("שם משתמש או סיסמא לא נכונים")
+            }
             console.error("Login failed:", error);
         }
     };
@@ -226,10 +227,12 @@ function Login() {
                             <GoogleLogin
                                 onSuccess={handleGoogleSuccess}
                                 onError={handleGoogleFailure}
-                                useOneTap
                                 theme="outline"
+                                useOneTap={false} 
+                                promptMomentNotification={() => { }} 
                             />
                         </GoogleOAuthProvider>
+
                         {/* לינק להרשמה */}
                         <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "1rem" }}>
                             עדיין לא רשום?{" "}
