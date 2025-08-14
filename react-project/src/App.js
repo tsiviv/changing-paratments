@@ -1,31 +1,36 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // import Routes במקום Switch
-import HeadPage from './pages/HeadPage';
-import rootReducer from '../../react-project/src/features/rootSlice';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+import rootReducer from '../../react-project/src/features/rootSlice';
+import HeadPage from './pages/HeadPage';
 import Register from './pages/Register';
-import Login from './pages/Login'
+import Login from './pages/Login';
 import UserProfile from './pages/personallArea';
 import NavbarHead from './pages/Navbar';
 import ResetPassword from './pages/ResetPassword';
-import './styles/app.css'
+import './styles/app.css';
+
 function App() {
   const store = configureStore({
-      reducer: rootReducer,
-    })
+    reducer: rootReducer,
+  });
+
   return (
     <Provider store={store}>
-      <Router>
-        <NavbarHead/>
-        <Routes> {/* השתמש ב- Routes במקום Switch */}
-          <Route path="/" element={<HeadPage />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
-          <Route path="/Register" element={<Register />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
-          <Route path="/Login" element={<Login />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
-          <Route path="/UserProfile" element={<UserProfile />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
-          <Route path="/reset-password" element={<ResetPassword />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
-
-        </Routes>
-      </Router>
+      <GoogleOAuthProvider clientId="482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com">
+        <Router>
+          <NavbarHead />
+          <Routes>
+            <Route path="/" element={<HeadPage />} />
+            <Route path="/Register" element={<Register />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/UserProfile" element={<UserProfile />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+          </Routes>
+        </Router>
+      </GoogleOAuthProvider>
     </Provider>
   );
 }
