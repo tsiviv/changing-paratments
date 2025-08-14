@@ -52,15 +52,12 @@ const Apartment = sequelize.define('Apartment', {
 Apartment.addHook('afterUpdate', async (apartment, options) => {
   console.log("Hook triggered before update");
 
-  // מציאת המשתמש שקשור לדירה
   const user = await User.findByPk(apartment.userId);
 
   if (user) {
-    // הגדלת מספר השינויים
     user.changeCount += 1;
 
     try {
-      // שמירה של המודל לאחר הגדלת ה-`changeCount`
       await user.save(); // אין צורך בשדה `updatedAt` - הוא יתעדכן אוטומטית
       console.log("User change count updated:", user.changeCount);
     } catch (error) {

@@ -53,8 +53,8 @@ function Login() {
                 navigate("../");
             }
         } catch (error) {
-            if (error.response.status == 404)
-                setMessage("שם משתמש או סיסמא לא נכונים")
+            if (error.response.status == 404){
+                setMessage("שם משתמש או סיסמא לא נכונים")}
             console.error("Login failed:", error);
         }
     };
@@ -104,7 +104,7 @@ function Login() {
                 navigate("../");
             }
         } catch (error) {
-            if (error.response.status == 4)
+            if (error.response.status == 404)
                 setMessage("שם משתמש או סיסמא לא נכונים")
             console.error("Login failed:", error);
         }
