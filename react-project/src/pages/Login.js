@@ -105,7 +105,7 @@ function Login() {
             }
         } catch (error) {
             if (error.response.status == 404)
-                setMessage("שם משתמש או סיסמא לא נכונים")
+                setMessage("משתמש לא קיים, הרשם קודם")
             console.error("Login failed:", error);
         }
     };
