@@ -1,8 +1,6 @@
 const WantedApartment = require('../models/OnwerPartments');
 const User = require('../models/users')
-// יצירת דירה חדשה
 const nodemailer = require('nodemailer');
-const User = require('../models/User');
 
 exports.createWantedApartment = async (req, res) => {
   const {
