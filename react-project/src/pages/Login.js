@@ -92,23 +92,22 @@ function Login() {
     }
 
     const handleGoogleSuccess = async (googleData) => {
-        console.log(googleData)
-        const TokenId = googleData.credential;
-        try {
-            const res = await axios.post(`${baseURL}users/google-login`, { TokenId });
-            if (res.data && res.data.token) {
-                localStorage.setItem("token", res.data.token);
-                dispatch(loginSuccess());
-                navigate("../");
-            }
-            console.log(res)
-        } catch (error) {
-            if (error.response?.status === 404) {
-                setMessage("משתמש לא קיים, הרשם קודם");
-            }
-            console.error("Login failed:", error);
+    try {
+        const TokenId = googleData.access_token; // לוודא שזו באמת ה־ID Token
+        const res = await axios.post(`${baseURL}users/google-login`, { TokenId });
+
+        if (res.data?.token) {
+            localStorage.setItem("token", res.data.token);
+            dispatch(loginSuccess());
+            navigate("../");
         }
-    };
+    } catch (error) {
+        if (error.response?.status === 404) {
+            setMessage("משתמש לא קיים, הרשם קודם");
+        }
+        console.error("Login failed:", error);
+    }
+};
 
     const handleGoogleFailure = (error) => {
         console.error("Google Login Error:", error);

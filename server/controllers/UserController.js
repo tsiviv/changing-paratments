@@ -19,7 +19,8 @@ async function verifyToken(idToken) {
     });
     const payload = ticket.getPayload();
     return payload; // מחזיר את המידע של המשתמש
-} exports.loginGoogle = async (req, res) => {
+}
+exports.loginGoogle = async (req, res) => {
     const { TokenId } = req.body;
     console.log(TokenId)
 
@@ -209,7 +210,33 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-// מחיקת משתמש
+exports.notification = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ status: 'error', message: 'User not found' });
+        }
+
+        user.notifaction = !user.notifaction;
+        await user.save();
+
+        res.json({
+            status: 'success',
+            message: 'Notification setting updated',
+            notifaction: user.notifaction
+        });
+
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error during update',
+            details: error.message
+        });
+    }
+};
+
 exports.deleteUser = async (req, res) => {
     const userId = req.user.id;
 

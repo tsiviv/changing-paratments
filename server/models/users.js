@@ -19,6 +19,10 @@ const User = sequelize.define('User', {
     type: DataTypes.INTEGER,
     defaultValue: 0, // ברירת מחדל
   },
+  notifaction: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  }
 }, {
   tableName: 'users',
   timestamps: true, // שדה `updatedAt` יתעדכן אוטומטית

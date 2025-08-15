@@ -17,6 +17,8 @@ router.post('/register', apiLimiter, [
 
 // כניסת משתמש
 router.post('/login', userController.loginUser);
+router.post('/notification', userController.notification);
+
 router.get('/:id',verifyToken, userController.getUserById);
 router.put('/:id',verifyToken, userController.updateUser);
 router.get('/', userController.getAllUsers);
