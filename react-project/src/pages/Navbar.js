@@ -45,15 +45,17 @@ function NavbarHead() {
                         'Authorization': `Bearer ${token}`,
                     },
                 });
+                console.log(response.data)
                 const userDetais = {
                     username: response.data.username,
                     email: response.data.email,
                     createdAt: response.data.updatedAt,
+                    notification: response.data.notification
                 };
                 dispatch(setuser(userDetais));
                 dispatch(setdesireApartment(response.data.WantedApartments));
                 dispatch(setApartment(response.data.Apartments));
-                setNotificationsEnabled(response.data.notifications || false); // <-- פה נשמר מצב ההתראות
+                setNotificationsEnabled(response.data.notifications);
             } catch (err) {
                 if (err.response?.status === 403) logout_generall();
                 console.error('Error fetching user profile:', err);
@@ -68,9 +70,11 @@ function NavbarHead() {
     // פונקציה להחלפת מצב התראות
     const toggleNotifications = async () => {
         try {
+            const id = parseJwt(token).id
+            console.log(id)
             const newStatus = !notificationsEnabled;
             await axios.post(
-                `${baseURL}users/notifications`,
+                `${baseURL}users/notification/${id}`,
                 { enabled: newStatus },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

@@ -212,8 +212,8 @@ exports.updateUser = async (req, res) => {
 
 exports.notification = async (req, res) => {
     try {
-        const { userId } = req.body;
-        const user = await User.findByPk(userId);
+        const { id } = req.params;
+        const user = await User.findByPk(id);
         if (!user) {
             return res.status(404).json({ status: 'error', message: 'User not found' });
         }
