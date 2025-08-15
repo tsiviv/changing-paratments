@@ -107,7 +107,6 @@ function Register() {
                 justifyContent: "center",
                 flexDirection: "column",
                 minHeight: "90vh",
-                background: "linear-gradient(135deg, #eaf4fc, #f5fcff)",
                 fontFamily: "'Roboto', sans-serif",
                 fontSize: "1rem",
                 color: "#333",

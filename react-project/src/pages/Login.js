@@ -124,7 +124,6 @@ function Login() {
                     justifyContent: "center",
                     flexDirection: "column",
                     minHeight: "90vh",
-                    background: "linear-gradient(135deg, #eaf4fc, #f5fcff)",
                     fontFamily: "'Roboto', sans-serif",
                     fontSize: "1.25rem", // הגדל את גודל הגופן
                     color: "#333",
