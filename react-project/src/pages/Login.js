@@ -4,8 +4,10 @@ import Box from "@mui/material/Box";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginSuccess, setModalShow } from "../features/Users";
+import Modal from 'react-bootstrap/Modal';
+import Button from "react-bootstrap/Button";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'; // הייבוא החדש
 import config from "../config";
-import { useGoogleLogin } from '@react-oauth/google';
 
 function Login() {
     const [loading, setLoading] = useState(false);
@@ -90,35 +92,29 @@ function Login() {
         setShowModal(false)
         setMessage("")
     }
+    const handleGoogleSuccess = async (response) => {
+        const TokenId = response.credential
+        console.log(response);
+        try {
 
-    const handleGoogleSuccess = async (googleData) => {
-    try {
-        const TokenId = googleData.access_token; // לוודא שזו באמת ה־ID Token
-        const res = await axios.post(`${baseURL}users/google-login`, { TokenId });
 
-        if (res.data?.token) {
-            localStorage.setItem("token", res.data.token);
-            dispatch(loginSuccess());
-            navigate("../");
+            const response = await axios.post(`${baseURL}users/google-login`, { TokenId });
+            if (response.data && response.data.token) {
+                localStorage.setItem("token", response.data.token);
+                dispatch(loginSuccess());
+                navigate("../");
+            }
+        } catch (error) {
+            if (error.response.status == 404)
+                setMessage("משתמש לא קיים, הרשם קודם")
+            console.error("Login failed:", error);
         }
-    } catch (error) {
-        if (error.response?.status === 404) {
-            setMessage("משתמש לא קיים, הרשם קודם");
-        }
-        console.error("Login failed:", error);
-    }
-};
+    };
 
     const handleGoogleFailure = (error) => {
         console.error("Google Login Error:", error);
         setMessage("Google registration failed");
     };
-    const googleLogin = useGoogleLogin({
-        onSuccess: handleGoogleSuccess,
-        onError: handleGoogleFailure,
-        prompt: 'select_account',
-    });
-
     return (
         <>
             <Box
@@ -227,23 +223,15 @@ function Login() {
                             </button>
                         </div>
 
-                        <div onClick={() => googleLogin()} style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "10px",
-                            padding: "10px 20px",
-                            border: "1px solid #ddd",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            background: "#fff",
-                            fontSize: "1rem",
-                            fontWeight: "500"
-                        }}>
-                            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style={{ width: "20px" }} />
-                            <span>התחברות עם Google</span>
-                        </div>
-
+                        <GoogleOAuthProvider clientId="482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com">
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={handleGoogleFailure}
+                                theme="outline"
+                                useOneTap={false} // מבטל התחברות אוטומטית
+                                promptMomentNotification={() => { }} // אופציונלי - מונע הצעות אוטומטיות
+                            />
+                        </GoogleOAuthProvider>
 
                         {/* לינק להרשמה */}
                         <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "1rem" }}>
