@@ -24,8 +24,8 @@ function App() {
           <Route path="/Login" element={<Login />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
           <Route path="/UserProfile" element={<UserProfile />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
           <Route path="/reset-password" element={<ResetPassword />} /> {/* השתמש ב-element כדי להציג את הקומפוננטה */}
-          <TermsModal></TermsModal>
         </Routes>
+        <TermsModal></TermsModal>
       </Router>
     </Provider>
   );
