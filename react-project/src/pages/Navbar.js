@@ -12,6 +12,7 @@ import { setModalShow } from '../features/Users';
 import ApartmentForm from './ApartmentForm';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaBell } from 'react-icons/fa'; // ספריית אייקונים יפה
 import { setuser } from '../features/Users';
 import { setdesireApartment } from '../features/desirePartment';
 import { setApartment } from '../features/partment';
@@ -27,7 +28,57 @@ function NavbarHead() {
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const token = localStorage.getItem('token');
-    const baseURL=config.baseUrl
+    const baseURL = config.baseUrl
+    // ...
+    const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (!parseJwt(token)) {
+                logout_generall();
+                return;
+            }
+            const id = parseJwt(token).id;
+            try {
+                const response = await axios.get(`${baseURL}users/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                const userDetais = {
+                    username: response.data.username,
+                    email: response.data.email,
+                    createdAt: response.data.updatedAt,
+                };
+                dispatch(setuser(userDetais));
+                dispatch(setdesireApartment(response.data.WantedApartments));
+                dispatch(setApartment(response.data.Apartments));
+                setNotificationsEnabled(response.data.notifications || false); // <-- פה נשמר מצב ההתראות
+            } catch (err) {
+                if (err.response?.status === 403) logout_generall();
+                console.error('Error fetching user profile:', err);
+            }
+        };
+
+        if (isAuthenticated) {
+            fetchUserProfile();
+        }
+    }, [token, ModalShow, ModalShowDetails]);
+
+    // פונקציה להחלפת מצב התראות
+    const toggleNotifications = async () => {
+        try {
+            const newStatus = !notificationsEnabled;
+            await axios.put(
+                `${baseURL}users/notifications`,
+                { enabled: newStatus },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setNotificationsEnabled(newStatus);
+        } catch (err) {
+            console.error('Error updating notifications:', err);
+        }
+    };
 
     const addOrUpdate = () => {
         isAuthenticated ? dispatch(setModalShow()) : navigate('./Login');
@@ -55,40 +106,6 @@ function NavbarHead() {
             return null;
         }
     }
-
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            if (!parseJwt(token)) {
-                logout_generall();
-                return;
-            }
-            const id = parseJwt(token).id;
-            try {
-                const response = await axios.get(`${baseURL}users/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-                console.log(response.data);
-                const userDetais = {
-                    username: response.data.username,
-                    email: response.data.email,
-                    createdAt: response.data.updatedAt,
-                };
-                console.log(userDetais);
-                dispatch(setuser(userDetais));
-                dispatch(setdesireApartment(response.data.WantedApartments));
-                dispatch(setApartment(response.data.Apartments));
-            } catch (err) {
-                if (err.response.status === 403) logout_generall();
-                console.error('Error fetching user profile:', err);
-            }
-        };
-
-        if (isAuthenticated) {
-            fetchUserProfile();
-        }
-    }, [token, ModalShow, ModalShowDetails]);
 
     return (
         <>
@@ -134,6 +151,20 @@ function NavbarHead() {
                                                 </div>
                                             </div>
                                         </li>
+                                        <li className="nav-item">
+                                            <div
+                                                className="cursor-pointer1 nav-link text-dark d-flex flex-column"
+                                                onClick={toggleNotifications}
+                                                role="button"
+                                                tabIndex="0"
+                                            >
+                                                <FaBell style={{ color: notificationsEnabled ? 'gold' : 'gray' }} size={20} />
+                                                <span style={{ fontSize: '0.8rem', textAlign: 'center' }}>
+                                                    {notificationsEnabled ? 'להסרת קבלת התראות' : 'לקבלת התראות'}
+                                                </span>
+                                            </div>
+                                        </li>
+
                                         <li className="nav-item ">
                                             <Link
                                                 to="/UserProfile"
