@@ -69,7 +69,7 @@ function NavbarHead() {
     const toggleNotifications = async () => {
         try {
             const newStatus = !notificationsEnabled;
-            await axios.put(
+            await axios.post(
                 `${baseURL}users/notifications`,
                 { enabled: newStatus },
                 { headers: { Authorization: `Bearer ${token}` } }
