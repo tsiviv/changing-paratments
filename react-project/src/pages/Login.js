@@ -92,6 +92,7 @@ function Login() {
     }
 
     const handleGoogleSuccess = async (googleData) => {
+        console.log(googleData)
         const TokenId = googleData.credential;
         try {
             const res = await axios.post(`${baseURL}users/google-login`, { TokenId });
@@ -100,6 +101,7 @@ function Login() {
                 dispatch(loginSuccess());
                 navigate("../");
             }
+            console.log(res)
         } catch (error) {
             if (error.response?.status === 404) {
                 setMessage("משתמש לא קיים, הרשם קודם");

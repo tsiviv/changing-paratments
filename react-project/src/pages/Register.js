@@ -81,6 +81,7 @@ function Register() {
                 navigate("../");
             }
         } catch (err) {
+            console.log(err)
             if (err.response?.status === 404) {
                 setMessage("משתמש קיים");
                 return;
