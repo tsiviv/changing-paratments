@@ -1,23 +1,72 @@
 const WantedApartment = require('../models/OnwerPartments');
+const User = require('../models/users')
 // יצירת דירה חדשה
+const nodemailer = require('nodemailer');
+const User = require('../models/User');
+
 exports.createWantedApartment = async (req, res) => {
   const {
-    userId, rooms, beds, mattresses, floor, city, address, notes,preferredSwapDate
+    userId, rooms, beds, mattresses, floor, city, address, notes, preferredSwapDate
   } = req.body;
 
   console.log('Request Body:', req.body);
 
   try {
     const apartment = await WantedApartment.create({
-      userId, rooms, beds, mattresses, floor, city, address, notes,preferredSwapDate
+      userId, rooms, beds, mattresses, floor, city, address, notes, preferredSwapDate
     });
-    res.status(201).json(apartment); // שליחת הדירה שנוצרה ישירות
+
+    res.status(201).json(apartment);
+
+    setImmediate(async () => {
+      try {
+        const users = await User.findAll({
+          where: { notifaction: true },
+          attributes: ['email']
+        });
+
+        const emails = users.map(u => u.email);
+
+        if (emails.length > 0) {
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS
+            }
+          });
+
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: emails,
+            subject: 'דירה חדשה נוספה לאתר',
+            html: `
+                <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
+                    <p>שלום,</p>
+                    <p>דירה חדשה נוספה למאגר באתר.</p>
+                    <p>ניתן להיכנס לאתר כדי לצפות בפרטים.</p>
+                    <p><a href="https://changing-paratments-production.up.railway.app" style="color: #1a73e8;">
+                      לחץ כאן כדי להיכנס לאתר
+                    </a></p>
+                </div>
+              `
+          };
+
+          await transporter.sendMail(mailOptions);
+          console.log(`נשלחו מיילים ל-${emails.length} משתמשים`);
+        }
+      } catch (mailError) {
+        console.error('שגיאה בשליחת מיילים:', mailError);
+      }
+    });
+
   } catch (error) {
     console.error('Error creating apartment:', error);
     res.status(500).json({ error: 'Error creating wanted apartment', details: error.message });
   }
 };
- exports.getAllApartmentCities = async(req, res)=> {
+
+exports.getAllApartmentCities = async (req, res) => {
   try {
     const apartments = await WantedApartment.findAll({
       attributes: ['city'], // רק השדה city
@@ -66,7 +115,7 @@ exports.updateWantedApartment = async (req, res) => {
   const { id } = req.params;
   console.log(req.body)
   const {
-    rooms, beds, mattresses, floor, city, address, notes,preferredSwapDate
+    rooms, beds, mattresses, floor, city, address, notes, preferredSwapDate
   } = req.body;
 
   try {
