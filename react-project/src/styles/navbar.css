@@ -52,9 +52,10 @@ ul li a {
 }
 
 .head-nav {
-    padding-left: 8rem;
-    padding-right: 8rem;
+    padding-left: 7rem;
+    padding-right: 4rem;
 }
+
 .header2 {
     font-size: 1rem !important;
 }
@@ -64,4 +65,8 @@ ul li a {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
+}
+
+.nav-link {
+    align-items: center;
 }

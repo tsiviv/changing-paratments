@@ -55,7 +55,7 @@ function NavbarHead() {
                 dispatch(setuser(userDetais));
                 dispatch(setdesireApartment(response.data.WantedApartments));
                 dispatch(setApartment(response.data.Apartments));
-                setNotificationsEnabled(response.data.notifications);
+                setNotificationsEnabled(response.data.notifaction);
             } catch (err) {
                 if (err.response?.status === 403) logout_generall();
                 console.error('Error fetching user profile:', err);
@@ -71,7 +71,6 @@ function NavbarHead() {
     const toggleNotifications = async () => {
         try {
             const id = parseJwt(token).id
-            console.log(id)
             const newStatus = !notificationsEnabled;
             await axios.post(
                 `${baseURL}users/notification/${id}`,
@@ -116,7 +115,7 @@ function NavbarHead() {
             <Navbar className="custom-navbar shadow p-3  bg-body rounded" expand="lg" dir="rtl">
                 <Navbar.Collapse className="w-100 head-nav">
                     <Form inline className="d-flex w-100">
-                        <div className="d-flex " style={{ width: '65%', gap: '40px' }}>
+                        <div className="d-flex " style={{ width: '58%', gap: '40px' }}>
                             <ul className="navbar-nav justify-content-start align-items-center">
                                 <li className="nav-item">
                                     <Link
@@ -135,7 +134,7 @@ function NavbarHead() {
                             </div>
                         </div>
 
-                        <div className="d-flex justify-content-start" style={{ width: '35%', gap: '40px' }}>
+                        <div className="d-flex justify-content-start" style={{ width: '42%', gap: '40px' }}>
                             <ul className="navbar-nav d-flex align-items-center" style={{ gap: '80px' }}>
                                 {isAuthenticated ? (
                                     <>
@@ -162,10 +161,13 @@ function NavbarHead() {
                                                 role="button"
                                                 tabIndex="0"
                                             >
-                                                <FaBell style={{ color: notificationsEnabled ? 'gold' : 'gray' }} size={20} />
-                                                <span style={{ fontSize: '0.8rem', textAlign: 'center' }}>
-                                                    {notificationsEnabled ? 'להסרת קבלת התראות' : 'לקבלת התראות'}
-                                                </span>
+                                                <FaBell size={20} style={{ color: notificationsEnabled ? 'gold' : 'black' }} />
+
+                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '115px', maxWidth: '280px', lineHeight: 1.4 }}>
+                                                    <span >
+                                                        {notificationsEnabled ? '  להסרת קבלת התראות ' : 'קבלת התראות על דירות חדשות '}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </li>
 
