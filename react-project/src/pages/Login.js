@@ -4,10 +4,8 @@ import Box from "@mui/material/Box";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginSuccess, setModalShow } from "../features/Users";
-import Modal from 'react-bootstrap/Modal';
-import Button from "react-bootstrap/Button";
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'; // הייבוא החדש
 import config from "../config";
+import { useGoogleLogin } from '@react-oauth/google';
 
 function Login() {
     const [loading, setLoading] = useState(false);
@@ -92,21 +90,20 @@ function Login() {
         setShowModal(false)
         setMessage("")
     }
-    const handleGoogleSuccess = async (response) => {
-        const TokenId = response.credential
-        console.log(response);
+
+    const handleGoogleSuccess = async (googleData) => {
+        const TokenId = googleData.credential;
         try {
-
-
-            const response = await axios.post(`${baseURL}users/google-login`, { TokenId });
-            if (response.data && response.data.token) {
-                localStorage.setItem("token", response.data.token);
+            const res = await axios.post(`${baseURL}users/google-login`, { TokenId });
+            if (res.data && res.data.token) {
+                localStorage.setItem("token", res.data.token);
                 dispatch(loginSuccess());
                 navigate("../");
             }
         } catch (error) {
-            if (error.response.status == 404)
-                setMessage("משתמש לא קיים, הרשם קודם")
+            if (error.response?.status === 404) {
+                setMessage("משתמש לא קיים, הרשם קודם");
+            }
             console.error("Login failed:", error);
         }
     };
@@ -115,6 +112,12 @@ function Login() {
         console.error("Google Login Error:", error);
         setMessage("Google registration failed");
     };
+    const googleLogin = useGoogleLogin({
+        onSuccess: handleGoogleSuccess,
+        onError: handleGoogleFailure,
+        prompt: 'select_account',
+    });
+
     return (
         <>
             <Box
@@ -223,12 +226,22 @@ function Login() {
                             </button>
                         </div>
 
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={handleGoogleFailure}
-                            theme="outline"
-                            useOneTap={false}
-                        />
+                        <div onClick={() => googleLogin()} style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "10px",
+                            padding: "10px 20px",
+                            border: "1px solid #ddd",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            background: "#fff",
+                            fontSize: "1rem",
+                            fontWeight: "500"
+                        }}>
+                            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style={{ width: "20px" }} />
+                            <span>התחברות עם Google</span>
+                        </div>
 
 
                         {/* לינק להרשמה */}
