@@ -147,7 +147,7 @@ function NavbarHead() {
                                             >
                                                 <i className="fas fa-plus mb-2" style={{  color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
-                                                    <span style={{ fontWeight: 700, color: '#bf1b2c' }}>
+                                                    <span style={{ fontWeight: 700, color: '#231f20' }}>
                                                         הוספת דירה<br />או עדכון
                                                     </span>
                                                 </div>
@@ -213,7 +213,7 @@ function NavbarHead() {
                                             >
                                                 <i className="fas fa-plus mb-2" style={{  color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
-                                                    <span style={{ fontWeight: 700, color: '#1d3557' }}>
+                                                    <span style={{ fontWeight: 700, color: '#231f20' }}>
                                                         הוספת דירה<br />או עדכון
                                                     </span>
                                                 </div>
