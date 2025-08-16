@@ -134,7 +134,7 @@ function FilterableCards({ citiesOptions, users, filters, setFilters }) {
                         <p><strong>שם:</strong> {user.username}</p>
 
                         {!user.WantedApartments?.length ? (
-                            <p className="no-wanted-label"><strong>מציע דירה מבלי לבקש דירה חלופית</strong></p>
+                            <p className="no-wanted-label">מציע דירה מבלי לבקש דירה חלופית</p>
                         ) : (
                             <>
                                 <p><strong>אזור מועדף:</strong> {user.WantedApartments?.[0]?.area}</p>

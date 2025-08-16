@@ -88,12 +88,12 @@
   color: #2b2d42;
 }
 .card-box.no-wanted-apartment {
-  background-color: #f3f0fa;
+  background-color: #fffdfd;
 }
 
 .card-box .no-wanted-label {
   box-shadow: 0 4px 14px #fffdfd;
-  background-color: #fffdff;
+  background-color: #bf1b2c;
   color: white;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;

@@ -124,13 +124,12 @@ function NavbarHead() {
                                         onKeyDown={(e) => e.key === 'Enter' && navigate('/')}
                                         aria-label="חזרה לעמוד הבית"
                                     >
-                                        <i className="fas fa-home mb-2"></i> <span>עמוד הבית</span>
+                                        <i className="fas fa-home mb-2" style={{  color: '#bf1b2c' }}></i> <span>עמוד הבית</span>
                                     </Link>
                                 </li>
                             </ul>
                             <div className="text-start me-5">
-                                <h1 className="display-4 fw-bold font-color-linear header">דירות להחלפה בימים הנוראים</h1>
-                                <h4 className="text-muted font-color-linear header2">מאגר דירות להחלפה לימים הנוראים לכל המגזרים</h4>
+                                <img src="/logo.png" style={{width:"400px", height:"100px", objectFit:"contain"}}></img>
                             </div>
                         </div>
 
@@ -146,9 +145,9 @@ function NavbarHead() {
                                                 role="button"
                                                 tabIndex="0"
                                             >
-                                                <i className="fas fa-plus mb-2"></i>
+                                                <i className="fas fa-plus mb-2" style={{  color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
-                                                    <span style={{ fontWeight: 700, color: '#1d3557' }}>
+                                                    <span style={{ fontWeight: 700, color: '#bf1b2c' }}>
                                                         הוספת דירה<br />או עדכון
                                                     </span>
                                                 </div>
@@ -177,7 +176,7 @@ function NavbarHead() {
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onKeyDown={(e) => e.key === 'Enter' && navigate('/UserProfile')}
                                             >
-                                                <i className="fas fa-user"></i> אזור אישי
+                                                <i className="fas fa-user" style={{  color: '#bf1b2c' }}></i> אזור אישי
                                             </Link>
                                         </li>
                                         <li className="nav-item">
@@ -187,7 +186,7 @@ function NavbarHead() {
                                                 onClick={logout_generall}
                                                 onKeyDown={(e) => e.key === 'Enter' && logout_generall()}
                                             >
-                                                <i className="fas fa-sign-out-alt"></i> יציאה
+                                                <i className="fas fa-sign-out-alt" style={{  color: '#bf1b2c' }}></i> יציאה
                                             </Link>
                                         </li>
                                         <li className="nav-item">
@@ -197,7 +196,7 @@ function NavbarHead() {
                                                 onClick={() => setShow(true)}
                                                 onKeyDown={(e) => e.key === 'Enter' && setShow(true)}
                                             >
-                                                <i className="fas fa-comment-dots mb-1"></i>
+                                                <i className="fas fa-comment-dots mb-1" style={{  color: '#bf1b2c' }}></i>
                                                 <span>הודעה למערכת</span>
                                             </Link>
                                         </li>
@@ -212,7 +211,7 @@ function NavbarHead() {
                                                 role="button"
                                                 tabIndex="0"
                                             >
-                                                <i className="fas fa-plus mb-2"></i>
+                                                <i className="fas fa-plus mb-2" style={{  color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
                                                     <span style={{ fontWeight: 700, color: '#1d3557' }}>
                                                         הוספת דירה<br />או עדכון
@@ -226,7 +225,7 @@ function NavbarHead() {
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onKeyDown={(e) => e.key === 'Enter' && navigate('/Login')}
                                             >
-                                                <i className="fas fa-sign-in-alt"></i> התחברות
+                                                <i className="fas fa-sign-in-alt" style={{  color: '#bf1b2c' }}></i> התחברות
                                             </Link>
                                         </li>
                                         <li className="nav-item ">
@@ -235,7 +234,7 @@ function NavbarHead() {
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onKeyDown={(e) => e.key === 'Enter' && navigate('/Register')}
                                             >
-                                                <i className="fas fa-user-plus"></i> הרשמה
+                                                <i className="fas fa-user-plus" style={{  color: '#bf1b2c' }}></i> הרשמה
                                             </Link>
                                         </li>
                                         <li className="nav-item">
@@ -245,7 +244,7 @@ function NavbarHead() {
                                                 onClick={() => setShow(true)}
                                                 onKeyDown={(e) => e.key === 'Enter' && setShow(true)}
                                             >
-                                                <i className="fas fa-comment-dots mb-1"></i>
+                                                <i className="fas fa-comment-dots mb-1" style={{  color: '#bf1b2c' }}></i>
                                                 <span>הודעה למערכת</span>
                                             </Link>
                                         </li>
