@@ -11,6 +11,7 @@ const crypto = require('crypto'); // כדי ליצור קוד חד-פעמי
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
 const { Op } = require('sequelize');
+const sequelize = require('../models');
 
 async function verifyToken(idToken) {
     const ticket = await client.verifyIdToken({
@@ -333,7 +334,7 @@ exports.getAllUsers = async (req, res) => {
       include,
       attributes: {
         include: [
-          [Sequelize.fn('COUNT', Sequelize.col('WantedApartments.id')), 'wantedCount']
+          [Sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
         ]
       },
       group: ['User.id'],
