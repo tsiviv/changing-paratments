@@ -88,9 +88,6 @@
   color: #231f20; /* טקסט כהה לניקיון */
 }
 
-.card-box strong {
-  color: #bf1b2c; /* להדגשה */
-}
 
 .card-box.no-wanted-apartment {
   border-left: 5px solid #231f20; /* צבע כהה למי שאין דירה מבוקשת */

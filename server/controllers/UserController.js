@@ -322,8 +322,7 @@ exports.getAllUsers = async (req, res) => {
 
         const whereUser = {}; // כאן אפשר להוסיף פילטרים על המשתמשים אם רוצים
 
-        // includes ל-Sequelize
-        const include = [
+        let include = [
             {
                 model: OnwerPartments,
                 as: 'Apartments',
@@ -334,26 +333,29 @@ exports.getAllUsers = async (req, res) => {
 
         // סינון לפי מי שיש לו דירה מבוקשת או לא
         if (hasWanted && !noWanted) {
-            // רק מי שיש לו דירה מבוקשת
+            // רק מי שיש לו WantedApartments
             include.push({
                 model: alternativePartmnets,
                 as: 'WantedApartments',
                 required: true,
             });
         } else if (!hasWanted && noWanted) {
+            // רק מי שאין לו WantedApartments
             include.push({
                 model: alternativePartmnets,
                 as: 'WantedApartments',
-                required: false, // כדי לא לאבד משתמשים בלי דירה
+                required: false,
             });
-            whereUser['$WantedApartments.id$'] = null;
+            whereUser['$WantedApartments.id$'] = null; // מסנן אחרי ה-include
         } else {
+            // אם גם וגם או כלום מסומן – מביא את כולם
             include.push({
                 model: alternativePartmnets,
                 as: 'WantedApartments',
                 required: false,
             });
         }
+
 
         const allUsers = await User.findAndCountAll({
             where: whereUser,
