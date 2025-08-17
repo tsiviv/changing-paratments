@@ -334,8 +334,7 @@ exports.getAllUsers = async (req, res) => {
                 as: 'WantedApartments',
                 required: false,
             });
-            // 💡 זהו החלק הקריטי – תנאי שיבטיח שאין רשומות בכלל
-            whereUser['$WantedApartments.id$'] = { [Op.is]: null };
+            whereUser['$WantedApartments.userId$'] = { [Op.is]: null };
         } else {
             // שניהם false → מחזירים את כולם בלי סינון
             include.push({

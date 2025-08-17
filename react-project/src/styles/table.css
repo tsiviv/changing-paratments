@@ -146,39 +146,24 @@
   border-color: #bf1b2c !important;
 }
 
-
-.my-btn {
-  background-color: #231f20; /* הצבע שלך */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
+/* מניעת שינוי צבע והיילייט של ה-DropdownButton */
+#dropdown-multiselect,
+#dropdown-multiselect:active,
+#dropdown-multiselect:focus-visible {
+  background-color: #231f20 !important; /* צבע כפתור קבוע */
+  color: white !important;
+  border-color: #231f20 !important;
+  box-shadow: none !important; /* מסיר את ההיילייט הכחול */
+  outline: none !important;
 }
 
-.my-btn,
-.my-btn:focus,
-.my-btn:active,
-.my-btn:focus:active {
+.clear-filters-btn,
+.clear-filters-btn:active {
   background-color: #231f20 !important;
   color: white !important;
   border: none !important;
   outline: none !important;
-  box-shadow: none !important; /* מסיר את ההיילייט הכחול */
-}
-
-
-.card-box a:hover {
-  color: #231f20;
-  transform: translateX(3px);
-}
-
-.card-box a,
-.card-box a:visited,
-.card-box a:active,
-.card-box a:focus {
-  color: #231f20;       /* שומר על אותו צבע */
-  text-decoration: none; /* מבטל קו תחתון/עיצוב דפדפן */
-  outline: none;         /* מבטל מסגרת */
+  box-shadow: none !important;
 }
 
 .sidebar-filters button {

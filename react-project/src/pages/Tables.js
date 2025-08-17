@@ -119,7 +119,7 @@ function FilterableCards({ citiesOptions, users, filters, setFilters }) {
                     className="text-right rtl"
                 />
 
-                <Button onClick={cleanOptions} className='mt-3'>נקה סינון</Button>
+                <Button onClick={cleanOptions} className='mt-3 clear-filters-btn'>נקה סינון</Button>
             </div>
 
             <div className="cards-wrapper">
