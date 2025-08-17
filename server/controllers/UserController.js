@@ -333,8 +333,8 @@ exports.getAllUsers = async (req, res) => {
                 model: alternativePartmnets,
                 as: 'WantedApartments',
                 required: false,
+                where: { id: { [Op.is]: null } }
             });
-            whereUser['$wanted_apartments.userId$'] = { [Op.is]: null };
         } else {
             // שניהם false → מחזירים את כולם בלי סינון
             include.push({
