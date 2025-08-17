@@ -295,14 +295,14 @@ exports.getAllUsers = async (req, res) => {
     const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
     const minBeds  = Number.isNaN(parseInt(req.query.minBeds))  ? null : parseInt(req.query.minBeds);
     const hasWanted = req.query.hasWanted === 'true';
-    const noWanted  = req.query.noWanted  === 'true';
+    const noWanted  = req.query.noWanted === 'true';
     const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
     // פילטר לדירות
     const whereApartment = {};
     if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
     if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
-    if (minBeds  !== null) whereApartment.beds  = { [Op.gte]: minBeds };
+    if (minBeds !== null) whereApartment.beds = { [Op.gte]: minBeds };
 
     let swapDatesFilter = [];
     if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
@@ -320,35 +320,41 @@ exports.getAllUsers = async (req, res) => {
       }
     ];
 
-    // סינון WantedApartments כבר ב-SQL
+    // תנאי לסינון WantedApartments
+    const whereUser = {};
     if (hasWanted && !noWanted) {
+      // משתמשים שיש להם WantedApartments
       include.push({
         model: alternativePartmnets,
         as: 'WantedApartments',
-        required: true, // INNER JOIN → חייב שיהיו דרישות
+        required: true, // INNER JOIN
       });
     } else if (!hasWanted && noWanted) {
+      // משתמשים שאין להם WantedApartments
       include.push({
         model: alternativePartmnets,
         as: 'WantedApartments',
-        required: false, // LEFT JOIN → משתמשים ללא דרישות
-        where: { id: { [Op.is]: null } } // רק אם אין רשומות
+        required: false, // LEFT JOIN
+        attributes: [], // לא צריך להחזיר שדות
       });
+      whereUser['$WantedApartments.id$'] = { [Op.is]: null }; // רק כאלה שאין להם דרישות
     } else {
+      // ללא סינון מיוחד
       include.push({
         model: alternativePartmnets,
         as: 'WantedApartments',
-        required: false, // ללא סינון
+        required: false,
       });
     }
 
     const result = await User.findAndCountAll({
       include,
+      where: whereUser, // מוסיפים את התנאים על המשתמש
       distinct: true,
       offset,
       limit,
       order: [['updatedAt', 'DESC']],
-      subQuery: false, // חשוב ל־$Alias$ בשאילתות עם JOIN
+      subQuery: false,
     });
 
     res.status(200).json({
@@ -366,6 +372,7 @@ exports.getAllUsers = async (req, res) => {
     });
   }
 };
+
 
 
 exports.ForgotPassword = async (req, res) => {
