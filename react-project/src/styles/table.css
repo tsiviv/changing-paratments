@@ -121,14 +121,14 @@
 .card-box a {
   margin-top: 1rem;
   align-self: flex-start;
-  color: #231f20;
+  color: #bf1b2c;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s, transform 0.2s;
 }
 
 .card-box a:hover {
-  color: #bf1b2c;
+  color: #231f20;
   transform: translateX(3px);
 }
 
