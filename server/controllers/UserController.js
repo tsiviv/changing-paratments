@@ -285,79 +285,86 @@ exports.getUserById = async (req, res) => {
     }
 };
 exports.getAllUsers = async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
-        const offset = (page - 1) * limit;
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = (page - 1) * limit;
 
-        // פילטרים מהקליינט
-        const cities = req.query.cities ? req.query.cities.split(',') : [];
-        const minRooms = parseInt(req.query.minRooms);
-        const minBeds = parseInt(req.query.minBeds);
-        const hasWanted = req.query.hasWanted === 'true';
-        const noWanted = req.query.noWanted === 'true';
-        const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
+    // פילטרים מהקליינט
+    const cities = req.query.cities ? req.query.cities.split(',').filter(Boolean) : [];
+    const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
+    const minBeds  = Number.isNaN(parseInt(req.query.minBeds))  ? null : parseInt(req.query.minBeds);
+    const hasWanted = req.query.hasWanted === 'true';
+    const noWanted  = req.query.noWanted  === 'true';
+    const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-        // פילטר לדירות של המשתמש
-        const whereApartment = {};
-        if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
-        if (!isNaN(minRooms)) whereApartment.rooms = { [Op.gte]: minRooms };
-        if (!isNaN(minBeds)) whereApartment.beds = { [Op.gte]: minBeds };
+    // פילטר לדירות
+    const whereApartment = {};
+    if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
+    if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
+    if (minBeds  !== null) whereApartment.beds  = { [Op.gte]: minBeds };
 
-        let swapDatesFilter = [];
-        if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
-        if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
-        swapDatesFilter = [...new Set(swapDatesFilter)];
-        if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
+    let swapDatesFilter = [];
+    if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
+    if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
+    swapDatesFilter = [...new Set(swapDatesFilter)];
+    if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
 
-        const include = [
-            {
-                model: OnwerPartments,
-                as: 'Apartments',
-                required: true,
-                where: whereApartment,
-            },
-            {
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false,
-            }
-        ];
+    // בניית include
+    const include = [
+      {
+        model: OnwerPartments,
+        as: 'Apartments',
+        required: true,
+        where: whereApartment,
+      }
+    ];
 
-        // שליפת כל המשתמשים עם pagination
-        const allUsers = await User.findAndCountAll({
-            include,
-            distinct: true,
-            offset,
-            limit,
-            order: [['updatedAt', 'DESC']],
-        });
-
-        // סינון לאחר השליפה לפי hasWanted/noWanted
-        let filteredUsers = allUsers.rows;
-        if (hasWanted && !noWanted) {
-            filteredUsers = filteredUsers.filter(user => user.WantedApartments.length > 0);
-        } else if (!hasWanted && noWanted) {
-            filteredUsers = filteredUsers.filter(user => user.WantedApartments.length === 0);
-        }
-
-        // עדכון total ו־totalPages אחרי הסינון
-        const total = filteredUsers.length;
-        const totalPages = Math.ceil(total / limit);
-
-        res.status(200).json({
-            data: filteredUsers,
-            total,
-            totalPages,
-        });
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({
-            status: 'error',
-            message: 'Server error during users retrieval',
-            details: error.message,
-        });
+    // סינון WantedApartments כבר ב-SQL
+    if (hasWanted && !noWanted) {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: true, // INNER JOIN → חייב שיהיו דרישות
+      });
+    } else if (!hasWanted && noWanted) {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false, // LEFT JOIN → משתמשים ללא דרישות
+        where: { id: { [Op.is]: null } } // רק אם אין רשומות
+      });
+    } else {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false, // ללא סינון
+      });
     }
+
+    const result = await User.findAndCountAll({
+      include,
+      distinct: true,
+      offset,
+      limit,
+      order: [['updatedAt', 'DESC']],
+      subQuery: false, // חשוב ל־$Alias$ בשאילתות עם JOIN
+    });
+
+    res.status(200).json({
+      data: result.rows,
+      total: result.count,
+      totalPages: Math.ceil(result.count / limit),
+    });
+
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error during users retrieval',
+      details: error.message,
+    });
+  }
 };
 
 
