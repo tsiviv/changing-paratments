@@ -285,88 +285,88 @@ exports.getUserById = async (req, res) => {
     }
 };
 exports.getAllUsers = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
-    const offset = (page - 1) * limit;
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 50;
+        const offset = (page - 1) * limit;
 
-    // פילטרים מהקליינט
-    const cities = req.query.cities ? req.query.cities.split(',') : [];
-    const minRooms = parseInt(req.query.minRooms);
-    const minBeds = parseInt(req.query.minBeds);
-    const hasWanted = req.query.hasWanted === 'true';
-    const noWanted = req.query.noWanted === 'true';
-    const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
+        // פילטרים מהקליינט
+        const cities = req.query.cities ? req.query.cities.split(',') : [];
+        const minRooms = parseInt(req.query.minRooms);
+        const minBeds = parseInt(req.query.minBeds);
+        const hasWanted = req.query.hasWanted === 'true';
+        const noWanted = req.query.noWanted === 'true';
+        const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-    // פילטר לדירות
-    const whereApartment = {};
-    if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
-    if (!isNaN(minRooms)) whereApartment.rooms = { [Op.gte]: minRooms };
-    if (!isNaN(minBeds)) whereApartment.beds = { [Op.gte]: minBeds };
+        // פילטר לדירות
+        const whereApartment = {};
+        if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
+        if (!isNaN(minRooms)) whereApartment.rooms = { [Op.gte]: minRooms };
+        if (!isNaN(minBeds)) whereApartment.beds = { [Op.gte]: minBeds };
 
-    let swapDatesFilter = [];
-    if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
-    if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
-    swapDatesFilter = [...new Set(swapDatesFilter)];
-    if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
+        let swapDatesFilter = [];
+        if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
+        if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
+        swapDatesFilter = [...new Set(swapDatesFilter)];
+        if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
 
-    const whereUser = {};
-    const include = [
-      {
-        model: OnwerPartments,
-        as: 'Apartments',
-        required: true,
-        where: whereApartment,
-      }
-    ];
+        const whereUser = {};
+        const include = [
+            {
+                model: OnwerPartments,
+                as: 'Apartments',
+                required: true,
+                where: whereApartment,
+            }
+        ];
 
-    // טיפול ב־WantedApartments לפי hasWanted/noWanted
-    if (hasWanted && !noWanted) {
-      // רק משתמשים שיש להם WantedApartments
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: true,
-      });
-    } else if (!hasWanted && noWanted) {
-      // רק משתמשים שאין להם WantedApartments
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false,
-      });
-      whereUser['$WantedApartments.id$'] = null;
-    } else {
-      // אם אין עדיפות – מביא את כולם
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false,
-      });
+        if (hasWanted && !noWanted) {
+            // יש דרישות
+            include.push({
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: true,
+            });
+        } else if (!hasWanted && noWanted) {
+            // אין דרישות
+            include.push({
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: false,
+            });
+            // 💡 זהו החלק הקריטי – תנאי שיבטיח שאין רשומות בכלל
+            whereUser['$WantedApartments.id$'] = { [Op.is]: null };
+        } else {
+            // שניהם false → מחזירים את כולם בלי סינון
+            include.push({
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: false,
+            });
+        }
+
+        const allUsers = await User.findAndCountAll({
+            where: whereUser,
+            include,
+            distinct: true,
+            offset,
+            limit,
+            order: [['updatedAt', 'DESC']],
+        });
+
+        res.status(200).json({
+            data: allUsers.rows,
+            total: allUsers.count,
+            totalPages: Math.ceil(allUsers.count / limit),
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error during users retrieval',
+            details: error.message,
+        });
     }
-
-    const allUsers = await User.findAndCountAll({
-      where: whereUser,
-      include,
-      distinct: true,
-      offset,
-      limit,
-      order: [['updatedAt', 'DESC']],
-    });
-
-    res.status(200).json({
-      data: allUsers.rows,
-      total: allUsers.count,
-      totalPages: Math.ceil(allUsers.count / limit),
-    });
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Server error during users retrieval',
-      details: error.message,
-    });
-  }
 };
 
 exports.ForgotPassword = async (req, res) => {

@@ -127,12 +127,60 @@
   transition: color 0.2s, transform 0.2s;
 }
 
+.form-check-input:checked {
+  background-color: #bf1b2c !important;
+  border-color: #bf1b2c !important;
+}
+
+.form-check-input:focus {
+  border-color: #bf1b2c !important;
+  box-shadow: none !important;
+}
+
+.dropdown-menu-options input[type="checkbox"]:checked {
+  accent-color: #bf1b2c; /* הדרך הפשוטה ביותר לדפדפנים מודרניים */
+}
+
+.dropdown-menu-options input[type="checkbox"]:checked {
+  background-color: #bf1b2c !important;
+  border-color: #bf1b2c !important;
+}
+
+
+.my-btn {
+  background-color: #231f20; /* הצבע שלך */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.my-btn,
+.my-btn:focus,
+.my-btn:active,
+.my-btn:focus:active {
+  background-color: #231f20 !important;
+  color: white !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important; /* מסיר את ההיילייט הכחול */
+}
+
+
 .card-box a:hover {
   color: #231f20;
   transform: translateX(3px);
 }
 
-/* לשיפור הכפתור */
+.card-box a,
+.card-box a:visited,
+.card-box a:active,
+.card-box a:focus {
+  color: #231f20;       /* שומר על אותו צבע */
+  text-decoration: none; /* מבטל קו תחתון/עיצוב דפדפן */
+  outline: none;         /* מבטל מסגרת */
+}
+
 .sidebar-filters button {
   width: 100%;
   background-color: #231f20;
