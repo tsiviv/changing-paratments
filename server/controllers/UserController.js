@@ -285,114 +285,99 @@ exports.getUserById = async (req, res) => {
     }
 };
 exports.getAllUsers = async (req, res) => {
-    try {
-        // פאג'ינציה
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
-        const offset = (page - 1) * limit;
+  try {
+    // פאג'ינציה
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = (page - 1) * limit;
 
-        // פילטרים מהקליינט
-        const cities = req.query.cities ? req.query.cities.split(',') : [];
-        const minRooms = parseInt(req.query.minRooms);
-        const minBeds = parseInt(req.query.minBeds);
-        const hasWanted = req.query.hasWanted === 'true';
-        const noWanted = req.query.noWanted === 'true';
+    // פילטרים מהקליינט
+    const cities = req.query.cities ? req.query.cities.split(',') : [];
+    const minRooms = parseInt(req.query.minRooms);
+    const minBeds = parseInt(req.query.minBeds);
+    const hasWanted = req.query.hasWanted === 'true';
+    const noWanted = req.query.noWanted === 'true';
+    const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-        // WHERE על הדירה
-        const whereApartment = {};
-        if (cities.length && !cities.includes('הכל')) {
-            whereApartment.city = { [Op.in]: cities };
-        }
-        if (!isNaN(minRooms)) {
-            whereApartment.rooms = { [Op.gte]: minRooms };
-        }
-        if (!isNaN(minBeds)) {
-            whereApartment.beds = { [Op.gte]: minBeds };
-        }
-        const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
-
-        let swapDatesFilter = [];
-
-        if (swapDates.includes(1)) {
-            swapDatesFilter.push(1, 3);
-        }
-
-        if (swapDates.includes(2)) {
-            swapDatesFilter.push(2, 3);
-        }
-
-        swapDatesFilter = [...new Set(swapDatesFilter)];
-
-        if (swapDatesFilter.length > 0) {
-            whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
-        }
-
-
-
-        const whereUser = {}; // במידה ותרצה להוסיף פילטרים על המשתמשים
-
-        // includes ל-Sequelize
-        const include = [
-            {
-                model: OnwerPartments,
-                as: 'Apartments',
-                required: true, // רק מי שיש לו דירה
-                where: whereApartment,
-            }
-        ];
-
-        // תנאים לדירות מבוקשות
-        if (hasWanted && !noWanted) {
-            // רק מי שיש לו דירה מבוקשת
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: true,
-            });
-        } else if (!hasWanted && noWanted) {
-            // רק מי שאין לו דירה מבוקשת
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false,
-            });
-            whereUser['$WantedApartments.id$'] = null;
-        } else {
-            // גם וגם - נחזיר את כל המשתמשים
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false,
-            });
-        }
-
-        // הבאת הנתונים מה-DB
-        const allUsers = await User.findAndCountAll({
-            where: whereUser,
-            include,
-            distinct: true,
-            offset,
-            limit,
-            order: [['updatedAt', 'DESC']],
-        });
-
-        res.status(200).json({
-            data: allUsers.rows,
-            total: allUsers.count,
-            totalPages: Math.ceil(allUsers.count / limit),
-        });
-
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({
-            status: 'error',
-            message: 'Server error during users retrieval',
-            details: error.message
-        });
+    // פילטרים לדירה
+    const whereApartment = {};
+    if (cities.length && !cities.includes('הכל')) {
+      whereApartment.city = { [Op.in]: cities };
     }
+    if (!isNaN(minRooms)) {
+      whereApartment.rooms = { [Op.gte]: minRooms };
+    }
+    if (!isNaN(minBeds)) {
+      whereApartment.beds = { [Op.gte]: minBeds };
+    }
+
+    let swapDatesFilter = [];
+    if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
+    if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
+    swapDatesFilter = [...new Set(swapDatesFilter)];
+
+    if (swapDatesFilter.length > 0) {
+      whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
+    }
+
+    const whereUser = {}; // כאן אפשר להוסיף פילטרים על המשתמשים אם רוצים
+
+    // includes ל-Sequelize
+    const include = [
+      {
+        model: OnwerPartments,
+        as: 'Apartments',
+        required: true,
+        where: whereApartment,
+      }
+    ];
+
+    // סינון לפי מי שיש לו דירה מבוקשת או לא
+    if (hasWanted && !noWanted) {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: true,
+      });
+    } else if (!hasWanted && noWanted) {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false,
+        where: { id: null },
+      });
+    } else {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false,
+      });
+    }
+
+    // הבאת הנתונים מה-DB
+    const allUsers = await User.findAndCountAll({
+      where: whereUser,
+      include,
+      distinct: true,
+      offset,
+      limit,
+      order: [['updatedAt', 'DESC']],
+    });
+
+    res.status(200).json({
+      data: allUsers.rows,
+      total: allUsers.count,
+      totalPages: Math.ceil(allUsers.count / limit),
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error during users retrieval',
+      details: error.message,
+    });
+  }
 };
-
-
 
 exports.ForgotPassword = async (req, res) => {
 
