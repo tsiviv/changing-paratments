@@ -317,39 +317,27 @@ exports.getAllUsers = async (req, res) => {
         as: 'Apartments',
         required: true,
         where: whereApartment,
+      },
+      {
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false, // LEFT JOIN כדי גם לראות משתמשים בלי WantedApartments
+        attributes: [],  // לא נרצה להחזיר את השדות עצמם
       }
     ];
 
-    // תנאי לסינון WantedApartments
-    const whereUser = {};
-    if (hasWanted && !noWanted) {
-      // משתמשים שיש להם WantedApartments
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: true, // INNER JOIN
-      });
-    } else if (!hasWanted && noWanted) {
-      // משתמשים שאין להם WantedApartments
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false, // LEFT JOIN
-        attributes: [], // לא צריך להחזיר שדות
-      });
-      whereUser['$WantedApartments.id$'] = { [Op.is]: null }; // רק כאלה שאין להם דרישות
-    } else {
-      // ללא סינון מיוחד
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false,
-      });
-    }
+    // תנאי GROUP + HAVING עבור noWanted
+    const havingClause = noWanted ? Sequelize.literal('COUNT("WantedApartments"."id") = 0') : undefined;
 
     const result = await User.findAndCountAll({
       include,
-      where: whereUser, // מוסיפים את התנאים על המשתמש
+      attributes: {
+        include: [
+          [Sequelize.fn('COUNT', Sequelize.col('WantedApartments.id')), 'wantedCount']
+        ]
+      },
+      group: ['User.id'],
+      having: havingClause,
       distinct: true,
       offset,
       limit,
@@ -359,8 +347,8 @@ exports.getAllUsers = async (req, res) => {
 
     res.status(200).json({
       data: result.rows,
-      total: result.count,
-      totalPages: Math.ceil(result.count / limit),
+      total: result.count.length ? result.count.length : result.count, // handle grouped count
+      totalPages: Math.ceil((result.count.length ? result.count.length : result.count) / limit),
     });
 
   } catch (error) {
@@ -372,8 +360,6 @@ exports.getAllUsers = async (req, res) => {
     });
   }
 };
-
-
 
 exports.ForgotPassword = async (req, res) => {
 
