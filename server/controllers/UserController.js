@@ -323,7 +323,8 @@ exports.getAllUsers = async (req, res) => {
         model: alternativePartmnets,
         as: 'WantedApartments',
         required: false,
-        separate: true, // שולף במערכת נפרדת כדי לא לשבור את ה־group
+        separate: true, 
+        attributes: [], // לא נרצה את השדות עצמם
       }
     ];
 
@@ -342,7 +343,7 @@ exports.getAllUsers = async (req, res) => {
           [sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
         ]
       },
-      group: ['User.id', 'Apartments.id'],
+      group: ['User.id', 'Apartments.id'], // הוספתי גם Apartments.id כדי להימנע מהשגיאה
       having: havingClause,
       distinct: true,
       offset,
