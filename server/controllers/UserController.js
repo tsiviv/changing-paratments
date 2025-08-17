@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto'); // כדי ליצור קוד חד-פעמי
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
-const { Op } = require('sequelize');
+const { Op, literal } = require('sequelize');
 
 async function verifyToken(idToken) {
     const ticket = await client.verifyIdToken({
@@ -284,10 +284,6 @@ exports.getUserById = async (req, res) => {
         res.status(500).json({ status: 'error', message: 'Server error during user retrieval', details: error.message });
     }
 };
-const { Op, literal } = require('sequelize');
-const User = require('../models/users');
-const OnwerPartments = require('../models/OnwerPartments');
-const alternativePartmnets = require('../models/WantedApartments'); // או איך שהמודל שלך נקרא
 
 exports.getAllUsers = async (req, res) => {
   try {
