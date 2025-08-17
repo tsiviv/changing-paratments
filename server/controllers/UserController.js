@@ -301,61 +301,34 @@ exports.getAllUsers = async (req, res) => {
 
         // פילטרים לדירה
         const whereApartment = {};
-        if (cities.length && !cities.includes('הכל')) {
-            whereApartment.city = { [Op.in]: cities };
-        }
-        if (!isNaN(minRooms)) {
-            whereApartment.rooms = { [Op.gte]: minRooms };
-        }
-        if (!isNaN(minBeds)) {
-            whereApartment.beds = { [Op.gte]: minBeds };
-        }
+        if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
+        if (!isNaN(minRooms)) whereApartment.rooms = { [Op.gte]: minRooms };
+        if (!isNaN(minBeds)) whereApartment.beds = { [Op.gte]: minBeds };
 
         let swapDatesFilter = [];
         if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
         if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
         swapDatesFilter = [...new Set(swapDatesFilter)];
+        if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
 
-        if (swapDatesFilter.length > 0) {
-            whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
-        }
+        const whereUser = {};
 
-        const whereUser = {}; // כאן אפשר להוסיף פילטרים על המשתמשים אם רוצים
-
-        let include = [
-            {
-                model: OnwerPartments,
-                as: 'Apartments',
-                required: true,
-                where: whereApartment,
-            }
+        // הגדרת include עבור הדירות וה-WantedApartments
+        const include = [
+            { model: OnwerPartments, as: 'Apartments', required: true, where: whereApartment }
         ];
 
-        // סינון לפי מי שיש לו דירה מבוקשת או לא
         if (hasWanted && !noWanted) {
-            // רק מי שיש לו WantedApartments
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: true,
-            });
+            // רק משתמשים שיש להם WantedApartments
+            include.push({ model: alternativePartmnets, as: 'WantedApartments', required: true });
         } else if (!hasWanted && noWanted) {
-            // רק מי שאין לו WantedApartments
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false,
-            });
-            whereUser['$WantedApartments.id$'] = null; // מסנן אחרי ה-include
+            // רק משתמשים שאין להם WantedApartments
+            include.push({ model: alternativePartmnets, as: 'WantedApartments', required: false });
+            whereUser['$WantedApartments.id$'] = null; // מסנן משתמשים עם WantedApartments
         } else {
-            // אם גם וגם או כלום מסומן – מביא את כולם
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false,
-            });
+            // אם לא סומן או סומן גם וגם, מביא את כולם
+            include.push({ model: alternativePartmnets, as: 'WantedApartments', required: false });
         }
-
 
         const allUsers = await User.findAndCountAll({
             where: whereUser,
@@ -371,6 +344,7 @@ exports.getAllUsers = async (req, res) => {
             total: allUsers.count,
             totalPages: Math.ceil(allUsers.count / limit),
         });
+
     } catch (error) {
         console.error('Error fetching users:', error);
         res.status(500).json({

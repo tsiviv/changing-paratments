@@ -1,12 +1,13 @@
 /* תצוגת הקומפוננטה הכללית */
 .cards-view-container {
   display: flex;
-  align-items: flex-start; /* חשוב כדי שהסינון לא ימתח את הקלפים */
+  align-items: flex-start;
+  /* חשוב כדי שהסינון לא ימתח את הקלפים */
   padding: 5rem;
   gap: 2rem;
   direction: rtl;
   font-family: 'Arial', sans-serif;
-  background-color: #f8f9fa;
+  background-color: #faf4f2;
 }
 
 /* סינון צדדי */
@@ -26,8 +27,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 3.5rem;
-  align-items: stretch; /* 💡 שים לב שזה כבר ברירת מחדל, אבל תוכל להוסיף */
+  align-items: stretch;
+  /* 💡 שים לב שזה כבר ברירת מחדל, אבל תוכל להוסיף */
 }
+
 .loader-overlay {
   position: fixed;
   top: 0;
@@ -43,7 +46,8 @@
 
 .loader {
   border: 8px solid #f3f3f3;
-  border-top: 8px solid #9A14B0; /* צבע תואם לכרטיסים שלך */
+  border-top: 8px solid #9A14B0;
+  /* צבע תואם לכרטיסים שלך */
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -51,15 +55,22 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 
 /* קלפים - עיצוב משודרג */
 .card-box {
-  background-color: #fffdfd; /* לבן קריר לשמירה על ניקיון */
-  border-left: 5px solid #bf1b2c; /* פס אדום בצד להבלטה */
+  background-color: #fffdfd;
+  /* לבן קריר לשמירה על ניקיון */
+  border-left: 5px solid #bf1b2c;
+  /* פס אדום בצד להבלטה */
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
@@ -77,20 +88,23 @@
 
 .card-box h5 {
   margin-bottom: 0.5rem;
-  color: #231f20; /* כהה, תואם את הצבעים של האתר */
+  color: #231f20;
+  /* כהה, תואם את הצבעים של האתר */
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .card-box p {
   margin: 0.4rem 0;
   font-size: 0.95rem;
-  color: #231f20; /* טקסט כהה לניקיון */
+  color: #231f20;
+  /* טקסט כהה לניקיון */
 }
 
 
 .card-box.no-wanted-apartment {
-  border-left: 5px solid #231f20; /* צבע כהה למי שאין דירה מבוקשת */
+  border-left: 5px solid #231f20;
+  /* צבע כהה למי שאין דירה מבוקשת */
 }
 
 .card-box .no-wanted-label {
@@ -101,7 +115,7 @@
   font-weight: 700;
   text-align: center;
   margin: 1rem 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-box a {
@@ -133,4 +147,51 @@
 .sidebar-filters button:hover {
   background-color: #5a6268;
   transform: translateY(-1px);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.pagination button {
+  background-color: #fcfbfa;
+  color:  #bf1b2c;
+  border: 1px solid #e0dfdd;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.pagination button:hover {
+  background-color: #bf1b2c;
+  /* אדום להדגשה */
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.pagination button.active {
+  background-color: #bf1b2c;
+  color:  #bf1b2c;
+  border-color: #bf1b2c;
+}
+
+.pagination button:disabled {
+  background-color: #fdf7f6;
+  /* רקע עדין בהיר קרוב לאדום האתר */
+  color: #dc818a;
+  /* טקסט אדום עדין */
+  cursor: not-allowed;
+  border-color: #f4e8e7;
+}
+
+.pagination-span {
+  color: #231f20;
+  font-weight: 600;
 }

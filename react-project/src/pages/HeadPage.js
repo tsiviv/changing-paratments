@@ -4,6 +4,7 @@ import FilterableTable from './Tables';
 import { useSelector } from 'react-redux';
 import config from '../config';
 import DonationBox from './DonationBox';
+import '../styles/table.css';
 
 const HeadPage = () => {
   const [users, setUsers] = useState([]);
@@ -38,6 +39,7 @@ const HeadPage = () => {
           swapDates: filters.swapDates.join(','),
         },
       });
+      console.log(res.data)
       setUsers(res.data.data);
       setTotalPages(res.data.totalPages);
     } catch (err) {
@@ -58,7 +60,6 @@ const HeadPage = () => {
   const getAllApartmentCities = async () => {
     const res = await axios.get(`${baseURL}OnwerParmters/city`)
     setcitiesOptions(res.data)
-    console.log(res)
   }
 
   useEffect(() => {
@@ -83,10 +84,10 @@ const HeadPage = () => {
         </div>
       ) : (
         <>
-          <div className="pagination-controls" style={{ marginTop: '20px', textAlign: 'center' }}>
-            <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
-            <span style={{ margin: '0 10px' }}>עמוד {page} מתוך {totalPages}</span>
+          <div className="pagination">
             <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
+            <span className="pagination-span" style={{ margin: '0 10px' ,color: '#231f20' }}>עמוד {page} מתוך {totalPages}</span>
+            <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
           </div>
           <DonationBox />
         </>

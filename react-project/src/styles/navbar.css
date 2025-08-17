@@ -1,18 +1,22 @@
-/* CSS מותאם אישית */
 .custom-navbar {
-    /* position: fixed; */
     top: 0;
-    /* או bottom: 0 אם רוצים להצמיד מלמטה */
     left: 0;
-    /* או right: 0 אם רוצים להצמיד מימין */
     z-index: 1000;
-    /* לקביעת סדר הציור של ה-<div> מעל אלמנטים אחרים */
     width: 100%;
-    /* לכיסוי כל רוחב הדף */
-    background-color: #fff;
-    /* צבע הרקע הרצוי */
-    padding: 10px 0;
-    /* מספק מרווח סביב ה-<div> */
+    background-color: #fcfbfa; /* רקע מאוד עדין, כמעט לבן */
+    padding: 12px 0;
+    
+    /* קו אדום מטושטש מאוד */
+    border-bottom: 1px solid rgba(191, 27, 44, 0.5); 
+    box-shadow: 0 2px 6px rgba(191, 27, 44, 0.15); /* מטושטש ורך */
+    
+    /* מעבר צבע קל כשמעבירים עכבר */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-navbar:hover {
+    background-color: #fdfcfb; /* שינוי קל בגוון הרקע */
+    box-shadow: 0 4px 8px rgba(191, 27, 44, 0.2);
 }
 
 .ul-padding {
@@ -47,25 +51,37 @@ ul li a {
     cursor: pointer;
 }
 
-/* כיתוב מתחת לאייקונים ב-navbar */
+/* מוודא שכל span בתוך nav-link יקבל את הצבע הרצוי */
 .navbar-nav .nav-link span {
-  color: #231f20;
-  font-weight: 700; /* אם רוצים לשמור על מודגשות כמו שלך */
+    color: #231f20;
+    font-weight: 700;
+    /* מודגש כמו שרצית */
 }
 
-/* מקרה של אייקון עם div פנימי (למשל "הוספת דירה או עדכון") */
+/* במידה ויש div בין ה-icon ל-span */
 .navbar-nav .nav-link div span {
-  color: #231f20;
+    color: #231f20;
+    font-weight: 700;
 }
 
-/* מוודא שגם כיתוב בתוך nav-item עם icon+span יקבל את הצבע */
+/* לכל nav-item + nav-link + span */
 .navbar-nav .nav-item .nav-link span {
-  color: #231f20;
+    color: #231f20;
+    font-weight: 700;
 }
-
 
 .header {
     font-size: 3rem !important;
+}
+
+/* כל כיתוב בתוך nav-link יקבל צבע ושקילה אחידה */
+.navbar-nav .nav-link,
+.navbar-nav .nav-link span,
+.navbar-nav .nav-link div span {
+    color: #231f20;
+    /* הצבע הרצוי */
+    font-weight: 700;
+    /* מודגש */
 }
 
 .head-nav {

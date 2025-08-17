@@ -112,10 +112,11 @@ function NavbarHead() {
 
     return (
         <>
-            <Navbar className="custom-navbar shadow p-3  bg-body rounded" expand="lg" dir="rtl">
+            <Navbar className="custom-navbar p-3 rounded " 
+                expand="lg" dir="rtl">
                 <Navbar.Collapse className="w-100 head-nav">
                     <Form inline className="d-flex w-100">
-                        <div className="d-flex " style={{ width: '58%', gap: '40px' }}>
+                        <div className="d-flex " style={{ width: isAuthenticated ? '50%' : '58%', gap: '40px' }}>
                             <ul className="navbar-nav justify-content-start align-items-center">
                                 <li className="nav-item">
                                     <Link
@@ -124,17 +125,17 @@ function NavbarHead() {
                                         onKeyDown={(e) => e.key === 'Enter' && navigate('/')}
                                         aria-label="חזרה לעמוד הבית"
                                     >
-                                        <i className="fas fa-home mb-2" style={{  color: '#bf1b2c' }}></i> <span>עמוד הבית</span>
+                                        <i className="fas fa-home mb-2" style={{ color: '#bf1b2c' }}></i> <span>עמוד הבית</span>
                                     </Link>
                                 </li>
                             </ul>
                             <div className="text-start me-5">
-                                <img src="/logo.png" style={{width:"400px", height:"100px", objectFit:"contain"}}></img>
+                                <img src="/logo.png" style={{ width: "400px", height: "100px", objectFit: "contain" }}></img>
                             </div>
                         </div>
 
-                        <div className="d-flex justify-content-start" style={{ width: '42%', gap: '40px' }}>
-                            <ul className="navbar-nav d-flex align-items-center" style={{ gap: '80px' }}>
+                        <div className="d-flex justify-content-start" style={{ width: isAuthenticated ? '50%' : '42%', gap: '40px' }}>
+                            <ul className="navbar-nav d-flex align-items-center" style={{ gap: '100px' }}>
                                 {isAuthenticated ? (
                                     <>
                                         <li className="nav-item">
@@ -145,7 +146,7 @@ function NavbarHead() {
                                                 role="button"
                                                 tabIndex="0"
                                             >
-                                                <i className="fas fa-plus mb-2" style={{  color: '#bf1b2c' }}></i>
+                                                <i className="fas fa-plus" style={{ color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
                                                     <span style={{ fontWeight: 700, color: '#231f20' }}>
                                                         הוספת דירה<br />או עדכון
@@ -176,7 +177,7 @@ function NavbarHead() {
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onKeyDown={(e) => e.key === 'Enter' && navigate('/UserProfile')}
                                             >
-                                                <i className="fas fa-user" style={{  color: '#bf1b2c' }}></i> אזור אישי
+                                                <i className="fas fa-user" style={{ color: '#bf1b2c' }}></i> אזור אישי
                                             </Link>
                                         </li>
                                         <li className="nav-item">
@@ -186,7 +187,7 @@ function NavbarHead() {
                                                 onClick={logout_generall}
                                                 onKeyDown={(e) => e.key === 'Enter' && logout_generall()}
                                             >
-                                                <i className="fas fa-sign-out-alt" style={{  color: '#bf1b2c' }}></i> יציאה
+                                                <i className="fas fa-sign-out-alt" style={{ color: '#bf1b2c' }}></i> יציאה
                                             </Link>
                                         </li>
                                         <li className="nav-item">
@@ -196,7 +197,7 @@ function NavbarHead() {
                                                 onClick={() => setShow(true)}
                                                 onKeyDown={(e) => e.key === 'Enter' && setShow(true)}
                                             >
-                                                <i className="fas fa-comment-dots mb-1" style={{  color: '#bf1b2c' }}></i>
+                                                <i className="fas fa-comment-dots mb-1" style={{ color: '#bf1b2c' }}></i>
                                                 <span>הודעה למערכת</span>
                                             </Link>
                                         </li>
@@ -211,7 +212,7 @@ function NavbarHead() {
                                                 role="button"
                                                 tabIndex="0"
                                             >
-                                                <i className="fas fa-plus mb-2" style={{  color: '#bf1b2c' }}></i>
+                                                <i className="fas fa-plus" style={{ color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
                                                     <span style={{ fontWeight: 700, color: '#231f20' }}>
                                                         הוספת דירה<br />או עדכון
@@ -225,7 +226,7 @@ function NavbarHead() {
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onKeyDown={(e) => e.key === 'Enter' && navigate('/Login')}
                                             >
-                                                <i className="fas fa-sign-in-alt" style={{  color: '#bf1b2c' }}></i> התחברות
+                                                <i className="fas fa-sign-in-alt" style={{ color: '#bf1b2c' }}></i> התחברות
                                             </Link>
                                         </li>
                                         <li className="nav-item ">
@@ -234,7 +235,7 @@ function NavbarHead() {
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onKeyDown={(e) => e.key === 'Enter' && navigate('/Register')}
                                             >
-                                                <i className="fas fa-user-plus" style={{  color: '#bf1b2c' }}></i> הרשמה
+                                                <i className="fas fa-user-plus" style={{ color: '#bf1b2c' }}></i> הרשמה
                                             </Link>
                                         </li>
                                         <li className="nav-item">
@@ -244,7 +245,7 @@ function NavbarHead() {
                                                 onClick={() => setShow(true)}
                                                 onKeyDown={(e) => e.key === 'Enter' && setShow(true)}
                                             >
-                                                <i className="fas fa-comment-dots mb-1" style={{  color: '#bf1b2c' }}></i>
+                                                <i className="fas fa-comment-dots mb-1" style={{ color: '#bf1b2c' }}></i>
                                                 <span>הודעה למערכת</span>
                                             </Link>
                                         </li>

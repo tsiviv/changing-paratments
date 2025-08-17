@@ -14,6 +14,7 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   width: 220px;
+  color: #231f20;
   font-size: 0.85rem;
   line-height: 1.4;
   direction: rtl;
@@ -23,7 +24,7 @@
 .donation-box h6 {
   margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #6c757d;
+  color: #231f20;
 }
 
 .donation-box p {
