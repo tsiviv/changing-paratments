@@ -310,42 +310,22 @@ exports.getAllUsers = async (req, res) => {
         swapDatesFilter = [...new Set(swapDatesFilter)];
         if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
 
-        const whereUser = {};
         const include = [
             {
                 model: OnwerPartments,
                 as: 'Apartments',
                 required: true,
                 where: whereApartment,
+            },
+            {
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: false,
             }
         ];
 
-        if (hasWanted && !noWanted) {
-            // יש דרישות
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: true,
-            });
-        } else if (!hasWanted && noWanted) {
-            // אין דרישות
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false,
-                where: { id: { [Op.is]: null } }
-            });
-        } else {
-            // שניהם false → מחזירים את כולם בלי סינון
-            include.push({
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false,
-            });
-        }
-
+        // מחזירים את כל המשתמשים לפי הפילטרים על Apartments
         const allUsers = await User.findAndCountAll({
-            where: whereUser,
             include,
             distinct: true,
             offset,
@@ -353,10 +333,23 @@ exports.getAllUsers = async (req, res) => {
             order: [['updatedAt', 'DESC']],
         });
 
+        let filteredUsers = allUsers.rows;
+
+        // סינון אחרי השליפה לפי hasWanted/noWanted
+        if (hasWanted && !noWanted) {
+            filteredUsers = filteredUsers.filter(user => user.WantedApartments.length > 0);
+        } else if (!hasWanted && noWanted) {
+            filteredUsers = filteredUsers.filter(user => user.WantedApartments.length === 0);
+        }
+
+        // עדכון total ו־totalPages אחרי הסינון
+        const total = filteredUsers.length;
+        const totalPages = Math.ceil(total / limit);
+
         res.status(200).json({
-            data: allUsers.rows,
-            total: allUsers.count,
-            totalPages: Math.ceil(allUsers.count / limit),
+            data: filteredUsers,
+            total,
+            totalPages,
         });
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -367,6 +360,7 @@ exports.getAllUsers = async (req, res) => {
         });
     }
 };
+
 
 exports.ForgotPassword = async (req, res) => {
 
