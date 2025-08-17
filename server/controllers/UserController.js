@@ -328,13 +328,13 @@ exports.getAllUsers = async (req, res) => {
     ];
 
     // תנאי GROUP + HAVING עבור noWanted
-    const havingClause = noWanted ? Sequelize.literal('COUNT("WantedApartments"."id") = 0') : undefined;
+    const havingClause = noWanted ? sequelize.literal('COUNT("WantedApartments"."id") = 0') : undefined;
 
     const result = await User.findAndCountAll({
       include,
       attributes: {
         include: [
-          [Sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
+          [sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
         ]
       },
       group: ['User.id'],
