@@ -323,7 +323,7 @@ exports.getAllUsers = async (req, res) => {
         model: alternativePartmnets,
         as: 'WantedApartments',
         required: false,
-        attributes: [], // לא נרצה את השדות עצמם
+        separate: true, // שולף במערכת נפרדת כדי לא לשבור את ה־group
       }
     ];
 
@@ -342,7 +342,7 @@ exports.getAllUsers = async (req, res) => {
           [sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
         ]
       },
-      group: ['User.id', 'Apartments.id'], // הוספתי גם Apartments.id כדי להימנע מהשגיאה
+      group: ['User.id', 'Apartments.id'],
       having: havingClause,
       distinct: true,
       offset,
