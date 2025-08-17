@@ -56,66 +56,72 @@
 }
 
 
-/* כל קלף */
+/* קלפים - עיצוב משודרג */
 .card-box {
-  background-color: #fffdfd;
+  background-color: #fffdfd; /* לבן קריר לשמירה על ניקיון */
+  border-left: 5px solid #bf1b2c; /* פס אדום בצד להבלטה */
   border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   line-height: 1.5;
 }
 
 .card-box:hover {
   transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
 .card-box h5 {
   margin-bottom: 0.5rem;
-  color: #1d3557;
-  font-weight: 900;
+  color: #231f20; /* כהה, תואם את הצבעים של האתר */
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
 .card-box p {
   margin: 0.4rem 0;
   font-size: 0.95rem;
+  color: #231f20; /* טקסט כהה לניקיון */
 }
 
 .card-box strong {
-  color: #2b2d42;
+  color: #bf1b2c; /* להדגשה */
 }
+
 .card-box.no-wanted-apartment {
-  background-color: #fffdfd;
+  border-left: 5px solid #231f20; /* צבע כהה למי שאין דירה מבוקשת */
 }
 
 .card-box .no-wanted-label {
-  box-shadow: 0 4px 14px #fffdfd;
   background-color: #bf1b2c;
   color: white;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  font-weight: bold;
+  font-weight: 700;
   text-align: center;
   margin: 1rem 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .card-box a {
   margin-top: 1rem;
   align-self: flex-start;
-  color: #007bff;
-  font-weight: bold;
+  color: #231f20;
+  font-weight: 600;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.2s;
 }
 
 .card-box a:hover {
-  color: #0056b3;
+  color: #bf1b2c;
+  transform: translateX(3px);
 }
 
-/* כפתור נקה סינון */
+/* לשיפור הכפתור */
 .sidebar-filters button {
   width: 100%;
   background-color: #231f20;
@@ -123,9 +129,11 @@
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .sidebar-filters button:hover {
   background-color: #5a6268;
+  transform: translateY(-1px);
 }
