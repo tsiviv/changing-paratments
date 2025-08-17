@@ -298,7 +298,7 @@ exports.getAllUsers = async (req, res) => {
         const noWanted = req.query.noWanted === 'true';
         const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-        // פילטר לדירות
+        // פילטר לדירות של המשתמש
         const whereApartment = {};
         if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
         if (!isNaN(minRooms)) whereApartment.rooms = { [Op.gte]: minRooms };
@@ -324,7 +324,7 @@ exports.getAllUsers = async (req, res) => {
             }
         ];
 
-        // מחזירים את כל המשתמשים לפי הפילטרים על Apartments
+        // שליפת כל המשתמשים עם pagination
         const allUsers = await User.findAndCountAll({
             include,
             distinct: true,
@@ -333,9 +333,8 @@ exports.getAllUsers = async (req, res) => {
             order: [['updatedAt', 'DESC']],
         });
 
+        // סינון לאחר השליפה לפי hasWanted/noWanted
         let filteredUsers = allUsers.rows;
-
-        // סינון אחרי השליפה לפי hasWanted/noWanted
         if (hasWanted && !noWanted) {
             filteredUsers = filteredUsers.filter(user => user.WantedApartments.length > 0);
         } else if (!hasWanted && noWanted) {
