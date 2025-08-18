@@ -130,7 +130,7 @@ function NavbarHead() {
                                 </li>
                             </ul>
                             <div className="text-start me-5">
-                                <img src="/logo.png" style={{ width: "400px", height: "100px", objectFit: "contain" }}></img>
+                                <img src="/logo.png" style={{ width: "450px", height: "100px" }}></img>
                             </div>
                         </div>
 
@@ -163,7 +163,7 @@ function NavbarHead() {
                                             >
                                                 <FaBell size={20} style={{ color: notificationsEnabled ? 'gold' : 'black' }} />
 
-                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '115px', maxWidth: '280px', lineHeight: 1.4 }}>
+                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '110px', maxWidth: '280px', lineHeight: 1.4 }}>
                                                     <span >
                                                         {notificationsEnabled ? '  להסרת קבלת התראות ' : 'קבלת התראות על דירות חדשות '}
                                                     </span>
