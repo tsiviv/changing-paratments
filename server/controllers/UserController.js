@@ -322,19 +322,13 @@ exports.getAllUsers = async (req, res) => {
       {
         model: alternativePartmnets,
         as: 'WantedApartments',
-        required: false,
-        separate: true, 
-        attributes: [], // לא נרצה את השדות עצמם
+        required: false, // LEFT JOIN כדי גם לראות משתמשים בלי WantedApartments
+        attributes: [],  // לא נרצה להחזיר את השדות עצמם
       }
     ];
 
-    // HAVING תנאי
-    let havingClause = undefined;
-    if (hasWanted && !noWanted) {
-      havingClause = sequelize.literal('COUNT(`WantedApartments`.`id`) > 0');
-    } else if (!hasWanted && noWanted) {
-      havingClause = sequelize.literal('COUNT(`WantedApartments`.`id`) = 0');
-    }
+    // תנאי GROUP + HAVING עבור noWanted
+    const havingClause = noWanted ? sequelize.literal('COUNT("WantedApartments"."id") = 0') : undefined;
 
     const result = await User.findAndCountAll({
       include,
@@ -343,7 +337,7 @@ exports.getAllUsers = async (req, res) => {
           [sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
         ]
       },
-      group: ['User.id', 'Apartments.id'], // הוספתי גם Apartments.id כדי להימנע מהשגיאה
+      group: ['User.id'],
       having: havingClause,
       distinct: true,
       offset,
@@ -352,14 +346,10 @@ exports.getAllUsers = async (req, res) => {
       subQuery: false,
     });
 
-    // Sequelize מחזיר count כ־array בגלל ה־group
-    const total = Array.isArray(result.count) ? result.count.length : result.count;
-    const totalPages = Math.ceil(total / limit);
-
     res.status(200).json({
       data: result.rows,
-      total,
-      totalPages,
+      total: result.count.length ? result.count.length : result.count, // handle grouped count
+      totalPages: Math.ceil((result.count.length ? result.count.length : result.count) / limit),
     });
 
   } catch (error) {
@@ -371,7 +361,6 @@ exports.getAllUsers = async (req, res) => {
     });
   }
 };
-
 
 exports.ForgotPassword = async (req, res) => {
 
