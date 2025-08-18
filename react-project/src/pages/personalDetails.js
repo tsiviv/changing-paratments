@@ -155,10 +155,10 @@ function PersonallDetails(props) {
             )}
           </Form.Group>
           <div className="d-flex justify-content-between mt-5">
-            <Button onClick={handleUpdate} disabled={!isFormValid}>
+            <Button onClick={handleUpdate} disabled={!isFormValid} className='update-btn'>
               עדכון פרופיל
             </Button>
-            <Button variant="secondary" onClick={props.onHide}>
+            <Button className='close-btn' onClick={props.onHide}>
               סגור
             </Button>
           </div>
