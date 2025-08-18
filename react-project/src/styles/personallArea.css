@@ -21,11 +21,13 @@
 .update-btn {
     background-color: #bf1b2c !important;
     border: none !important;
+    font-weight: 600 !important;
 }
 
 .close-btn {
     background-color: #231f20 !important;
     border: none !important;
+    font-weight: 600 !important;
 }
 
 .container {

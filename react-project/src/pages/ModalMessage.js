@@ -91,11 +91,12 @@ function SendMessage({ show, setShow }) {
                     bottom: "20px",
                     right: "20px",
                     cursor: "pointer",
-                    background: "#007bff",
+                    background: "#bf1b2c",
                     borderRadius: "50%",
                     padding: "15px",
                     color: "white",
                     boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
+
                 }}
                 onClick={handleShow}
             >
@@ -181,18 +182,23 @@ function SendMessage({ show, setShow }) {
                     </Form>
                     {successMessage && <p className="text-success">{successMessage}</p>}
                 </Modal.Body>
-                <Modal.Footer style={{ direction: "rtl" }}>
-                    <Button variant="secondary" onClick={handleClose}>
-                        סגור
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={handleSendMessage}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? <Spinner animation="border" size="sm" /> : "שלח הודעה"}
-                    </Button>
-                </Modal.Footer>
+               <Modal.Footer
+  style={{ direction: "rtl" }}
+  className="d-flex align-items-center justify-content-between"
+>
+ 
+  <Button
+    onClick={handleSendMessage}
+    disabled={isLoading}
+    className="update-btn"
+  >
+    {isLoading ? <Spinner animation="border" size="sm" /> : "שלח הודעה"}
+  </Button>
+   <Button className="close-btn" onClick={handleClose}>
+    סגור
+  </Button>
+</Modal.Footer>
+
             </Modal>
         </div>
     );
