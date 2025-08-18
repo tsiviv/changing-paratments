@@ -322,13 +322,14 @@ exports.getAllUsers = async (req, res) => {
       {
         model: alternativePartmnets,
         as: 'WantedApartments',
-        required: false, // LEFT JOIN כדי גם לראות משתמשים בלי WantedApartments
-        attributes: [],  // לא נרצה להחזיר את השדות עצמם
+        required: false, // עדיין LEFT JOIN
+        // מחזירים את השדות של הדירות החלופיות
+        attributes: ['id', 'city', 'rooms', 'beds'],
       }
     ];
 
     // תנאי GROUP + HAVING עבור noWanted
-    const havingClause = noWanted ? sequelize.literal('COUNT("WantedApartments"."id") = 0') : undefined;
+    const havingClause = noWanted ? sequelize.literal('COUNT(`WantedApartments`.`id`) = 0') : undefined;
 
     const result = await User.findAndCountAll({
       include,
@@ -337,7 +338,7 @@ exports.getAllUsers = async (req, res) => {
           [sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
         ]
       },
-      group: ['User.id'],
+      group: ['User.id', 'Apartments.id', 'WantedApartments.id'], // חובה להוסיף אותם בגלל ONLY_FULL_GROUP_BY
       having: havingClause,
       distinct: true,
       offset,
