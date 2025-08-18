@@ -324,7 +324,7 @@ exports.getAllUsers = async (req, res) => {
         as: 'WantedApartments',
         required: false, // עדיין LEFT JOIN
         // מחזירים את השדות של הדירות החלופיות
-        attributes: ['id', 'city', 'rooms', 'beds'],
+    attributes: ['id', 'area', 'numberOfRooms', 'numberOfBeds'], 
       }
     ];
 
