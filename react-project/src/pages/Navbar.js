@@ -112,11 +112,11 @@ function NavbarHead() {
 
     return (
         <>
-            <Navbar className="custom-navbar p-3 rounded " 
+            <Navbar className="custom-navbar p-3 rounded "
                 expand="lg" dir="rtl">
                 <Navbar.Collapse className="w-100 head-nav">
                     <Form inline className="d-flex w-100">
-                        <div className="d-flex " style={{ width: isAuthenticated ? '50%' : '58%', gap: '40px' }}>
+                        <div className="d-flex " style={{ width: isAuthenticated ? '50%' : '58%', gap: '80px' }}>
                             <ul className="navbar-nav justify-content-start align-items-center">
                                 <li className="nav-item">
                                     <Link
@@ -134,8 +134,8 @@ function NavbarHead() {
                             </div>
                         </div>
 
-                        <div className="d-flex justify-content-start" style={{ width: isAuthenticated ? '50%' : '42%', gap: '40px' }}>
-                            <ul className="navbar-nav d-flex align-items-center" style={{ gap: '100px' }}>
+                        <div className="d-flex justify-content-start" style={{ width: isAuthenticated ? '50%' : '42%', gap: '30px' }}>
+                            <ul className="navbar-nav d-flex align-items-center" style={{ gap: '90px' }}>
                                 {isAuthenticated ? (
                                     <>
                                         <li className="nav-item">
@@ -145,6 +145,7 @@ function NavbarHead() {
                                                 onKeyDown={(e) => e.key === 'Enter' && addOrUpdate()}
                                                 role="button"
                                                 tabIndex="0"
+                                                style={{ marginLeft: "-35px" }}
                                             >
                                                 <i className="fas fa-plus" style={{ color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
@@ -160,10 +161,11 @@ function NavbarHead() {
                                                 onClick={toggleNotifications}
                                                 role="button"
                                                 tabIndex="0"
+                                                style={{ marginLeft: "-35px" }}
                                             >
                                                 <FaBell size={20} style={{ color: notificationsEnabled ? 'gold' : 'black' }} />
 
-                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '110px', maxWidth: '280px', lineHeight: 1.4 }}>
+                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '50px', maxWidth: '160px', lineHeight: 1.4 }}>
                                                     <span >
                                                         {notificationsEnabled ? '  להסרת קבלת התראות ' : 'קבלת התראות על דירות חדשות '}
                                                     </span>

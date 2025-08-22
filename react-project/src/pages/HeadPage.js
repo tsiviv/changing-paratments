@@ -66,12 +66,20 @@ const HeadPage = () => {
     getAllApartmentCities()
   }, [ModalShow])
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
   const nextPage = () => {
-    if (page < totalPages) setPage((prev) => prev + 1);
+    if (page < totalPages) {
+      setPage((prev) => prev + 1);
+    }
   };
 
   const prevPage = () => {
-    if (page > 1) setPage((prev) => prev - 1);
+    if (page > 1) {
+      setPage((prev) => prev - 1);
+    }
   };
 
   return (
@@ -85,9 +93,9 @@ const HeadPage = () => {
       ) : (
         <>
           <div className="pagination">
-            <button onClick={prevPage} disabled={page === 1}>← הקודם</button>
-            <span className="pagination-span" style={{ margin: '0 10px' ,color: '#231f20' }}>עמוד {page} מתוך {totalPages}</span>
-            <button onClick={nextPage} disabled={page === totalPages}>הבא →</button>
+            <button onClick={nextPage} disabled={page === totalPages}>← הבא</button>
+            <span className="pagination-span" style={{ margin: '0 10px', color: '#231f20' }}>עמוד {page} מתוך {totalPages}</span>
+            <button onClick={prevPage} disabled={page === 1}>הקודם →</button>
           </div>
           <DonationBox />
         </>
