@@ -84,6 +84,8 @@ const HeadPage = () => {
 
   return (
     <div>
+      <h1>מאגר דירות להחלפה לימים הנוראים</h1>
+      <h2>החלפת דירות בקלות ובנוחות</h2>
       <FilterableTable citiesOptions={citiesOptions} users={loading ? [] : users} filters={filters} setFilters={setFilters} />
 
       {loading ? (
