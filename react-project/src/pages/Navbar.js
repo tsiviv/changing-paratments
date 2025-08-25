@@ -131,6 +131,10 @@ function NavbarHead() {
                             </ul>
                             <div className="text-start me-5">
                                 <img src="/logo.png" style={{ width: "450px", height: "100px" }}></img>
+                                <div className='header-con'>
+                                    <div className='head1'>מאגר דירות להחלפה</div>
+                                    <div className='head2'>לימים הנוראים</div>
+                                </div>
                             </div>
                         </div>
 

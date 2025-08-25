@@ -3,19 +3,42 @@
     left: 0;
     z-index: 1000;
     width: 100%;
-    background-color: #fcfbfa; /* רקע מאוד עדין, כמעט לבן */
+    background-color: #fcfbfa;
+    /* רקע מאוד עדין, כמעט לבן */
     padding: 12px 0;
-    
+
     /* קו אדום מטושטש מאוד */
-    border-bottom: 1px solid rgba(191, 27, 44, 0.5); 
-    box-shadow: 0 2px 6px rgba(191, 27, 44, 0.15); /* מטושטש ורך */
-    
+    border-bottom: 1px solid rgba(191, 27, 44, 0.5);
+    box-shadow: 0 2px 6px rgba(191, 27, 44, 0.15);
+    /* מטושטש ורך */
+
     /* מעבר צבע קל כשמעבירים עכבר */
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.header-con {
+    display: flex;
+    gap: 14px;
+    justify-content: start;
+}
+
+.head1, 
+.head2 {
+    color: #231f20; /* ברירת מחדל ל-head1 */
+    letter-spacing: 4px; /* רווח בין אותיות */
+    word-spacing: 7px;   /* רווח בין מילים */
+    font-weight: 700;
+    font-size: 17px;
+}
+
+.head2 {
+    color: #bf1b2c; /* צבע ייחודי ל-head2 */
+}
+
+
 .custom-navbar:hover {
-    background-color: #fdfcfb; /* שינוי קל בגוון הרקע */
+    background-color: #fdfcfb;
+    /* שינוי קל בגוון הרקע */
     box-shadow: 0 4px 8px rgba(191, 27, 44, 0.2);
 }
 
