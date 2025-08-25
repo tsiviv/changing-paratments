@@ -54,7 +54,7 @@ function Login() {
                 navigate("../");
             }
         } catch (error) {
-            if (error.response.status == 404) {
+            if (error.response.status == 401) {
                 setMessage("שם משתמש או סיסמא לא נכונים")
             }
             console.error("Login failed:", error);

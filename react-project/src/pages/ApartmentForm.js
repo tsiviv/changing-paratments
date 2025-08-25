@@ -391,6 +391,7 @@ const ApartmentForm = (props) => {
                     style={{ borderBottom: 'none' }}
                 >
                     <Modal.Title className="w-100 text-center header fw-bold">טופס עדכון דירה</Modal.Title>
+                    <div>אין להכניס בשום אופן דירות להשכרה האתר מיועד רק להחלפה</div>
                 </Modal.Header>
                 <Modal.Body className='ps-4 pe-4' style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <Container className=' mt-0 color-body'>
