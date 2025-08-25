@@ -425,36 +425,38 @@ exports.ForgotPassword = async (req, res) => {
     }
 }
 exports.ResetPassword = async (req, res) => {
-
     const { code, newPassword } = req.body;
-    console.log(code)
-    console.log(req.session.resetCode)
+
     try {
-        // בדוק אם הקוד שהוזן תואם לקוד בזיכרון
+        // בדיקה שהקוד תואם ותקף
         if (req.session.resetCode !== code || Date.now() - req.session.resetCodeTime > 15 * 60 * 1000) {
             return res.status(400).json({ message: 'הקוד לא תקין או פג תוקף' });
         }
 
-        // חפש את המשתמש במערכת
-        const user = await User.findOne({ email: req.session.email });
+        // חיפוש המשתמש לפי המייל ששמור ב-session
+        const user = await User.findOne({ where: { email: req.session.email } });
 
         if (!user) {
             return res.status(400).json({ message: 'משתמש לא נמצא' });
         }
 
-        // עדכון הסיסמה
+        // עדכון הסיסמה עם hash
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
         await user.save();
 
-        // מחיקת הקוד מה-session לאחר השחזור
+        // בדיקה מיידית שהhash עובד
+        const verify = await bcrypt.compare(newPassword, user.password);
+        console.log('Password verify after reset:', verify); // צריך להחזיר true
+
+        // מחיקת הקוד מה-session
         delete req.session.resetCode;
         delete req.session.resetCodeTime;
 
         res.status(200).json({ message: 'הסיסמה שוחזרה בהצלחה' });
+
     } catch (error) {
         console.error('Error during password reset:', error);
         res.status(500).json({ message: 'אירעה שגיאה במערכת' });
     }
-}
-
+};
