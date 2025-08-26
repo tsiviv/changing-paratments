@@ -92,3 +92,40 @@ input.text-primary {
 .h-date{
     font-size: calc(1.275rem + .1vw);
 }
+@media (min-width: 1400px) {
+    .header {
+        font-size: 38px !important;
+    }
+    h3 {
+        font-size: 26px;
+    }
+    p {
+        font-size: 17px;
+    }
+}
+
+/* מסכים בינוניים */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .header {
+        font-size: 36px !important;
+    }
+    h3 {
+        font-size: 25px;
+    }
+    p {
+        font-size: 16px;
+    }
+}
+
+/* מסכים קטנים יותר של מחשב */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .header {
+        font-size: 34px !important;
+    }
+    h3 {
+        font-size: 24px;
+    }
+    p {
+        font-size: 15px;
+    }
+}

@@ -7,6 +7,7 @@ import { loginSuccess } from "../features/Users";
 import config from '../config';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import '../styles/login.css'
+
 function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [name, setName] = useState('');
@@ -17,7 +18,7 @@ function Register() {
     const [touched, setTouched] = useState({});
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const baseURL = config.baseUrl
+    const baseURL = config.baseUrl;
 
     const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
     const validatePassword = (password) => password.length >= 6;
@@ -25,19 +26,14 @@ function Register() {
 
     const validateField = (fieldName, value) => {
         switch (fieldName) {
-            case "email":
-                return validateEmail(value) ? "" : "אנא הכנס מייל תקין";
-            case "password":
-                return validatePassword(value) ? "" : "סיסמא חייבת להיות לפחות 6 תווים";
-            case "name":
-                return validateName(value) ? "" : "שם צריך להיות לפחות 3 אותיות";
-            default:
-                return "";
+            case "email": return validateEmail(value) ? "" : "אנא הכנס מייל תקין";
+            case "password": return validatePassword(value) ? "" : "סיסמא חייבת להיות לפחות 6 תווים";
+            case "name": return validateName(value) ? "" : "שם צריך להיות לפחות 3 אותיות";
+            default: return "";
         }
     };
 
     useEffect(() => {
-        // בדיקת ולידציה כשיש שינוי בערכים
         setErrors({
             email: validateField("email", email),
             password: validateField("password", password),
@@ -45,35 +41,23 @@ function Register() {
         });
     }, [email, password, name]);
 
-    const isFormValid = !Object.values(errors).some((error) => error);
+    const isFormValid = !Object.values(errors).some(Boolean);
 
-    const handleBlur = (fieldName) => {
-        setTouched({ ...touched, [fieldName]: true });
-    };
+    const handleBlur = (fieldName) => setTouched({ ...touched, [fieldName]: true });
 
     const register = async () => {
         if (!isFormValid) return;
-        console.log("re")
         const user = { username: name, email, password };
         try {
             const response = await axios.post(`${baseURL}users/register`, user);
-            console.log(response)
-            if (response?.status == 201) {
-                navigate('../Login');
-            }
+            if (response?.status === 201) navigate('../Login');
         } catch (err) {
-            if (err.response.status === 409) {
-                setMessage("משתמש קיים");
-            } else {
-                console.error('Registration failed:', err);
-                setMessage("שגיאה בהרשמה");
-            }
+            if (err.response?.status === 409) setMessage("משתמש קיים");
+            else setMessage("שגיאה בהרשמה");
         }
     };
 
-    const login = () => {
-        navigate('../login');
-    };
+    const login = () => navigate('../login');
 
     const handleGoogleSuccess = async (response) => {
         try {
@@ -85,12 +69,8 @@ function Register() {
                 navigate("../");
             }
         } catch (err) {
-            if (err.response.status === 409) {
-                setMessage("משתמש קיים");
-                return;
-            }
-            console.error('Google Login failed:', err);
-            setMessage("שגיאה של גוגל");
+            if (err.response?.status === 409) setMessage("משתמש קיים");
+            else setMessage("שגיאה של גוגל");
         }
     };
 
@@ -100,148 +80,44 @@ function Register() {
     };
 
     return (
-        <Box
-    sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        minHeight: "90vh",
-        fontFamily: "'Roboto', sans-serif",
-        fontSize: "1rem",
-        color: "#231f20",
-        overflow: "hidden"
-    }}
->
-    <div className="login-page" style={{ maxWidth: "500px", width: "100%" }}>
-        <form
-            className="login-form"
-            style={{
-                padding: "3em",
-                background: "#fff",
-                borderRadius: "8px",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-            }}
-        >
-            <h1 style={{ textAlign: "center", marginBottom: "1em", color: "#231f20" }}>הרשמה</h1>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", minHeight: "90vh", fontFamily: "'Roboto', sans-serif", fontSize: "1rem", color: "#231f20", overflow: "hidden" }}>
+            <div className="login-page">
+                <form className="login-form">
+                    <h1>הרשמה</h1>
 
-            {/* שדה שם */}
-            <div style={{ marginBottom: "1.5em", textAlign: "right" }}>
-                <input
-                    type="text"
-                    placeholder="שם"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onBlur={() => handleBlur("name")}
-                    style={{
-                        width: "100%",
-                        padding: "12px",
-                        border: "1px solid #ddd",
-                        borderRadius: "5px",
-                        fontSize: "1.1rem",
-                        textAlign: "right",
-                        color: "#231f20"
-                    }}
-                />
-                {touched.name && errors.name && <p style={{ color: "#bf1b2c" }}>{errors.name}</p>}
+                    <div style={{ marginBottom: "1.5em", textAlign: "right", position: "relative" }}>
+                        <input type="text" placeholder="שם" value={name} onChange={(e) => setName(e.target.value)} onBlur={() => handleBlur("name")} />
+                        {touched.name && errors.name && <p className="error-msg">{errors.name}</p>}
+                    </div>
+
+                    <div style={{ marginBottom: "1.5em", textAlign: "right" }}>
+                        <input type="email" placeholder="מייל" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => handleBlur("email")} />
+                        {touched.email && errors.email && <p className="error-msg">{errors.email}</p>}
+                    </div>
+
+                    <div style={{ marginBottom: "2em", textAlign: "right", position: "relative" }}>
+                        <label className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                            <i className="fas fa-lock"></i>
+                        </label>
+                        <input type={showPassword ? "text" : "password"} placeholder="סיסמה" value={password} onChange={(e) => setPassword(e.target.value)} onBlur={() => handleBlur("password")} />
+                        {touched.password && errors.password && <p className="error-msg">{errors.password}</p>}
+                    </div>
+
+                    <button type="button" onClick={register} disabled={!isFormValid} className="register-btn">הרשמה</button>
+
+                    <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
+                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} useOneTap={false} promptMomentNotification={() => {}} theme="outline" />
+                    </GoogleOAuthProvider>
+
+                    {message && <p className="error-msg" style={{ textAlign: "center", marginTop: "1em" }}>{message}</p>}
+
+                    <p className="login-link">
+                        כבר יש לך חשבון?{" "}
+                        <span onClick={login}>התחבר</span>
+                    </p>
+                </form>
             </div>
-
-            {/* שדה מייל */}
-            <div style={{ marginBottom: "1.5em", textAlign: "right" }}>
-                <input
-                    type="email"
-                    placeholder="מייל"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onBlur={() => handleBlur("email")}
-                    style={{
-                        width: "100%",
-                        padding: "12px",
-                        border: "1px solid #ddd",
-                        borderRadius: "5px",
-                        fontSize: "1.1rem",
-                        textAlign: "right",
-                        color: "#231f20"
-                    }}
-                />
-                {touched.email && errors.email && <p style={{ color: "#bf1b2c" }}>{errors.email}</p>}
-            </div>
-
-            {/* שדה סיסמה */}
-            <div style={{ marginBottom: "2em", textAlign: "right", position: "relative" }}>
-                <label style={{ position: "absolute", top: "50%", left: "10px", transform: "translateY(-50%)", color: "#bf1b2c", cursor: "pointer" }}
-                    onClick={() => setShowPassword(!showPassword)}
-                >
-                    <i className="fas fa-lock"></i>
-                </label>
-                <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="סיסמה"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onBlur={() => handleBlur("password")}
-                    style={{
-                        width: "100%",
-                        padding: "12px",
-                        border: "1px solid #ddd",
-                        borderRadius: "5px",
-                        fontSize: "1.1rem",
-                        textAlign: "right",
-                        color: "#231f20"
-                    }}
-                />
-                {touched.password && errors.password && <p style={{ color: "#bf1b2c" }}>{errors.password}</p>}
-            </div>
-
-            {/* כפתור הרשמה */}
-            <button
-                type="button"
-                onClick={register}
-                style={{
-                    width: "100%",
-                    padding: "12px",
-                    backgroundColor: "#bf1b2c",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    fontSize: "1.1rem",
-                    fontWeight: 700,
-                    marginBottom: "2em",
-                }}
-                disabled={!isFormValid}
-            >
-                הרשמה
-            </button>
-
-            {/* התחברות עם גוגל */}
-            <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
-                <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={handleGoogleFailure}
-                    useOneTap={false}
-                    promptMomentNotification={() => {}}
-                    theme="outline"
-                />
-            </GoogleOAuthProvider>
-
-            {/* הודעות שגיאה */}
-            {message && <p style={{ color: "#bf1b2c", textAlign: "center", marginTop: "1em" }}>{message}</p>}
-
-            {/* לינק להתחברות */}
-            <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "0.9rem", color: "#231f20" }}>
-                כבר יש לך חשבון?{" "}
-                <span
-                    onClick={login}
-                    style={{ color: "#bf1b2c", cursor: "pointer", textDecoration: "underline", fontWeight: 700 }}
-                >
-                    התחבר
-                </span>
-            </p>
-        </form>
-    </div>
-</Box>
-
+        </Box>
     );
 }
 

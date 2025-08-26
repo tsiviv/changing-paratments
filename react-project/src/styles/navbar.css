@@ -20,6 +20,7 @@
     display: flex;
     gap: 14px;
     justify-content: start;
+    margin-right: 2px;
 }
 
 .head1, 

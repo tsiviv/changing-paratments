@@ -155,3 +155,64 @@
     border: 3px solid #fff;
     /* Optional: White border for contrast */
 }
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .name-container {
+        height: 270px;
+    }
+    .profile__content {
+        font-size: 38px;
+        width: 75vw;
+    }
+    .avatar__img {
+        width: 160px;
+        height: 160px;
+    }
+    .email {
+        font-size: 26px;
+    }
+    .email-value, .link {
+        font-size: 21px;
+    }
+}
+
+/* למסכים בינוניים */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .name-container {
+        height: 250px;
+    }
+    .profile__content {
+        font-size: 35px;
+        width: 80vw;
+    }
+    .avatar__img {
+        width: 150px;
+        height: 150px;
+    }
+    .email {
+        font-size: 25px;
+    }
+    .email-value, .link {
+        font-size: 20px;
+    }
+}
+
+/* למסכים קטנים (למחשבים קטנים בלבד, לא מובייל) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .name-container {
+        height: 220px;
+    }
+    .profile__content {
+        font-size: 30px;
+        width: 85vw;
+    }
+    .avatar__img {
+        width: 130px;
+        height: 130px;
+    }
+    .email {
+        font-size: 22px;
+    }
+    .email-value, .link {
+        font-size: 18px;
+    }
+}

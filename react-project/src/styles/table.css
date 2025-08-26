@@ -227,3 +227,133 @@
   color: #231f20;
   font-weight: 600;
 }
+/* מסכים מאוד רחבים */
+@media (min-width: 1400px) {
+  .cards-view-container {
+    padding: 6rem;
+    gap: 3rem;
+  }
+
+  .sidebar-filters {
+    width: 280px;
+    padding: 2rem;
+  }
+
+  .cards-wrapper {
+    gap: 4rem;
+  }
+
+  .card-box h5 {
+    font-size: 1.4rem;
+  }
+
+  .card-box p {
+    font-size: 1rem;
+  }
+
+  .pagination button {
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* מסכים רחבים */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .cards-view-container {
+    padding: 5rem;
+    gap: 2.5rem;
+  }
+
+  .sidebar-filters {
+    width: 260px;
+  }
+
+  .cards-wrapper {
+    gap: 3.5rem;
+  }
+
+  .card-box h5 {
+    font-size: 1.3rem;
+  }
+
+  .card-box p {
+    font-size: 0.98rem;
+  }
+}
+
+/* מסכים בינוניים */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .cards-view-container {
+    padding: 4rem;
+    gap: 2rem;
+  }
+
+  .sidebar-filters {
+    width: 240px;
+  }
+
+  .cards-wrapper {
+    gap: 3rem;
+  }
+
+  .card-box h5 {
+    font-size: 1.2rem;
+  }
+
+  .card-box p {
+    font-size: 0.95rem;
+  }
+}
+
+/* מסכים קטנים (למחשבים קטנים בלבד) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .cards-view-container {
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  .sidebar-filters {
+    width: 100%;
+    position: relative;
+    top: auto;
+  }
+
+  .cards-wrapper {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+
+  .card-box h5 {
+    font-size: 1.1rem;
+  }
+
+  .card-box p {
+    font-size: 0.9rem;
+  }
+
+  .pagination button {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+}
+#dropdown-multiselect .dropdown-menu-options {
+  max-height: 150px;
+  overflow-y: auto;
+  padding-right: 10px;
+  text-align: right;
+}
+
+#dropdown-multiselect .dropdown-menu-options .dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  direction: rtl;
+}
+
+#dropdown-multiselect .dropdown-menu-options label {
+  margin: 0;
+  flex-grow: 1;
+  text-align: right;
+}

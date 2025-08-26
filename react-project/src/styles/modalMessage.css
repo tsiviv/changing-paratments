@@ -1,0 +1,64 @@
+.message-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+  background: #bf1b2c;
+  border-radius: 50%;
+  padding: 15px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-header-custom {
+  direction: rtl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.modal-title-custom {
+  flex-grow: 1;
+  text-align: center;
+  margin-right: 40px;
+}
+
+.modal-close-btn {
+  position: absolute;
+  right: 10px;
+}
+
+.modal-body-custom {
+  direction: rtl;
+  text-align: right;
+}
+
+textarea.form-control {
+  text-align: right;
+}
+
+input.form-control {
+  text-align: right;
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.update-btn {
+  background-color: #bf1b2c;
+  color: white;
+  font-weight: 700;
+}
+
+.close-btn {
+  background-color: #6c757d;
+  color: white;
+  font-weight: 700;
+}

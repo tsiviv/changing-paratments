@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import '../styles/table.css';
 
 function MultiSelectDropdown({ options, selectedOptions, setSelectedOptions, label }) {
@@ -23,28 +23,10 @@ function MultiSelectDropdown({ options, selectedOptions, setSelectedOptions, lab
                 <strong>בחר אפשרויות:</strong>
             </Dropdown.ItemText>
 
-            <div
-                className="dropdown-menu-options"
-                dir="rtl"
-                style={{
-                    maxHeight: '150px',
-                    overflowY: 'auto',
-                    paddingRight: '10px',
-                    textAlign: 'right',
-                }}
-            >
+            <div className="dropdown-menu-options" dir="rtl">
                 {options.map((option, index) => (
-                    <div key={index} className="d-flex justify-content-between align-items-center mb-2" style={{ direction: 'rtl' }}>
-                        <label
-                            htmlFor={`option-${index}`}
-                            style={{
-                                margin: 0,
-                                flexGrow: 1,
-                                textAlign: 'right',
-                            }}
-                        >
-                            {option}
-                        </label>
+                    <div key={index}>
+                        <label htmlFor={`option-${index}`}>{option}</label>
                         <input
                             id={`option-${index}`}
                             type="checkbox"

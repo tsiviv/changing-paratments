@@ -1,9 +1,11 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
 import config from '../config';
+import '../styles/modalMessage.css';
+
 function SendMessage({ show, setShow }) {
     const [message, setMessage] = useState("");
     const [username, setUsername] = useState("");
@@ -12,40 +14,26 @@ function SendMessage({ show, setShow }) {
     const [successMessage, setSuccessMessage] = useState("");
     const [errors, setErrors] = useState({ username: "", message: "" });
     const [isLoading, setIsLoading] = useState(false);
-    const baseURL=config.baseUrl
+    const baseURL = config.baseUrl;
 
     const handleShow = () => setShow(true);
     const handleClose = () => {
         setShow(false);
         setSuccessMessage("");
         setErrors({ username: "", message: "" });
-        console.log("כבר נכנסתי לפסק הזמן");
-        console.log("כבר נכנסתי לפסק הזמן");
-
     };
 
     const validateField = (fieldName, value) => {
-        if (fieldName === "username" && !value.trim()) {
-            return "שדה זה הינו חובה.";
-        }
-        if (fieldName === "message" && !value.trim()) {
-            return "שדה זה הינו חובה.";
-        }
+        if (fieldName === "username" && !value.trim()) return "שדה זה הינו חובה.";
+        if (fieldName === "message" && !value.trim()) return "שדה זה הינו חובה.";
         return "";
     };
 
     const handleInputChange = (fieldName, value) => {
-        if (fieldName === "username") {
-            setUsername(value);
-        } else if (fieldName === "message") {
-            setMessage(value);
-        }
+        if (fieldName === "username") setUsername(value);
+        else if (fieldName === "message") setMessage(value);
 
-        // עדכון השגיאה של השדה לפי המצב החדש
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            [fieldName]: validateField(fieldName, value),
-        }));
+        setErrors(prev => ({ ...prev, [fieldName]: validateField(fieldName, value) }));
     };
 
     const handleSendMessage = async () => {
@@ -53,7 +41,6 @@ function SendMessage({ show, setShow }) {
             username: validateField("username", username),
             message: validateField("message", message),
         };
-
         if (newErrors.username || newErrors.message) {
             setErrors(newErrors);
             return;
@@ -76,65 +63,25 @@ function SendMessage({ show, setShow }) {
             setSuccessMessage("שגיאה בשליחת ההודעה.");
         } finally {
             setIsLoading(false);
-            setTimeout(() => {
-                console.log("Sd/fdg")
-                handleClose()
-            }, 500);
+            setTimeout(handleClose, 500);
         }
     };
 
     return (
         <div>
-            <div
-                style={{
-                    position: "fixed",
-                    bottom: "20px",
-                    right: "20px",
-                    cursor: "pointer",
-                    background: "#bf1b2c",
-                    borderRadius: "50%",
-                    padding: "15px",
-                    color: "white",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
-
-                }}
-                onClick={handleShow}
-            >
+            <div className="message-button" onClick={handleShow}>
                 <AiOutlineMessage size={30} />
             </div>
 
             <Modal show={show} onHide={handleClose} centered>
-                <Modal.Header
-                    style={{
-                        direction: "rtl",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        position: "relative",
-                    }}
-                >
-                    <Modal.Title
-                        style={{
-                            flexGrow: 1,
-                            textAlign: "center",
-                            marginRight: "40px",
-                        }}
-                    >
+                <Modal.Header className="modal-header-custom">
+                    <Modal.Title className="modal-title-custom">
                         שלח הודעה למערכת
                     </Modal.Title>
-                    <button
-                        type="button"
-                        className="btn-close"
-                        onClick={handleClose}
-                        aria-label="Close"
-                        style={{
-                            position: "absolute",
-                            right: "10px",
-                        }}
-                    ></button>
+                    <button type="button" className="btn-close modal-close-btn" onClick={handleClose} aria-label="Close"></button>
                 </Modal.Header>
 
-                <Modal.Body style={{ direction: "rtl", textAlign: "right" }}>
+                <Modal.Body className="modal-body-custom">
                     <Form>
                         <Form.Group className="mb-3" controlId="username">
                             <Form.Label>שם</Form.Label>
@@ -145,10 +92,10 @@ function SendMessage({ show, setShow }) {
                                 onChange={(e) => handleInputChange("username", e.target.value)}
                                 isInvalid={!!errors.username}
                                 required
-                                style={{ textAlign: "right" }}
                             />
                             <Form.Text className="text-danger">{errors.username}</Form.Text>
                         </Form.Group>
+
                         <Form.Group className="mb-3" controlId="message">
                             <Form.Label>תוכן ההודעה</Form.Label>
                             <Form.Control
@@ -159,14 +106,14 @@ function SendMessage({ show, setShow }) {
                                 onChange={(e) => handleInputChange("message", e.target.value)}
                                 isInvalid={!!errors.message}
                                 required
-                                style={{ textAlign: "right" }}
                             />
                             <Form.Text className="text-danger">{errors.message}</Form.Text>
                         </Form.Group>
+
                         <Form.Group className="mb-3">
                             <Form.Label>דרג את האתר</Form.Label>
-                            <div>
-                                {[1, 2, 3, 4, 5].map((star) => (
+                            <div className="star-rating">
+                                {[1,2,3,4,5].map(star => (
                                     <FaStar
                                         key={star}
                                         size={30}
@@ -180,25 +127,16 @@ function SendMessage({ show, setShow }) {
                             </div>
                         </Form.Group>
                     </Form>
+
                     {successMessage && <p className="text-success">{successMessage}</p>}
                 </Modal.Body>
-               <Modal.Footer
-  style={{ direction: "rtl" }}
-  className="d-flex align-items-center justify-content-between"
->
- 
-  <Button
-    onClick={handleSendMessage}
-    disabled={isLoading}
-    className="update-btn"
-  >
-    {isLoading ? <Spinner animation="border" size="sm" /> : "שלח הודעה"}
-  </Button>
-   <Button className="close-btn" onClick={handleClose}>
-    סגור
-  </Button>
-</Modal.Footer>
 
+                <Modal.Footer className="d-flex align-items-center justify-content-between">
+                    <Button onClick={handleSendMessage} disabled={isLoading} className="update-btn">
+                        {isLoading ? <Spinner animation="border" size="sm" /> : "שלח הודעה"}
+                    </Button>
+                    <Button className="close-btn" onClick={handleClose}>סגור</Button>
+                </Modal.Footer>
             </Modal>
         </div>
     );

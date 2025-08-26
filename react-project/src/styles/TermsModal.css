@@ -35,3 +35,54 @@
   margin: 40px auto;   /* מרכז בדף */
   position: relative;  /* לא fixed */
 }
+/* מסכים מאוד רחבים */
+@media (min-width: 1400px) {
+  .terms-button {
+    padding: 14px 28px;
+    font-size: 1.1rem;
+  }
+
+  .modal-content-term {
+    max-width: 700px;
+    padding: 30px 40px;
+  }
+}
+
+/* מסכים רחבים */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .terms-button {
+    padding: 13px 25px;
+    font-size: 1rem;
+  }
+
+  .modal-content-term {
+    max-width: 650px;
+    padding: 28px 35px;
+  }
+}
+
+/* מסכים בינוניים */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .terms-button {
+    padding: 12px 22px;
+    font-size: 0.95rem;
+  }
+
+  .modal-content-term {
+    max-width: 600px;
+    padding: 25px 30px;
+  }
+}
+
+/* מסכים קטנים (למחשבים קטנים בלבד) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .terms-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .modal-content-term {
+    max-width: 90%;
+    padding: 20px 25px;
+  }
+}
