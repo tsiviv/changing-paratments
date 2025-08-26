@@ -11,7 +11,6 @@ const crypto = require('crypto'); // כדי ליצור קוד חד-פעמי
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
 const { Op } = require('sequelize');
-const sequelize = require('../models');
 
 async function verifyToken(idToken) {
     const ticket = await client.verifyIdToken({
@@ -286,88 +285,88 @@ exports.getUserById = async (req, res) => {
     }
 };
 exports.getAllUsers = async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
-        const offset = (page - 1) * limit;
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = (page - 1) * limit;
 
-        // פילטרים מהקליינט
-        const cities = req.query.cities ? req.query.cities.split(',').filter(Boolean) : [];
-        const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
-        const minBeds = Number.isNaN(parseInt(req.query.minBeds)) ? null : parseInt(req.query.minBeds);
-        const hasWanted = req.query.hasWanted === 'true';
-        const noWanted = req.query.noWanted === 'true';
-        const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
+    // פילטרים מהקליינט
+    const cities = req.query.cities ? req.query.cities.split(',').filter(Boolean) : [];
+    const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
+    const minBeds  = Number.isNaN(parseInt(req.query.minBeds))  ? null : parseInt(req.query.minBeds);
+    const hasWanted = req.query.hasWanted === 'true';
+    const noWanted  = req.query.noWanted  === 'true';
+    const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-        // פילטר לדירות
-        const whereApartment = {};
-        if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
-        if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
-        if (minBeds !== null) whereApartment.beds = { [Op.gte]: minBeds };
+    // פילטר לדירות
+    const whereApartment = {};
+    if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
+    if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
+    if (minBeds  !== null) whereApartment.beds  = { [Op.gte]: minBeds };
 
-        let swapDatesFilter = [];
-        if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
-        if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
-        swapDatesFilter = [...new Set(swapDatesFilter)];
-        if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
+    let swapDatesFilter = [];
+    if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
+    if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
+    swapDatesFilter = [...new Set(swapDatesFilter)];
+    if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
 
-        // בניית include
-        const include = [
-            {
-                model: OnwerPartments,
-                as: 'Apartments',
-                required: true,
-                where: whereApartment,
-            },
-            {
-                model: alternativePartmnets,
-                as: 'WantedApartments',
-                required: false, // עדיין LEFT JOIN
-                attributes: ['id', 'area', 'numberOfRooms', 'numberOfBeds'],
-            }
-        ];
+    // בניית include
+    const include = [
+      {
+        model: OnwerPartments,
+        as: 'Apartments',
+        required: true,
+        where: whereApartment,
+      }
+    ];
 
-        // תנאי GROUP + HAVING עבור noWanted
-        // תנאי GROUP + HAVING
-        let havingClause = undefined;
-        if (noWanted) {
-            havingClause = sequelize.literal('COUNT(`WantedApartments`.`id`) = 0');
-        }
-        if (hasWanted) {
-            havingClause = sequelize.literal('COUNT(`WantedApartments`.`id`) > 0');
-        }
-
-        const result = await User.findAndCountAll({
-            include,
-            attributes: {
-                include: [
-                    [sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
-                ]
-            },
-            group: ['User.id', 'Apartments.id', 'WantedApartments.id'], // חובה להוסיף אותם בגלל ONLY_FULL_GROUP_BY
-            having: havingClause,
-            distinct: true,
-            offset,
-            limit,
-            order: [['updatedAt', 'DESC']],
-            subQuery: false,
-        });
-
-        res.status(200).json({
-            data: result.rows,
-            total: result.count.length ? result.count.length : result.count, // handle grouped count
-            totalPages: Math.ceil((result.count.length ? result.count.length : result.count) / limit),
-        });
-
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({
-            status: 'error',
-            message: 'Server error during users retrieval',
-            details: error.message,
-        });
+    // סינון WantedApartments כבר ב-SQL
+    if (hasWanted && !noWanted) {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: true, // INNER JOIN → חייב שיהיו דרישות
+      });
+    } else if (!hasWanted && noWanted) {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false, // LEFT JOIN → משתמשים ללא דרישות
+        where: { id: { [Op.is]: null } } // רק אם אין רשומות
+      });
+    } else {
+      include.push({
+        model: alternativePartmnets,
+        as: 'WantedApartments',
+        required: false, // ללא סינון
+      });
     }
+
+    const result = await User.findAndCountAll({
+      include,
+      distinct: true,
+      offset,
+      limit,
+      order: [['updatedAt', 'DESC']],
+      subQuery: false, // חשוב ל־$Alias$ בשאילתות עם JOIN
+    });
+
+    res.status(200).json({
+      data: result.rows,
+      total: result.count,
+      totalPages: Math.ceil(result.count / limit),
+    });
+
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error during users retrieval',
+      details: error.message,
+    });
+  }
 };
+
 
 exports.ForgotPassword = async (req, res) => {
 
@@ -425,38 +424,36 @@ exports.ForgotPassword = async (req, res) => {
     }
 }
 exports.ResetPassword = async (req, res) => {
-    const { code, newPassword } = req.body;
 
+    const { code, newPassword } = req.body;
+    console.log(code)
+    console.log(req.session.resetCode)
     try {
-        // בדיקה שהקוד תואם ותקף
+        // בדוק אם הקוד שהוזן תואם לקוד בזיכרון
         if (req.session.resetCode !== code || Date.now() - req.session.resetCodeTime > 15 * 60 * 1000) {
             return res.status(400).json({ message: 'הקוד לא תקין או פג תוקף' });
         }
 
-        // חיפוש המשתמש לפי המייל ששמור ב-session
-        const user = await User.findOne({ where: { email: req.session.email } });
+        // חפש את המשתמש במערכת
+        const user = await User.findOne({ email: req.session.email });
 
         if (!user) {
             return res.status(400).json({ message: 'משתמש לא נמצא' });
         }
 
-        // עדכון הסיסמה עם hash
+        // עדכון הסיסמה
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
         await user.save();
 
-        // בדיקה מיידית שהhash עובד
-        const verify = await bcrypt.compare(newPassword, user.password);
-        console.log('Password verify after reset:', verify); // צריך להחזיר true
-
-        // מחיקת הקוד מה-session
+        // מחיקת הקוד מה-session לאחר השחזור
         delete req.session.resetCode;
         delete req.session.resetCodeTime;
 
         res.status(200).json({ message: 'הסיסמה שוחזרה בהצלחה' });
-
     } catch (error) {
         console.error('Error during password reset:', error);
         res.status(500).json({ message: 'אירעה שגיאה במערכת' });
     }
-};
+}
+
