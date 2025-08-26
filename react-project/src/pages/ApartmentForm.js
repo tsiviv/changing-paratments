@@ -387,12 +387,22 @@ const ApartmentForm = (props) => {
                 centered
                 className="custom-modal "
             >
-                <Modal.Header closeButton className=' d-flex align-items-center justify-content-center'
-                    style={{ borderBottom: 'none' }}
-                >
-                    <Modal.Title className="w-100 text-center header fw-bold">טופס עדכון דירה</Modal.Title>
-                    <div>אין להכניס בשום אופן דירות להשכרה האתר מיועד רק להחלפה</div>
+                <Modal.Header closeButton className='d-flex flex-column align-items-center justify-content-center' style={{ borderBottom: 'none' }}>
+                    <Modal.Title className="w-100 text-center header fw-bold">
+                        טופס עדכון דירה
+                    </Modal.Title>
+
+                    {showAlert && (
+                        <div className="w-100 mt-2">
+                            <AlertComponent message={message} setShowAlert={setShowAlert} showAlert={showAlert} />
+                        </div>
+                    )}
+
+                    <div className="mt-2 text-center" style={{ fontSize: '0.9rem', color: '#555' }}>
+                        אין להכניס בשום אופן דירות להשכרה האתר מיועד רק להחלפה
+                    </div>
                 </Modal.Header>
+
                 <Modal.Body className='ps-4 pe-4' style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <Container className=' mt-0 color-body'>
                         <Form onSubmit={handleSubmit}>
