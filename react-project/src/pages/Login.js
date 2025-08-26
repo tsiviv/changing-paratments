@@ -44,7 +44,6 @@ function Login() {
         }
     };
     const checkuser = async (e) => {
-        e.preventDefault();
         const user = { email, password };
         try {
             const response = await axios.post(`${baseURL}users/login`, user);
@@ -64,6 +63,7 @@ function Login() {
     const register = () => navigate("/register", { replace: false });
 
     const forgotPassword = async () => {
+        console.log("forget")
         if (!emailRegex.test(email)) {
             setMessage("מייל לא תקין. נא להזין מייל תקני.");
             return;
@@ -71,7 +71,6 @@ function Login() {
         setLoading(true);
 
         try {
-            // שליחת בקשה לשחזור סיסמה
             const response = await axios.post(`${baseURL}users/forgot-password`, { email }, { withCredentials: true });
 
             if (response.data) {

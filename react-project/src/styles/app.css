@@ -1,4 +1,6 @@
 body {
    background-color: #faf4f2 !important;
     overflow: auto;
+     transform: scale(1);    /* מקטין את כל התוכן ל-80% */
+    transform-origin: top center;
 }
