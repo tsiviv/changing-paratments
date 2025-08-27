@@ -386,8 +386,9 @@ const ApartmentForm = (props) => {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
                 className="custom-modal "
+                closeButton
             >
-                <Modal.Header closeButton className='d-flex flex-column align-items-center justify-content-center' style={{ borderBottom: 'none' }}>
+                <Modal.Header  className='d-flex flex-column align-items-center justify-content-center' style={{ borderBottom: 'none' }}>
                     <Modal.Title className="w-100 text-center header fw-bold">
                         טופס עדכון דירה
                     </Modal.Title>
