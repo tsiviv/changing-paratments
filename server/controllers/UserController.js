@@ -286,113 +286,113 @@ exports.getUserById = async (req, res) => {
     }
 };
 exports.getAllUsers = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
-    const offset = (page - 1) * limit;
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 50;
+        const offset = (page - 1) * limit;
 
-    // פילטרים מהקליינט
-    const cities = req.query.cities ? req.query.cities.split(',').filter(Boolean) : [];
-    const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
-    const minBeds  = Number.isNaN(parseInt(req.query.minBeds))  ? null : parseInt(req.query.minBeds);
-    const hasWanted = req.query.hasWanted === 'true';
-    const noWanted  = req.query.noWanted  === 'true';
-    const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
+        // פילטרים מהקליינט
+        const cities = req.query.cities ? req.query.cities.split(',').filter(Boolean) : [];
+        const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
+        const minBeds = Number.isNaN(parseInt(req.query.minBeds)) ? null : parseInt(req.query.minBeds);
+        const hasWanted = req.query.hasWanted === 'true';
+        const noWanted = req.query.noWanted === 'true';
+        const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-    // פילטר לדירות
-    const whereApartment = {};
-    if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
-    if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
-    if (minBeds  !== null) whereApartment.beds  = { [Op.gte]: minBeds };
+        // פילטר לדירות
+        const whereApartment = {};
+        if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
+        if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
+        if (minBeds !== null) whereApartment.beds = { [Op.gte]: minBeds };
 
-    let swapDatesFilter = [];
-    if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
-    if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
-    swapDatesFilter = [...new Set(swapDatesFilter)];
-    if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
+        let swapDatesFilter = [];
+        if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
+        if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
+        swapDatesFilter = [...new Set(swapDatesFilter)];
+        if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
 
-    // בניית include
-    const include = [
-      {
-        model: OnwerPartments,
-        as: 'Apartments',
-        required: true,
-        where: whereApartment,
-      }
-    ];
+        // בניית include
+        const include = [
+            {
+                model: OnwerPartments,
+                as: 'Apartments',
+                required: true,
+                where: whereApartment,
+            }
+        ];
 
-    // סינון WantedApartments כבר ב-SQL
-    if (hasWanted && !noWanted) {
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: true, // INNER JOIN → חייב שיהיו דרישות
-      });
-    } else if (!hasWanted && noWanted) {
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false, // LEFT JOIN → משתמשים ללא דרישות
-        where: { id: { [Op.is]: null } } // רק אם אין רשומות
-      });
-    } else {
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false, // ללא סינון
-      });
+        // סינון WantedApartments כבר ב-SQL
+        if (hasWanted && !noWanted) {
+            include.push({
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: true, // INNER JOIN → חייב שיהיו דרישות
+            });
+        } else if (!hasWanted && noWanted) {
+            include.push({
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: false, // LEFT JOIN → משתמשים ללא דרישות
+                where: { id: { [Op.is]: null } } // רק אם אין רשומות
+            });
+        } else {
+            include.push({
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: false, // ללא סינון
+            });
+        }
+
+        const result = await User.findAndCountAll({
+            include,
+            distinct: true,
+            offset,
+            limit,
+            order: [['updatedAt', 'DESC']],
+            subQuery: false, // חשוב ל־$Alias$ בשאילתות עם JOIN
+        });
+
+        res.status(200).json({
+            data: result.rows,
+            total: result.count,
+            totalPages: Math.ceil(result.count / limit),
+        });
+
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error during users retrieval',
+            details: error.message,
+        });
     }
-
-    const result = await User.findAndCountAll({
-      include,
-      distinct: true,
-      offset,
-      limit,
-      order: [['updatedAt', 'DESC']],
-      subQuery: false, // חשוב ל־$Alias$ בשאילתות עם JOIN
-    });
-
-    res.status(200).json({
-      data: result.rows,
-      total: result.count,
-      totalPages: Math.ceil(result.count / limit),
-    });
-
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Server error during users retrieval',
-      details: error.message,
-    });
-  }
 };
 
 
 const resend = new Resend(process.env.SEND_API_KEY);
 
 exports.ForgotPassword = async (req, res) => {
-  const { email } = req.body;
+    const { email } = req.body;
 
-  try {
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(400).json({ message: 'שגיאה: משתמש לא נמצא' });
-    }
+    try {
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(400).json({ message: 'שגיאה: משתמש לא נמצא' });
+        }
 
-    const resetCode = Math.floor(10000 + Math.random() * 90000).toString();
-    req.session.resetCode = resetCode;
-    req.session.resetCodeTime = Date.now();
+        const resetCode = Math.floor(10000 + Math.random() * 90000).toString();
+        req.session.resetCode = resetCode;
+        req.session.resetCodeTime = Date.now();
+        req.session.email = email
+        // בניית הקישור לשחזור סיסמה
+        const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
 
-    // בניית הקישור לשחזור סיסמה
-    const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
-
-    // הגדרות המייל לשליחה
-    const mailOptions = {
-      from: 'onboarding@resend.dev', // Resend דורש שכתובת ה-from תהיה בדומיין שלהם או בדומיין שאומת על ידכם
-      to: user.email,
-      subject: 'שחזור סיסמה - האכסניא',
-      html: `
+        // הגדרות המייל לשליחה
+        const mailOptions = {
+            from: 'onboarding@resend.dev', // Resend דורש שכתובת ה-from תהיה בדומיין שלהם או בדומיין שאומת על ידכם
+            to: user.email,
+            subject: 'שחזור סיסמה - האכסניא',
+            html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
           <p>שלום,</p>
           <p>קיבלנו בקשה לשחזור סיסמה.</p>
@@ -401,25 +401,25 @@ exports.ForgotPassword = async (req, res) => {
           <p>אם לא ביקשת לשחזר את הסיסמה, ניתן להתעלם מהודעה זו.</p>
         </div>
       `,
-    };
+        };
 
-    console.log("Preparing to send email with Resend...");
+        console.log("Preparing to send email with Resend...");
 
-    // שליחת המייל באמצעות Resend API
-    const { data, error } = await resend.emails.send(mailOptions);
+        // שליחת המייל באמצעות Resend API
+        const { data, error } = await resend.emails.send(mailOptions);
 
-    if (error) {
-      console.error('❌ Error sending email:', error);
-      return res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
+        if (error) {
+            console.error('❌ Error sending email:', error);
+            return res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
+        }
+
+        console.log("Email sent successfully:", data);
+        res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
+
+    } catch (error) {
+        console.error('❌ An unexpected error occurred in ForgotPassword:', error);
+        res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
     }
-
-    console.log("Email sent successfully:", data);
-    res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
-
-  } catch (error) {
-    console.error('❌ An unexpected error occurred in ForgotPassword:', error);
-    res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
-  }
 };
 
 exports.ResetPassword = async (req, res) => {
@@ -427,26 +427,23 @@ exports.ResetPassword = async (req, res) => {
     console.log(code)
     console.log(req.session.resetCode)
     try {
-        // בדוק אם הקוד שהוזן תואם לקוד בזיכרון
         if (req.session.resetCode !== code || Date.now() - req.session.resetCodeTime > 15 * 60 * 1000) {
             return res.status(400).json({ message: 'הקוד לא תקין או פג תוקף' });
         }
 
-        // חפש את המשתמש במערכת
-        const user = await User.findOne({ email: req.session.email });
 
-        if (!user) {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+
+        const [updatedRowsCount] = await User.update(
+            { password: hashedPassword },
+            { where: { email: req.session.email } }
+        );
+
+        if (updatedRowsCount === 0) {
             return res.status(400).json({ message: 'משתמש לא נמצא' });
         }
 
-        // עדכון הסיסמה באמצעות הצפנה אחידה
-        // השתמש באותו מספר סבבי גיבוב כמו בהרשמה
-        const hashedPassword = await bcrypt.hash(newPassword, 10); // השתמש ב-10 סבבי גיבוב
-
-        user.password = hashedPassword;
-        await user.save();
-
-        // מחיקת הקוד מה-session לאחר השחזור
         delete req.session.resetCode;
         delete req.session.resetCodeTime;
 
