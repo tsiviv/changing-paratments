@@ -13,8 +13,6 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
 const { Op } = require('sequelize');
 const { google } = require('googleapis');
 
-const KEYFILEPATH = './creditinal.json'; 
-const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
 
 async function verifyToken(idToken) {
     const ticket = await client.verifyIdToken({
@@ -374,69 +372,68 @@ exports.getAllUsers = async (req, res) => {
 
 
 async function getTransporter() {
-    const auth = new google.auth.GoogleAuth({
-        keyFile: KEYFILEPATH,
-        scopes: SCOPES,
-    });
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    },
+    scopes: SCOPES,
+  });
 
-    const accessToken = await auth.getClient().then(client => client.getAccessToken());
+  const accessToken = await auth.getClient().then(client => client.getAccessToken());
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            type: 'OAuth2',
-            user: process.env.EMAIL_USER, // החשבון ממנו נשלח המייל
-            accessToken: accessToken.token,
-        },
-    });
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: process.env.EMAIL_USER,
+      accessToken: accessToken.token,
+    },
+  });
 
-    return transporter;
+  return transporter;
 }
 
 exports.ForgotPassword = async (req, res) => {
-    const { email } = req.body;
+  const { email } = req.body;
 
-    try {
-        const user = await User.findOne({ where: { email } });
-
-        if (!user) {
-            return res.status(400).json({ message: 'שגיאה משתמש לא נמצא' });
-        }
-
-        const resetCode = Math.floor(10000 + Math.random() * 90000).toString();
-
-        req.session.resetCode = resetCode;
-        req.session.resetCodeTime = Date.now();
-
-        const transporter = await getTransporter();
-
-        const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
-
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: user.email,
-            subject: 'שחזור סיסמא האכסניא',
-            html: `
-            <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <p>שלום,</p>
-                <p>קיבלנו בקשה לשחזור סיסמה.</p>
-                <p>לחץ על הקישור הבא כדי לאפס את הסיסמה שלך:</p>
-                <p><a href="${resetLink}" style="color: #1a73e8;">${resetLink}</a></p>
-                <p>אם לא ביקשת לשחזר את הסיסמה, ניתן להתעלם מהודעה זו.</p>
-            </div>
-            `
-        };
-
-        await transporter.sendMail(mailOptions);
-
-        res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
-
-    } catch (error) {
-        console.error('❌ Gmail API/Nodemailer error:', error);
-        res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(400).json({ message: 'שגיאה: משתמש לא נמצא' });
     }
-};
 
+    const resetCode = Math.floor(10000 + Math.random() * 90000).toString();
+    req.session.resetCode = resetCode;
+    req.session.resetCodeTime = Date.now();
+
+    const transporter = await getTransporter();
+
+    const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
+
+    const mailOptions = {
+      from: `"האכסניא" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'שחזור סיסמא האכסניא',
+      html: `
+        <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <p>שלום,</p>
+          <p>קיבלנו בקשה לשחזור סיסמה.</p>
+          <p>לחץ על הקישור הבא כדי לאפס את הסיסמה שלך:</p>
+          <p><a href="${resetLink}" style="color: #1a73e8;">${resetLink}</a></p>
+          <p>אם לא ביקשת לשחזר את הסיסמה, ניתן להתעלם מהודעה זו.</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
+  } catch (error) {
+    console.error('❌ Error in ForgotPassword:', error);
+    res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
+  }
+};
 exports.ResetPassword = async (req, res) => {
 
     const { code, newPassword } = req.body;
