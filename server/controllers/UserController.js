@@ -427,9 +427,10 @@ exports.ForgotPassword = async (req, res) => {
         </div>
       `,
     };
+console.log("wait")
 
     await transporter.sendMail(mailOptions);
-
+console.log("success")
     res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
   } catch (error) {
     console.error('❌ Error in ForgotPassword:', error);
