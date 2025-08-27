@@ -392,9 +392,21 @@ const ApartmentForm = (props) => {
                         טופס עדכון דירה
                     </Modal.Title>
 
-                    <div style="background-color: #fff3cd; border-color: #ffeeba; color: #856404; padding: 1rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem; text-align: center;">
-                        <p style="margin: 0; font-weight: bold;">אין להכניס בשום אופן דירות להשכרה. האתר מיועד אך ורק להחלפה.</p>
+                    <div style={{
+                        backgroundColor: "#fff3cd",
+                        borderColor: "#ffeeba",
+                        color: "#856404",
+                        padding: "1rem",
+                        marginBottom: "1rem",
+                        border: "1px solid transparent",
+                        borderRadius: ".25rem",
+                        textAlign: "center"
+                    }}>
+                        <p style={{ margin: 0, fontWeight: "bold" }}>
+                            אין להכניס בשום אופן דירות להשכרה. האתר מיועד אך ורק להחלפה.
+                        </p>
                     </div>
+
                 </Modal.Header>
 
                 <Modal.Body className='ps-4 pe-4' style={{ maxHeight: '70vh', overflowY: 'auto' }}>
