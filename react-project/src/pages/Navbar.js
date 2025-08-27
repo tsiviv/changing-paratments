@@ -149,7 +149,7 @@ function NavbarHead() {
                                                 onKeyDown={(e) => e.key === 'Enter' && addOrUpdate()}
                                                 role="button"
                                                 tabIndex="0"
-                                                style={{ marginLeft: "-35px" }}
+                                                // style={{ marginLeft: "-35px" }}
                                             >
                                                 <i className="fas fa-plus" style={{ color: '#bf1b2c' }}></i>
                                                 <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
