@@ -392,12 +392,6 @@ const ApartmentForm = (props) => {
                         טופס עדכון דירה
                     </Modal.Title>
 
-                    {showAlert && (
-                        <div className="w-100 mt-2">
-                            <AlertComponent message={message} setShowAlert={setShowAlert} showAlert={showAlert} />
-                        </div>
-                    )}
-
                     <div className="mt-2 text-center" style={{ fontSize: '0.9rem', color: '#555' }}>
                         אין להכניס בשום אופן דירות להשכרה האתר מיועד רק להחלפה
                     </div>
