@@ -30,7 +30,7 @@ const ApartmentForm = (props) => {
         preferredSwapDate: Apartment?.preferredSwapDate,
         userId: parseJwt(token)?.id
     });
-    const baseURL=config.baseUrl
+    const baseURL = config.baseUrl
 
 
     const [formDataDesired, setFormDataDesired] = useState({
@@ -113,18 +113,9 @@ const ApartmentForm = (props) => {
         }
     }
     function validateCity(input) {
-        const inputLower = input.toLowerCase().trim(); // הופכים את המילה לאותיות קטנות
-        const inputWords = inputLower.split(/\s+/); // מפרקים את המשפט למילים לפי רווחים
-
-        // מחפשים אם לפחות אחת מהמילים של המשתמש קיימת במערך הערים
-        return inputWords.some(word =>
-            config.cities.some(city => {
-                const cityWords = city.toLowerCase().split(/\s+/); // מפרקים את שם העיר למילים
-                return cityWords.includes(word); // בודקים אם המילה קיימת ברשימת המילים של העיר
-            })
-        );
+        const inputTrimmed = input.trim()
+        return config.cities.some(city => city === inputTrimmed);
     }
-
 
 
     const deleteDesirApatment = async () => {
@@ -145,7 +136,7 @@ const ApartmentForm = (props) => {
                     userId: ""
                 });
                 setTimeout(() => {
-                    dispatch(setModalShow(false));
+                    dispatch(setModalShow());
                 }, 1200);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
@@ -185,7 +176,7 @@ const ApartmentForm = (props) => {
                     userId: parseJwt(token)?.id
                 });
                 setTimeout(() => {
-                    dispatch(setModalShow(false));
+                    dispatch(setModalShow());
                 }, 1200);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
@@ -315,7 +306,7 @@ const ApartmentForm = (props) => {
                     userId: parseJwt(token).id
                 });
                 setTimeout(() => {
-                    dispatch(setModalShow(false));
+                    dispatch(setModalShow());
                 }, 1000);
             } else {
 
@@ -360,7 +351,7 @@ const ApartmentForm = (props) => {
                 });
 
                 setTimeout(() => {
-                    dispatch(setModalShow(false));
+                    dispatch(setModalShow());
                 }, 1000);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
@@ -377,7 +368,7 @@ const ApartmentForm = (props) => {
         if (!token) {
             setMessage("פג תוקף התחבר שוב")
             setShowAlert(true)
-            dispatch(setModalShow(false))
+            dispatch(setModalShow())
             logout()
             navigate('../Login')
             return
@@ -396,11 +387,16 @@ const ApartmentForm = (props) => {
                 centered
                 className="custom-modal "
             >
-                <Modal.Header closeButton className=' d-flex align-items-center justify-content-center'
-                    style={{ borderBottom: 'none' }}
-                >
-                    <Modal.Title className="w-100 text-center header fw-bold">טופס עדכון דירה</Modal.Title>
+                <Modal.Header closeButton className='d-flex flex-column align-items-center justify-content-center' style={{ borderBottom: 'none' }}>
+                    <Modal.Title className="w-100 text-center header fw-bold">
+                        טופס עדכון דירה
+                    </Modal.Title>
+
+                    <div style="background-color: #fff3cd; border-color: #ffeeba; color: #856404; padding: 1rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem; text-align: center;">
+                        <p style="margin: 0; font-weight: bold;">אין להכניס בשום אופן דירות להשכרה. האתר מיועד אך ורק להחלפה.</p>
+                    </div>
                 </Modal.Header>
+
                 <Modal.Body className='ps-4 pe-4' style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <Container className=' mt-0 color-body'>
                         <Form onSubmit={handleSubmit}>
@@ -592,7 +588,6 @@ const ApartmentForm = (props) => {
                                                 name="notes"
                                                 value={formDataCurrent.notes}
                                                 onChange={handleChangeCurrent}
-                                                required
                                             />
                                         </Form.Group>
                                     </Col>
