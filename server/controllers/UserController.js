@@ -6,12 +6,11 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const fs = require('fs');
 const path = require('path');
-const nodemailer = require('nodemailer');
 const crypto = require('crypto'); // כדי ליצור קוד חד-פעמי
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
 const { Op } = require('sequelize');
-const { google } = require('googleapis');
+const { Resend } = require('resend');
 
 
 async function verifyToken(idToken) {
@@ -370,31 +369,11 @@ exports.getAllUsers = async (req, res) => {
 };
 
 
-const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
+const { Resend } = require('resend');
+const User = require('./models/User'); // ודא שהנתיב לקובץ המודל נכון
 
-async function getTransporter() {
-    console.log(process.env.GOOGLE_PRIVATE_KEY,process.env.GOOGLE_CLIENT_EMAIL)
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    },
-    scopes: SCOPES,
-  });
-
-  const accessToken = await auth.getClient().then(client => client.getAccessToken());
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.EMAIL_USER,
-      accessToken: accessToken.token,
-    },
-  });
-
-  return transporter;
-}
+// יצירת מופע של Resend עם מפתח ה-API
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 exports.ForgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -409,14 +388,14 @@ exports.ForgotPassword = async (req, res) => {
     req.session.resetCode = resetCode;
     req.session.resetCodeTime = Date.now();
 
-    const transporter = await getTransporter();
-
+    // בניית הקישור לשחזור סיסמה
     const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
 
+    // הגדרות המייל לשליחה
     const mailOptions = {
-      from: `"האכסניא" <${process.env.EMAIL_USER}>`,
+      from: 'onboarding@resend.dev', // Resend דורש שכתובת ה-from תהיה בדומיין שלהם או בדומיין שאומת על ידכם
       to: user.email,
-      subject: 'שחזור סיסמא האכסניא',
+      subject: 'שחזור סיסמה - האכסניא',
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
           <p>שלום,</p>
@@ -427,16 +406,26 @@ exports.ForgotPassword = async (req, res) => {
         </div>
       `,
     };
-console.log("wait")
 
-    await transporter.sendMail(mailOptions);
-console.log("success")
+    console.log("Preparing to send email with Resend...");
+
+    // שליחת המייל באמצעות Resend API
+    const { data, error } = await resend.emails.send(mailOptions);
+
+    if (error) {
+      console.error('❌ Error sending email:', error);
+      return res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
+    }
+
+    console.log("Email sent successfully:", data);
     res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
+
   } catch (error) {
-    console.error('❌ Error in ForgotPassword:', error);
+    console.error('❌ An unexpected error occurred in ForgotPassword:', error);
     res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
   }
 };
+
 exports.ResetPassword = async (req, res) => {
 
     const { code, newPassword } = req.body;
