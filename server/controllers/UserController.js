@@ -423,7 +423,6 @@ exports.ForgotPassword = async (req, res) => {
 };
 
 exports.ResetPassword = async (req, res) => {
-
     const { code, newPassword } = req.body;
     console.log(code)
     console.log(req.session.resetCode)
@@ -440,8 +439,10 @@ exports.ResetPassword = async (req, res) => {
             return res.status(400).json({ message: 'משתמש לא נמצא' });
         }
 
-        // עדכון הסיסמה
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        // עדכון הסיסמה באמצעות הצפנה אחידה
+        // השתמש באותו מספר סבבי גיבוב כמו בהרשמה
+        const hashedPassword = await bcrypt.hash(newPassword, 10); // השתמש ב-10 סבבי גיבוב
+
         user.password = hashedPassword;
         await user.save();
 
@@ -454,5 +455,4 @@ exports.ResetPassword = async (req, res) => {
         console.error('Error during password reset:', error);
         res.status(500).json({ message: 'אירעה שגיאה במערכת' });
     }
-}
-
+};
