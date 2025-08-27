@@ -84,7 +84,7 @@ function NavbarHead() {
     };
 
     const addOrUpdate = () => {
-        isAuthenticated ? dispatch(setModalShow()) : navigate('./Login');
+        isAuthenticated ? dispatch(setModalShow(true)) : navigate('./Login');
     };
 
     const logout_generall = () => {
@@ -262,7 +262,7 @@ function NavbarHead() {
                     </Form>
                 </Navbar.Collapse>
             </Navbar>
-            <ApartmentForm show={ModalShow} onHide={() => dispatch(setModalShow())} />
+            <ApartmentForm show={ModalShow} onHide={() => dispatch(setModalShow(false))} />
             <SendMessage setShow={setShow} show={show}></SendMessage>
         </>
     );

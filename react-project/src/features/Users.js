@@ -32,12 +32,13 @@ const authSlice = createSlice({
             localStorage.clear();
         },
         setModalShowDetails(state) {
+            console.log("ModalShow2", state.ModalShow)
             state.ModalShowDetails = state.ModalShowDetails ? false : true
         },
-        setModalShow(state) {
-            console.log(state.ModalShow)
-            state.ModalShow = state.ModalShow ? false : true
+        setModalShow(state, action) {
+            state.ModalShow = action.payload; 
         }
+
     },
 });
 

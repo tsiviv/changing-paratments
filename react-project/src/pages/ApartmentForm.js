@@ -30,7 +30,7 @@ const ApartmentForm = (props) => {
         preferredSwapDate: Apartment?.preferredSwapDate,
         userId: parseJwt(token)?.id
     });
-    const baseURL = config.baseUrl
+    const baseURL=config.baseUrl
 
 
     const [formDataDesired, setFormDataDesired] = useState({
@@ -113,9 +113,18 @@ const ApartmentForm = (props) => {
         }
     }
     function validateCity(input) {
-        const inputTrimmed = input.trim()
-        return config.cities.some(city => city === inputTrimmed);
+        const inputLower = input.toLowerCase().trim(); // הופכים את המילה לאותיות קטנות
+        const inputWords = inputLower.split(/\s+/); // מפרקים את המשפט למילים לפי רווחים
+
+        // מחפשים אם לפחות אחת מהמילים של המשתמש קיימת במערך הערים
+        return inputWords.some(word =>
+            config.cities.some(city => {
+                const cityWords = city.toLowerCase().split(/\s+/); // מפרקים את שם העיר למילים
+                return cityWords.includes(word); // בודקים אם המילה קיימת ברשימת המילים של העיר
+            })
+        );
     }
+
 
 
     const deleteDesirApatment = async () => {
@@ -136,7 +145,7 @@ const ApartmentForm = (props) => {
                     userId: ""
                 });
                 setTimeout(() => {
-                    dispatch(setModalShow());
+                    dispatch(setModalShow(false));
                 }, 1200);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
@@ -176,7 +185,7 @@ const ApartmentForm = (props) => {
                     userId: parseJwt(token)?.id
                 });
                 setTimeout(() => {
-                    dispatch(setModalShow());
+                    dispatch(setModalShow(false));
                 }, 1200);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
@@ -306,7 +315,7 @@ const ApartmentForm = (props) => {
                     userId: parseJwt(token).id
                 });
                 setTimeout(() => {
-                    dispatch(setModalShow());
+                    dispatch(setModalShow(false));
                 }, 1000);
             } else {
 
@@ -351,7 +360,7 @@ const ApartmentForm = (props) => {
                 });
 
                 setTimeout(() => {
-                    dispatch(setModalShow());
+                    dispatch(setModalShow(false));
                 }, 1000);
             } else {
                 setMessage('שגיאה בשליחת הפרטים.');
@@ -368,7 +377,7 @@ const ApartmentForm = (props) => {
         if (!token) {
             setMessage("פג תוקף התחבר שוב")
             setShowAlert(true)
-            dispatch(setModalShow())
+            dispatch(setModalShow(false))
             logout()
             navigate('../Login')
             return
@@ -387,16 +396,11 @@ const ApartmentForm = (props) => {
                 centered
                 className="custom-modal "
             >
-                <Modal.Header closeButton className='d-flex flex-column align-items-center justify-content-center' style={{ borderBottom: 'none' }}>
-                    <Modal.Title className="w-100 text-center header fw-bold">
-                        טופס עדכון דירה
-                    </Modal.Title>
-
-                    <div className="mt-2 text-center" style={{ fontSize: '0.9rem', color: '#555' }}>
-                        אין להכניס בשום אופן דירות להשכרה האתר מיועד רק להחלפה
-                    </div>
+                <Modal.Header closeButton className=' d-flex align-items-center justify-content-center'
+                    style={{ borderBottom: 'none' }}
+                >
+                    <Modal.Title className="w-100 text-center header fw-bold">טופס עדכון דירה</Modal.Title>
                 </Modal.Header>
-
                 <Modal.Body className='ps-4 pe-4' style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     <Container className=' mt-0 color-body'>
                         <Form onSubmit={handleSubmit}>
@@ -588,6 +592,7 @@ const ApartmentForm = (props) => {
                                                 name="notes"
                                                 value={formDataCurrent.notes}
                                                 onChange={handleChangeCurrent}
+                                                required
                                             />
                                         </Form.Group>
                                     </Col>
