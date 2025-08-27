@@ -369,33 +369,35 @@ exports.getAllUsers = async (req, res) => {
 
 
 exports.ForgotPassword = async (req, res) => {
-
     const { email } = req.body;
 
-    console.log(email, process.env.EMAIL_USER, process.env.EMAIL_PASS)
+    console.log('📧 Email received:', email);
+    console.log('🔑 EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'NOT SET');
+    console.log('🔑 EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'NOT SET');
 
     try {
-        // חיפוש המשתמש במערכת לפי המייל
-        const user = await User.findOne({
-            where: { email: email } // תקין: המאפיין נמצא בתוך `where`
-        });
+        const user = await User.findOne({ where: { email: email } });
 
         if (!user) {
+            console.warn('⚠️ User not found for email:', email);
             return res.status(400).json({ message: 'שגיאה משתמש לא נמצא' });
         }
+        console.log('✅ User found:', user.id);
 
         const resetCode = Math.floor(10000 + Math.random() * 90000).toString();
+        console.log('🔢 Generated reset code:', resetCode);
 
         req.session.resetCode = resetCode;
         req.session.resetCodeTime = Date.now();
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
+            auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
         });
+
+        console.log('✉️ Transporter created, testing connection...');
+        await transporter.verify();
+        console.log('✅ SMTP connection verified');
 
         const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
 
@@ -404,25 +406,36 @@ exports.ForgotPassword = async (req, res) => {
             to: user.email,
             subject: 'שחזור סיסמא האכסניא',
             html: `
-        <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <p>שלום,</p>
-            <p>קיבלנו בקשה לשחזור סיסמה.</p>
-            <p>לחץ על הקישור הבא כדי לאפס את הסיסמה שלך:</p>
-            <p><a href="${resetLink}" style="color: #1a73e8;">${resetLink}</a></p>
-            <p>אם לא ביקשת לשחזר את הסיסמה, ניתן להתעלם מהודעה זו.</p>
-        </div>
-    `
+            <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <p>שלום,</p>
+                <p>קיבלנו בקשה לשחזור סיסמה.</p>
+                <p>לחץ על הקישור הבא כדי לאפס את הסיסמה שלך:</p>
+                <p><a href="${resetLink}" style="color: #1a73e8;">${resetLink}</a></p>
+                <p>אם לא ביקשת לשחזר את הסיסמה, ניתן להתעלם מהודעה זו.</p>
+            </div>
+            `
         };
 
+        console.log('📤 Sending email to:', user.email);
 
         await transporter.sendMail(mailOptions);
+        console.log('✅ Email sent successfully');
 
         res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
+
     } catch (error) {
-        console.error('Error during password reset email sending:', error);
+        console.error('❌ Nodemailer error:', error);
+
+        if (error.code) console.error('📌 Error code:', error.code);
+        if (error.response) console.error('📌 SMTP response:', error.response);
+        if (error.responseCode) console.error('📌 SMTP responseCode:', error.responseCode);
+        if (error.command) console.error('📌 SMTP command:', error.command);
+        if (error.timeout) console.error('📌 Timeout:', error.timeout);
+
         res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
     }
-}
+};
+
 exports.ResetPassword = async (req, res) => {
 
     const { code, newPassword } = req.body;
