@@ -6,31 +6,33 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   logging: console.log, // אפשר לראות את כל השאילתות שמבוצעות
 });
 
-// בדיקה בסיסית לחיבור
-async function testConnectionAndIndexes() {
+async function cleanDuplicateIndexes() {
   try {
-    await sequelize.authenticate();
-    console.log('✅ Connection has been established successfully.');
-
-    // בדיקה של כל הטבלאות והאינדקסים
     const [tables] = await sequelize.query("SHOW TABLES;");
-    console.log('📋 Tables in database:', tables.map(t => Object.values(t)[0]));
-
+    
     for (const table of tables) {
       const tableName = Object.values(table)[0];
       const [indexes] = await sequelize.query(`SHOW INDEX FROM \`${tableName}\`;`);
-      console.log(`🔹 Indexes for table ${tableName}:`, indexes.map(idx => ({
-        name: idx.Key_name,
-        column: idx.Column_name,
-        unique: idx.Non_unique === 0
-      })));
+
+      const seen = new Set();
+      for (const idx of indexes) {
+        const key = idx.Column_name + (idx.Non_unique === 0 ? '_unique' : '');
+        if (seen.has(key) && idx.Key_name !== 'PRIMARY') {
+          console.log(`Deleting duplicate index ${idx.Key_name} on ${tableName}.${idx.Column_name}`);
+          await sequelize.query(`DROP INDEX \`${idx.Key_name}\` ON \`${tableName}\`;`);
+        } else {
+          seen.add(key);
+        }
+      }
     }
 
+    console.log('✅ Duplicate indexes cleaned. Running sync...');
+    await sequelize.sync({ alter: true }); // או { force: true } אם רוצים למחוק ולבנות מחדש
+    console.log('✅ Sync completed successfully.');
   } catch (error) {
-    console.error('❌ Unable to connect to the database or fetch indexes:', error);
+    console.error('❌ Error cleaning indexes or syncing:', error);
   }
 }
 
-testConnectionAndIndexes();
-
+cleanDuplicateIndexes();
 module.exports = sequelize;
