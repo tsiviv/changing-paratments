@@ -372,6 +372,7 @@ exports.getAllUsers = async (req, res) => {
 
 
 async function getTransporter() {
+    console.log(process.env.GOOGLE_PRIVATE_KEY,process.env.GOOGLE_CLIENT_EMAIL)
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
