@@ -425,7 +425,7 @@ exports.ForgotPassword = async (req, res) => {
 exports.ResetPassword = async (req, res) => {
     const { code, newPassword } = req.body;
     console.log(code)
-    console.log(req.session.resetCode)
+    console.log(req.session.email)
     try {
         if (req.session.resetCode !== code || Date.now() - req.session.resetCodeTime > 15 * 60 * 1000) {
             return res.status(400).json({ message: 'הקוד לא תקין או פג תוקף' });
