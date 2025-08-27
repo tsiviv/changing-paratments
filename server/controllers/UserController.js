@@ -369,10 +369,6 @@ exports.getAllUsers = async (req, res) => {
 };
 
 
-const { Resend } = require('resend');
-const User = require('./models/User'); // ודא שהנתיב לקובץ המודל נכון
-
-// יצירת מופע של Resend עם מפתח ה-API
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 exports.ForgotPassword = async (req, res) => {
