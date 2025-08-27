@@ -188,7 +188,7 @@ function Login() {
 
                         {/* כפתורים */}
                         <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}>
-                            <button
+                            {/* <button
                                 disabled={loading}
                                 type="button"
                                 onClick={forgotPassword}
@@ -205,7 +205,7 @@ function Login() {
                                 }}
                             >
                                 שכחתי סיסמה
-                            </button>
+                            </button> */}
                             <button
                                 disabled={loading}
                                 type="button"

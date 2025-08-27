@@ -116,7 +116,7 @@ function NavbarHead() {
                 expand="lg" dir="rtl">
                 <Navbar.Collapse className="w-100 head-nav">
                     <Form inline className="d-flex w-100">
-                        <div className="d-flex " style={{ width: isAuthenticated ? '50%' : '58%', gap: '80px' }}>
+                        <div className="d-flex " style={{ width: '58%', gap: '80px' }}>
                             <ul className="navbar-nav justify-content-start align-items-center">
                                 <li className="nav-item">
                                     <Link
@@ -138,7 +138,7 @@ function NavbarHead() {
                             </div>
                         </div>
 
-                        <div className="d-flex justify-content-start" style={{ width: isAuthenticated ? '50%' : '42%', gap: '30px' }}>
+                        <div className="d-flex justify-content-start" style={{ width: '42%', gap: '30px' }}>
                             <ul className="navbar-nav d-flex align-items-center" style={{ gap: '90px' }}>
                                 {isAuthenticated ? (
                                     <>
@@ -159,7 +159,7 @@ function NavbarHead() {
                                                 </div>
                                             </div>
                                         </li>
-                                        <li className="nav-item">
+                                        {/* <li className="nav-item">
                                             <div
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onClick={toggleNotifications}
@@ -175,7 +175,7 @@ function NavbarHead() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> */}
 
                                         <li className="nav-item ">
                                             <Link
