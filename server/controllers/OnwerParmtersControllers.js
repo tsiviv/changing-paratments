@@ -19,44 +19,44 @@ exports.createWantedApartment = async (req, res) => {
         res.status(201).json(apartment);
 
         
-        setImmediate(async () => {
-            try {
-                const users = await User.findAll({
-                    where: { notifaction: true },
-                    attributes: ['email']
-                });
+        // setImmediate(async () => {
+        //     try {
+        //         const users = await User.findAll({
+        //             where: { notifaction: true },
+        //             attributes: ['email']
+        //         });
 
-                const emails = users.map(u => u.email);
+        //         const emails = users.map(u => u.email);
 
-                if (emails.length > 0) {
-                    const mailOptions = {
-                        from: 'onboarding@resend.dev', // Resend דורש שכתובת ה-from תהיה בדומיין שלהם או בדומיין שאומת על ידכם
-                        to: emails,
-                        subject: 'דירה חדשה נוספה לאתר',
-                        html: `
-                            <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
-                                <p>שלום,</p>
-                                <p>דירה חדשה נוספה למאגר באתר.</p>
-                                <p>ניתן להיכנס לאתר כדי לצפות בפרטים.</p>
-                                <p><a href="https://changing-paratments-production.up.railway.app" style="color: #1a73e8;">
-                                    לחץ כאן כדי להיכנס לאתר
-                                </a></p>
-                            </div>
-                        `
-                    };
+        //         if (emails.length > 0) {
+        //             const mailOptions = {
+        //                 from: 'onboarding@resend.dev', // Resend דורש שכתובת ה-from תהיה בדומיין שלהם או בדומיין שאומת על ידכם
+        //                 to: emails,
+        //                 subject: 'דירה חדשה נוספה לאתר',
+        //                 html: `
+        //                     <div dir="rtl" style="font-family: Arial, sans-serif; line-height: 1.6;">
+        //                         <p>שלום,</p>
+        //                         <p>דירה חדשה נוספה למאגר באתר.</p>
+        //                         <p>ניתן להיכנס לאתר כדי לצפות בפרטים.</p>
+        //                         <p><a href="https://changing-paratments-production.up.railway.app" style="color: #1a73e8;">
+        //                             לחץ כאן כדי להיכנס לאתר
+        //                         </a></p>
+        //                     </div>
+        //                 `
+        //             };
 
-                    const { data, error } = await resend.emails.send(mailOptions);
+        //             const { data, error } = await resend.emails.send(mailOptions);
 
-                    if (error) {
-                        console.error('❌ שגיאה בשליחת מיילים:', error);
-                    } else {
-                        console.log(`נשלחו מיילים ל-${emails.length} משתמשים. פרטי שליחה:`, data);
-                    }
-                }
-            } catch (mailError) {
-                console.error('שגיאה בשליחת מיילים:', mailError);
-            }
-        });
+        //             if (error) {
+        //                 console.error('❌ שגיאה בשליחת מיילים:', error);
+        //             } else {
+        //                 console.log(`נשלחו מיילים ל-${emails.length} משתמשים. פרטי שליחה:`, data);
+        //             }
+        //         }
+        //     } catch (mailError) {
+        //         console.error('שגיאה בשליחת מיילים:', mailError);
+        //     }
+        // });
 
     } catch (error) {
         console.error('Error creating apartment:', error);
