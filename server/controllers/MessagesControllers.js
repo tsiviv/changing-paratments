@@ -1,7 +1,7 @@
 const { Resend } = require('resend');
 const Message = require('../models/Messages'); // ודא שהנתיב לקובץ המודל נכון
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.SEND_API_KEY);
 
 exports.postMessage = async (req, res) => {
     const { username, message, rating } = req.body;

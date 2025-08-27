@@ -2,7 +2,7 @@ const WantedApartment = require('../models/OnwerPartments');
 const User = require('../models/users')
 
 const { Resend } = require('resend');
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.SEND_API_KEY);
 
 exports.createWantedApartment = async (req, res) => {
     const {

@@ -369,7 +369,7 @@ exports.getAllUsers = async (req, res) => {
 };
 
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.SEND_API_KEY);
 
 exports.ForgotPassword = async (req, res) => {
   const { email } = req.body;
