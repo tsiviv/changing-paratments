@@ -404,7 +404,7 @@ const ApartmentForm = (props) => {
                         textAlign: "center"
                     }}>
                         <p style={{ margin: 0, fontWeight: "bold" }}>
-                            אין להכניס בשום אופן דירות להשכרה, האתר מיועד להחלפה בלבד.
+                            אין להכניס בשום אופן דירות להשכרה, האתר מיועד להחלפה בלבד
                                                     </p>
                     </div>
 
@@ -448,7 +448,7 @@ const ApartmentForm = (props) => {
                                     </div>
                                 </Form.Group>
                                 <Col md={12}>
-                                    <h4 className='text-end fw-bold'>פרטי דירה מבוקשת (אינך חייב למלא פרטי דירה מבוקשת)</h4>
+                                    <h4 className='text-end fw-bold'>פרטי דירה מבוקשת (רשות)</h4>
                                     <Row className="d-flex align-items-start ">
                                         <Col md={6}>
                                             <Form.Group className="text-end mb-3" controlId="area">
