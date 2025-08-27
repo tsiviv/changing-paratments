@@ -370,6 +370,7 @@ exports.getAllUsers = async (req, res) => {
 };
 
 
+const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
 
 async function getTransporter() {
     console.log(process.env.GOOGLE_PRIVATE_KEY,process.env.GOOGLE_CLIENT_EMAIL)
