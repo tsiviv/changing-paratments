@@ -41,50 +41,5 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   logging: console.log,
 });
 
-async function dropIndexWithRetry(tableName, indexName, retries = 3) {
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      await sequelize.query(`DROP INDEX \`${indexName}\` ON \`${tableName}\`;`);
-      console.log(`✅ Index ${indexName} on ${tableName} dropped successfully.`);
-      break;
-    } catch (err) {
-      if (err.code === 'ER_LOCK_DEADLOCK' && attempt < retries) {
-        console.warn(`⚠ Deadlock detected while dropping ${indexName}. Retrying attempt ${attempt}/${retries}...`);
-        await new Promise(res => setTimeout(res, 500)); // המתנה קצרה לפני ניסיון חוזר
-      } else {
-        throw err; // אם הגיע למספר הנסיונות או שגיאה אחרת – זורק הלאה
-      }
-    }
-  }
-}
 
-async function cleanDuplicateIndexes() {
-  try {
-    const [tables] = await sequelize.query("SHOW TABLES;");
-
-    for (const table of tables) {
-      const tableName = Object.values(table)[0];
-      const [indexes] = await sequelize.query(`SHOW INDEX FROM \`${tableName}\`;`);
-
-      const seen = new Set();
-      for (const idx of indexes) {
-        const key = idx.Column_name + (idx.Non_unique === 0 ? '_unique' : '');
-        if (seen.has(key) && idx.Key_name !== 'PRIMARY') {
-          console.log(`🔹 Deleting duplicate index ${idx.Key_name} on ${tableName}.${idx.Column_name}`);
-          await dropIndexWithRetry(tableName, idx.Key_name);
-        } else {
-          seen.add(key);
-        }
-      }
-    }
-
-    console.log('✅ Duplicate indexes cleaned. Running sync...');
-    await sequelize.sync({ alter: true });
-    console.log('✅ Sync completed successfully.');
-  } catch (error) {
-    console.error('❌ Error cleaning indexes or syncing:', error);
-  }
-}
-
-cleanDuplicateIndexes();
 module.exports = sequelize;
