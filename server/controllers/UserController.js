@@ -371,7 +371,7 @@ exports.getAllUsers = async (req, res) => {
 
 const transporter = nodemailer.createTransport({
     host: process.env.MAILTRAP_HOST,
-    port: process.env.MAILTRAP_PORT || 2525, // פורט 2525 מומלץ לעבודה עם Mailtrap ב-Railway
+    port: 2525, // פורט 2525 מומלץ לעבודה עם Mailtrap ב-Railway
     secure: false, // עבור Mailtrap Sandbox זה צריך להיות false
     auth: {
         user: process.env.MAILTRAP_USER,
