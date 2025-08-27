@@ -403,8 +403,8 @@ const ApartmentForm = (props) => {
                         textAlign: "center"
                     }}>
                         <p style={{ margin: 0, fontWeight: "bold" }}>
-                            אין להכניס בשום אופן דירות להשכרה. האתר מיועד אך ורק להחלפה.
-                        </p>
+                            אין להכניס בשום אופן דירות להשכרה, האתר מיועד להחלפה בלבד.
+                                                    </p>
                     </div>
 
                 </Modal.Header>
