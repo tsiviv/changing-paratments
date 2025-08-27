@@ -79,14 +79,14 @@ function FilterableCards({ citiesOptions, users, filters, setFilters }) {
                     <Form.Label className="fw-bold mt-4">סינון לפי סוג הצעה</Form.Label>
                     <Form.Check
                         type="checkbox"
-                        label="כולל מי שמבקש דירה חלופית"
+                        label=" מי שמבקש דירה חלופית"
                         checked={filters.withWanted}
                         onChange={(e) => updateFilter('withWanted', e.target.checked)}
                         className="mb-2"
                     />
                     <Form.Check
                         type="checkbox"
-                        label="כולל מי שמציע בלי לבקש דירה"
+                        label=" מי שמציע בלי לבקש דירה"
                         checked={filters.withoutWanted}
                         onChange={(e) => updateFilter('withoutWanted', e.target.checked)}
                         className="mb-5"
