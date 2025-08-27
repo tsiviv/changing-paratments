@@ -11,7 +11,7 @@ const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
 const { Op } = require('sequelize');
 const { Resend } = require('resend');
-
+const nodemailer= require('nodemailer')
 
 async function verifyToken(idToken) {
     const ticket = await client.verifyIdToken({
@@ -369,7 +369,15 @@ exports.getAllUsers = async (req, res) => {
 };
 
 
-const resend = new Resend(process.env.SEND_API_KEY);
+const transporter = nodemailer.createTransport({
+    host: process.env.MAILTRAP_HOST,
+    port: process.env.MAILTRAP_PORT || 2525, // פורט 2525 מומלץ לעבודה עם Mailtrap ב-Railway
+    secure: false, // עבור Mailtrap Sandbox זה צריך להיות false
+    auth: {
+        user: process.env.MAILTRAP_USER,
+        pass: process.env.MAILTRAP_PASSWORD,
+    },
+});
 
 exports.ForgotPassword = async (req, res) => {
     const { email } = req.body;
@@ -383,13 +391,14 @@ exports.ForgotPassword = async (req, res) => {
         const resetCode = Math.floor(10000 + Math.random() * 90000).toString();
         req.session.resetCode = resetCode;
         req.session.resetCodeTime = Date.now();
-        req.session.email = email
+        req.session.email = email;
+
         // בניית הקישור לשחזור סיסמה
         const resetLink = `https://changing-paratments-production.up.railway.app/reset-password?code=${resetCode}`;
 
         // הגדרות המייל לשליחה
         const mailOptions = {
-            from: 'onboarding@resend.dev', // Resend דורש שכתובת ה-from תהיה בדומיין שלהם או בדומיין שאומת על ידכם
+            from: 'noreply@yourdomain.com', // השתמש בכתובת מייל שתגדיר ותאמת ב-Mailtrap
             to: user.email,
             subject: 'שחזור סיסמה - האכסניא',
             html: `
@@ -403,17 +412,15 @@ exports.ForgotPassword = async (req, res) => {
       `,
         };
 
-        console.log("Preparing to send email with Resend...");
+        console.log("Preparing to send email with Nodemailer and Mailtrap...");
 
-        // שליחת המייל באמצעות Resend API
-        const { data, error } = await resend.emails.send(mailOptions);
-
-        if (error) {
-            console.error('❌ Error sending email:', error);
-            return res.status(500).json({ message: 'אירעה שגיאה במהלך שליחת המייל' });
-        }
-
-        console.log("Email sent successfully:", data);
+        // שליחת המייל באמצעות Nodemailer
+        const info = await transporter.sendMail(mailOptions);
+        
+        console.log("Email sent successfully:", info.messageId);
+        // עבור בדיקה, תוכל לראות את המייל בארגז החול שלך ב-Mailtrap
+        console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
+        
         res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
 
     } catch (error) {
@@ -446,6 +453,7 @@ exports.ResetPassword = async (req, res) => {
 
         delete req.session.resetCode;
         delete req.session.resetCodeTime;
+        delete req.session.email;
 
         res.status(200).json({ message: 'הסיסמה שוחזרה בהצלחה' });
     } catch (error) {
