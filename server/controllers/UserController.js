@@ -285,86 +285,86 @@ exports.getUserById = async (req, res) => {
     }
 };
 exports.getAllUsers = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
-    const offset = (page - 1) * limit;
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 50;
+        const offset = (page - 1) * limit;
 
-    // פילטרים מהקליינט
-    const cities = req.query.cities ? req.query.cities.split(',').filter(Boolean) : [];
-    const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
-    const minBeds  = Number.isNaN(parseInt(req.query.minBeds))  ? null : parseInt(req.query.minBeds);
-    const hasWanted = req.query.hasWanted === 'true';
-    const noWanted  = req.query.noWanted  === 'true';
-    const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
+        // פילטרים מהקליינט
+        const cities = req.query.cities ? req.query.cities.split(',').filter(Boolean) : [];
+        const minRooms = Number.isNaN(parseInt(req.query.minRooms)) ? null : parseInt(req.query.minRooms);
+        const minBeds = Number.isNaN(parseInt(req.query.minBeds)) ? null : parseInt(req.query.minBeds);
+        const hasWanted = req.query.hasWanted === 'true';
+        const noWanted = req.query.noWanted === 'true';
+        const swapDates = req.query.swapDates ? req.query.swapDates.split(',').map(Number) : [];
 
-    // פילטר לדירות
-    const whereApartment = {};
-    if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
-    if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
-    if (minBeds  !== null) whereApartment.beds  = { [Op.gte]: minBeds };
+        // פילטר לדירות
+        const whereApartment = {};
+        if (cities.length && !cities.includes('הכל')) whereApartment.city = { [Op.in]: cities };
+        if (minRooms !== null) whereApartment.rooms = { [Op.gte]: minRooms };
+        if (minBeds !== null) whereApartment.beds = { [Op.gte]: minBeds };
 
-    let swapDatesFilter = [];
-    if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
-    if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
-    swapDatesFilter = [...new Set(swapDatesFilter)];
-    if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
+        let swapDatesFilter = [];
+        if (swapDates.includes(1)) swapDatesFilter.push(1, 3);
+        if (swapDates.includes(2)) swapDatesFilter.push(2, 3);
+        swapDatesFilter = [...new Set(swapDatesFilter)];
+        if (swapDatesFilter.length > 0) whereApartment.preferredSwapDate = { [Op.in]: swapDatesFilter };
 
-    // בניית include
-    const include = [
-      {
-        model: OnwerPartments,
-        as: 'Apartments',
-        required: true,
-        where: whereApartment,
-      }
-    ];
+        // בניית include
+        const include = [
+            {
+                model: OnwerPartments,
+                as: 'Apartments',
+                required: true,
+                where: whereApartment,
+            },
+            {
+                model: alternativePartmnets,
+                as: 'WantedApartments',
+                required: false, // עדיין LEFT JOIN
+                attributes: ['id', 'area', 'numberOfRooms', 'numberOfBeds'],
+            }
+        ];
 
-    // סינון WantedApartments כבר ב-SQL
-    if (hasWanted && !noWanted) {
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: true, // INNER JOIN → חייב שיהיו דרישות
-      });
-    } else if (!hasWanted && noWanted) {
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false, // LEFT JOIN → משתמשים ללא דרישות
-        where: { id: { [Op.is]: null } } // רק אם אין רשומות
-      });
-    } else {
-      include.push({
-        model: alternativePartmnets,
-        as: 'WantedApartments',
-        required: false, // ללא סינון
-      });
+        // תנאי GROUP + HAVING עבור noWanted
+        // תנאי GROUP + HAVING
+        let havingClause = undefined;
+        if (noWanted) {
+            havingClause = sequelize.literal('COUNT(`WantedApartments`.`id`) = 0');
+        }
+        if (hasWanted) {
+            havingClause = sequelize.literal('COUNT(`WantedApartments`.`id`) > 0');
+        }
+
+        const result = await User.findAndCountAll({
+            include,
+            attributes: {
+                include: [
+                    [sequelize.fn('COUNT', sequelize.col('WantedApartments.id')), 'wantedCount']
+                ]
+            },
+            group: ['User.id', 'Apartments.id', 'WantedApartments.id'], // חובה להוסיף אותם בגלל ONLY_FULL_GROUP_BY
+            having: havingClause,
+            distinct: true,
+            offset,
+            limit,
+            order: [['updatedAt', 'DESC']],
+            subQuery: false,
+        });
+        res.status(200).json({
+            data: result.rows,
+            total: result.count.length ? result.count.length : result.count, // handle grouped count
+            totalPages: Math.ceil((result.count.length ? result.count.length : result.count) / limit),
+        });
+
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error during users retrieval',
+            details: error.message,
+        });
     }
-
-    const result = await User.findAndCountAll({
-      include,
-      distinct: true,
-      offset,
-      limit,
-      order: [['updatedAt', 'DESC']],
-      subQuery: false, // חשוב ל־$Alias$ בשאילתות עם JOIN
-    });
-
-    res.status(200).json({
-      data: result.rows,
-      total: result.count,
-      totalPages: Math.ceil(result.count / limit),
-    });
-
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Server error during users retrieval',
-      details: error.message,
-    });
-  }
 };
 
 
@@ -415,11 +415,11 @@ exports.ForgotPassword = async (req, res) => {
 
         // שליחת המייל באמצעות Nodemailer
         const info = await transporter.sendMail(mailOptions);
-        
+
         console.log("Email sent successfully:", info.messageId);
         // עבור בדיקה, תוכל לראות את המייל בארגז החול שלך ב-Mailtrap
         console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
-        
+
         res.status(200).json({ message: 'הקוד נשלח בהצלחה למייל' });
 
     } catch (error) {
