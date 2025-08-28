@@ -1,62 +1,94 @@
-/* current-apartment.css - גרסה מוקטנת */
+/* current-apartment.css */
+/* .color-body{
+    background: #f1f1f1 !important;
+} */
 
 .container {
-    max-width: 650px;          /* היה 800px */
-    margin: 30px auto;         /* פחות רווח */
-    padding: 20px;             /* היה 30px */
-    border-radius: 6px;        /* היה 8px */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+    max-width: 800px;
+    margin: 0 auto;
+    /* מרכז את התוכן */
+    padding: 30px;
+    /* background: #f1f1f1 !important; */
+
+    /* background: #fff  !important; */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     direction: rtl;
+    /* כיוון טקסט מימין לשמאל */
     text-align: right;
+    /* יש למרכז את כל הטקסט מימין לשמאל */
+    margin: 50px;
 }
 
 .custom-modal .modal-content {
-    height: 90vh;              /* היה 93vh */
+    height: 93vh;
+    /* גובה מלא של הדף */
+
 }
 
 .header {
-    font-size: 26px !important; /* היה 35px */
-    margin-right: 20px;         /* היה 30px */
+    font-family: 'open sans hebrew regular';
+    font-size: 35px !important;
+    color: #333;
+    margin-right: 30px;
+}
+
+.color-black {
+    background: linear-gradient(360deg, #262626 0%, #464646 100%);
+}
+
+.label {
+    font-weight: lighter !important;
+}
+
+.custom-modal .modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.custom-modal .modal-header,
+.custom-modal .modal-footer {
+    flex-shrink: 0;
 }
 
 h3 {
-    font-size: 20px;           /* היה 24px */
-    margin-bottom: 15px;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 p {
-    font-size: 14px;           /* היה 16px */
-    line-height: 1.5;
-    margin: 8px 0;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 10px 0;
+    color: #555;
 }
 
 strong {
-    font-size: 14px;
+    font-weight: bold;
+    color: #222;
 }
 
+/* הוספת עיצוב לשדות מידע */
 p span {
-    font-size: 14px;
+    color: #007bff;
+    font-weight: normal;
 }
-
-.h-date {
-    font-size: calc(1rem + .05vw); /* קטן יותר */
+.container.color-body{
+    background: #f3efef !important;
 }
-
-/* שדות */
-form label.label {
-    font-size: 14px;
+.color-weakblack{
+    background: #686767 !important;
 }
-
-form input, 
-form textarea,
-form select {
-    font-size: 14px;
-    padding: 0.35rem 0.55rem;  /* היה גדול יותר */
+.custom-hover:hover {
+    background: #525151 !important;
 }
-
-/* כפתורים */
-button {
-    font-size: 14px !important;
-    padding: 0.45rem 0.9rem !important; /* היה 0.6-0.8 */
-    border-radius: 6px !important;      /* היה 8-10px */
+input.text-primary {
+    color: blue !important;
+}
+.h-date{
+    font-size: calc(1.275rem + .1vw);
 }
