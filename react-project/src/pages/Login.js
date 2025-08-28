@@ -125,25 +125,27 @@ function Login() {
                     flexDirection: "column",
                     minHeight: "90vh",
                     fontFamily: "'Roboto', sans-serif",
-                    fontSize: "1.25rem",
+                    fontSize: "1.5rem",
                     color: "#231f20",
                     overflow: "hidden"
                 }}
             >
-                <div className="login-page" style={{ maxWidth: "500px", width: "100%" }}>
+                <div className="login-page" style={{ maxWidth: "480px", width: "100%" }}> {/* רחב יותר */}
                     <form
                         className="login-form"
                         style={{
-                            padding: "3em",
+                            padding: "2.5em", // יותר פדינג
                             background: "#fff",
-                            borderRadius: "8px",
-                            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
+                            borderRadius: "10px",
+                            boxShadow: "0 6px 20px rgba(0, 0, 0, 0.15)",
                         }}
                     >
-                        <h1 style={{ textAlign: "center", marginBottom: "1em", color: "#231f20", fontWeight: "500" }}>התחברות</h1>
+                        <h1 style={{ textAlign: "center", marginBottom: "1.5em", color: "#231f20", fontWeight: "500", fontSize: "1.6rem" }}>
+                            התחברות
+                        </h1>
 
                         {/* שדה המייל */}
-                        <div style={{ position: "relative", marginBottom: "1.5em", textAlign: "right" }}>
+                        <div style={{ position: "relative", marginBottom: "1.8em", textAlign: "right" }}>
                             <input
                                 type="email"
                                 placeholder="מייל"
@@ -151,19 +153,19 @@ function Login() {
                                 onChange={(e) => setemail(e.target.value)}
                                 style={{
                                     width: "100%",
-                                    padding: "15px 15px 15px 15px",
+                                    padding: "14px",
                                     border: "1px solid #ddd",
-                                    borderRadius: "5px",
-                                    fontSize: "1.25rem",
+                                    borderRadius: "6px",
+                                    fontSize: "1.3rem",
                                     textAlign: "right",
                                     color: "#231f20"
                                 }}
                             />
                         </div>
 
-
+                        {/* שדה סיסמה */}
                         <div style={{ marginBottom: "2em", textAlign: "right", position: "relative" }}>
-                            <label style={{ position: "absolute", top: "50%", left: "10px", transform: "translateY(-50%)", color: "#bf1b2c", cursor: "pointer" }}
+                            <label style={{ position: "absolute", top: "50%", left: "12px", transform: "translateY(-50%)", color: "#bf1b2c", cursor: "pointer" }}
                                 onClick={() => setShowPassword(!showPassword)}
                             >
                                 <i className="fas fa-lock"></i>
@@ -175,66 +177,51 @@ function Login() {
                                 onChange={(e) => setpassword(e.target.value)}
                                 style={{
                                     width: "100%",
-                                    padding: "12px",
+                                    padding: "14px",
                                     border: "1px solid #ddd",
-                                    borderRadius: "5px",
-                                    fontSize: "1.1rem",
+                                    borderRadius: "6px",
+                                    fontSize: "1.3rem",
                                     textAlign: "right",
                                     color: "#231f20"
                                 }}
                             />
                         </div>
 
-
-                        {/* כפתורים */}
-                        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}>
-                            {/* <button
-                                disabled={loading}
-                                type="button"
-                                onClick={forgotPassword}
-                                style={{
-                                    flex: 1,
-                                    padding: "1rem",
-                                    backgroundColor: "#bf1b2c",
-                                    color: "#fff",
-                                    border: "none",
-                                    borderRadius: "5px",
-                                    cursor: "pointer",
-                                    fontSize: "1.25rem",
-                                    fontWeight: 700
-                                }}
-                            >
-                                שכחתי סיסמה
-                            </button> */}
+                        {/* כפתור התחברות */}
+                        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5em" }}>
                             <button
                                 disabled={loading}
                                 type="button"
                                 onClick={checkuser}
                                 style={{
                                     flex: 1,
-                                    padding: "1rem",
+                                    padding: "14px",
                                     backgroundColor: "#bf1b2c",
                                     color: "#fff",
                                     border: "none",
-                                    borderRadius: "5px",
+                                    borderRadius: "6px",
                                     cursor: "pointer",
-                                    fontSize: "1.25rem",
+                                    fontSize: "1.3rem",
                                     fontWeight: 700
                                 }}
                             >
                                 התחבר
                             </button>
                         </div>
-                        <GoogleOAuthProvider clientId="482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com">
+
+                        {/* Google Login */}
+                        <GoogleOAuthProvider clientId="YOUR_CLIENT_ID">
                             <GoogleLogin
                                 onSuccess={handleGoogleSuccess}
                                 onError={handleGoogleFailure}
                                 theme="outline"
-                                useOneTap={false} // מבטל התחברות אוטומטית
-                                promptMomentNotification={() => { }} // אופציונלי - מונע הצעות אוטומטיות
+                                useOneTap={false}
+                                style={{ transform: "scale(1)" }} // גודל רגיל
                             />
                         </GoogleOAuthProvider>
-                        <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "1rem", color: "#231f20" }}>
+
+                        {/* קישור הרשמה */}
+                        <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "1.1rem", color: "#231f20" }}>
                             עדיין לא רשום?{" "}
                             <span
                                 onClick={register}
@@ -246,13 +233,14 @@ function Login() {
 
                         {/* הודעות */}
                         {message && (
-                            <p style={{ color: message.includes("לא") ? "#bf1b2c" : "#231f20", textAlign: "center", fontWeight: 700 }}>
+                            <p style={{ color: message.includes("לא") ? "#bf1b2c" : "#231f20", textAlign: "center", fontWeight: 700, fontSize: "1rem" }}>
                                 {message}
                             </p>
                         )}
                     </form>
                 </div>
             </Box>
+
 
 
         </>

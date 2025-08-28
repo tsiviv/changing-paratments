@@ -1,15 +1,23 @@
+
 .terms-button {
-  display: block;      /* לפי התוכן בלבד */
-  margin: 40px auto 20px;     /* מרכזי עם רווחים למעלה ולמטה */
-  background-color: #bf1b2c;  
+  display: block;
+  margin: 30px auto 15px;
+  background-color: #bf1b2c;
   color: #fff;
-  padding: 12px 20px;         
+  padding: 10px 18px;       /* קטן יותר */
   border: none;
-  border-radius: 50px;
+  border-radius: 40px;     /* עדיין עגלגל */
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;        /* טיפה פחות עבה */
+  font-size: 14px;         /* הקטנת טקסט */
   text-align: center;
 }
+
+.terms-button:hover {
+  background-color: #a21625;
+  transform: translateY(-2px);
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -34,55 +42,4 @@
   direction: rtl;
   margin: 40px auto;   /* מרכז בדף */
   position: relative;  /* לא fixed */
-}
-/* מסכים מאוד רחבים */
-@media (min-width: 1400px) {
-  .terms-button {
-    padding: 14px 28px;
-    font-size: 1.1rem;
-  }
-
-  .modal-content-term {
-    max-width: 700px;
-    padding: 30px 40px;
-  }
-}
-
-/* מסכים רחבים */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .terms-button {
-    padding: 13px 25px;
-    font-size: 1rem;
-  }
-
-  .modal-content-term {
-    max-width: 650px;
-    padding: 28px 35px;
-  }
-}
-
-/* מסכים בינוניים */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .terms-button {
-    padding: 12px 22px;
-    font-size: 0.95rem;
-  }
-
-  .modal-content-term {
-    max-width: 600px;
-    padding: 25px 30px;
-  }
-}
-
-/* מסכים קטנים (למחשבים קטנים בלבד) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .terms-button {
-    padding: 10px 20px;
-    font-size: 0.9rem;
-  }
-
-  .modal-content-term {
-    max-width: 90%;
-    padding: 20px 25px;
-  }
 }
