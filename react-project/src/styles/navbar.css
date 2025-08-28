@@ -4,126 +4,90 @@
     z-index: 1000;
     width: 100%;
     background-color: #fcfbfa;
-    /* רקע מאוד עדין, כמעט לבן */
-    padding: 12px 0;
-
-    /* קו אדום מטושטש מאוד */
-    border-bottom: 1px solid rgba(191, 27, 44, 0.5);
-    box-shadow: 0 2px 6px rgba(191, 27, 44, 0.15);
-    /* מטושטש ורך */
-
-    /* מעבר צבע קל כשמעבירים עכבר */
+    padding: 6px 0; /* הקטנה משמעותית של הגובה */
+    border-bottom: 1px solid rgba(191, 27, 44, 0.4);
+    box-shadow: 0 1px 4px rgba(191, 27, 44, 0.15);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-navbar:hover {
+    background-color: #fdfcfb;
+    box-shadow: 0 2px 6px rgba(191, 27, 44, 0.2);
 }
 
 .header-con {
     display: flex;
-    gap: 14px;
-    justify-content: start;
-    margin-right: 2px;
+    gap: 8px; /* הקטנה של המרווח בין הכותרות */
+    justify-content: flex-start;
+    margin-right: 5px;
 }
 
 .head1, 
 .head2 {
-    color: #231f20; /* ברירת מחדל ל-head1 */
-    letter-spacing: 4px; /* רווח בין אותיות */
-    word-spacing: 7px;   /* רווח בין מילים */
+    color: #231f20;
+    letter-spacing: 4.5px;
     font-weight: 700;
-    font-size: 17px;
+    font-size: 15px; 
 }
 
 .head2 {
-    color: #bf1b2c; /* צבע ייחודי ל-head2 */
-}
-
-
-.custom-navbar:hover {
-    background-color: #fdfcfb;
-    /* שינוי קל בגוון הרקע */
-    box-shadow: 0 4px 8px rgba(191, 27, 44, 0.2);
-}
-
-.ul-padding {
-    padding-left: 20%;
+    color: #bf1b2c;
 }
 
 ul {
-    text-align: center;
-    list-style-type: none;
-    /* מסיר את הנקודות */
-    padding: 0;
-    /* מסיר רווחים פנימיים */
+    display: flex;
+    justify-content: center;
+    gap: 1rem; /* רווחים קטנים יותר בין פריטים */
+    list-style: none;
     margin: 0;
-    /* מסיר רווחים חיצוניים */
+    padding: 0;
 }
 
 ul li a {
     text-decoration: none;
-    /* מסיר את הקו תחתון מהקישורים */
     color: inherit;
-    /* שומר על הצבע המקורי של הטקסט */
+    font-size: 13px; /* הקטנה נוספת לטקסט בקישורים */
 }
 
 .color-linear {
     background: linear-gradient(360deg, #262626 0%, #464646 100%) !important;
     border: none !important;
-    border-radius: 15px !important;
-
+    border-radius: 10px !important; /* הקטנה של הפינות */
 }
 
 .cursor-pointer1 {
     cursor: pointer;
 }
 
-/* מוודא שכל span בתוך nav-link יקבל את הצבע הרצוי */
-.navbar-nav .nav-link span {
-    color: #231f20;
-    font-weight: 700;
-    /* מודגש כמו שרצית */
-}
-
-/* במידה ויש div בין ה-icon ל-span */
-.navbar-nav .nav-link div span {
-    color: #231f20;
-    font-weight: 700;
-}
-
-/* לכל nav-item + nav-link + span */
-.navbar-nav .nav-item .nav-link span {
-    color: #231f20;
-    font-weight: 700;
-}
-
-.header {
-    font-size: 3rem !important;
-}
-
-/* כל כיתוב בתוך nav-link יקבל צבע ושקילה אחידה */
+/* אחידות צבע לכל טקסט בלינקים */
 .navbar-nav .nav-link,
 .navbar-nav .nav-link span,
 .navbar-nav .nav-link div span {
     color: #231f20;
-    /* הצבע הרצוי */
     font-weight: 700;
-    /* מודגש */
+    font-size: 13px; /* קטן יותר */
 }
 
-.head-nav {
-    padding-left: 7rem;
-    padding-right: 4rem;
+.header {
+    font-size: 2rem !important; /* אם יש כותרת גדולה יותר */
 }
 
 .header2 {
-    font-size: 1rem !important;
+    font-size: 0.9rem !important;
+}
+
+.head-nav {
+    padding: 0 1rem; /* פחות padding בצדדים */
 }
 
 .font-color-linear {
     background: linear-gradient(360deg, #262626 0%, #464646 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
 }
 
 .nav-link {
+    display: flex;
     align-items: center;
+    font-size: 13px; /* להבטיח קומפקטיות גם בלינקים */
 }

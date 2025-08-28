@@ -112,12 +112,13 @@ function NavbarHead() {
 
     return (
         <>
-            <Navbar className="custom-navbar p-3 rounded "
-                expand="lg" dir="rtl">
+            <Navbar className="custom-navbar p-3 rounded" expand="lg" dir="rtl">
                 <Navbar.Collapse className="w-100 head-nav">
-                    <Form inline className="d-flex w-100">
-                        <div className="d-flex " style={{ width: '58%', gap: '80px' }}>
-                            <ul className="navbar-nav justify-content-start align-items-center">
+                    <Form inline className="d-flex w-100 align-items-center">
+
+                        {/* צד שמאל – בית + לוגו */}
+                        <div className="d-flex align-items-center" style={{ width: "50%", gap: "100px" }}>
+                            <ul className="navbar-nav align-items-center me-4"> {/* רווח מימין לבית */}
                                 <li className="nav-item">
                                     <Link
                                         to="/"
@@ -125,84 +126,62 @@ function NavbarHead() {
                                         onKeyDown={(e) => e.key === 'Enter' && navigate('/')}
                                         aria-label="חזרה לעמוד הבית"
                                     >
-                                        <i className="fas fa-home mb-2" style={{ color: '#bf1b2c' }}></i> <span>עמוד הבית</span>
+                                        <i className="fas fa-home mb-2" style={{ color: '#bf1b2c' }}></i>
+                                        <span>עמוד הבית</span>
                                     </Link>
                                 </li>
                             </ul>
-                            <div className="text-start me-5">
-                                <img src="/logo.png" style={{ width: "450px", height: "100px" }}></img>
-                                <div className='header-con'>
+
+                            <div className="text-start align-items-center ms-4"> {/* רווח מהבית ללוגו */}
+                                <img
+                                    src="/logo.png"
+                                    style={{ width: "400px", height: "60px" }}
+                                    alt="לוגו"
+                                />
+                                <div className="header-con ms-3">
                                     <div className='head1'>מאגר דירות להחלפה</div>
                                     <div className='head2'>לימים הנוראים</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="d-flex justify-content-start" style={{ width: '42%', gap: '30px' }}>
-                            <ul className="navbar-nav d-flex align-items-center" style={{ gap: '90px' }}>
+                        {/* צד ימין – תפריט */}
+                        <div className="d-flex align-items-center justify-content-end" style={{ width: "50%", gap: "800px" }}>
+                            <ul className="navbar-nav d-flex align-items-center" style={{ gap: "80px", marginLeft:"100px" }}>
                                 {isAuthenticated ? (
                                     <>
                                         <li className="nav-item">
                                             <div
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onClick={addOrUpdate}
-                                                onKeyDown={(e) => e.key === 'Enter' && addOrUpdate()}
                                                 role="button"
                                                 tabIndex="0"
-                                                // style={{ marginLeft: "-35px" }}
                                             >
                                                 <i className="fas fa-plus" style={{ color: '#bf1b2c' }}></i>
-                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
+                                                <div className="text-center" style={{ lineHeight: 1.4 }}>
                                                     <span style={{ fontWeight: 700, color: '#231f20' }}>
                                                         הוספת דירה<br />או עדכון
                                                     </span>
                                                 </div>
                                             </div>
                                         </li>
-                                        {/* <li className="nav-item">
-                                            <div
-                                                className="cursor-pointer1 nav-link text-dark d-flex flex-column"
-                                                onClick={toggleNotifications}
-                                                role="button"
-                                                tabIndex="0"
-                                                style={{ marginLeft: "-35px" }}
-                                            >
-                                                <FaBell size={20} style={{ color: notificationsEnabled ? 'gold' : 'black' }} />
 
-                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '50px', maxWidth: '160px', lineHeight: 1.4 }}>
-                                                    <span >
-                                                        {notificationsEnabled ? '  להסרת קבלת התראות ' : 'קבלת התראות על דירות חדשות '}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </li> */}
-
-                                        <li className="nav-item ">
-                                            <Link
-                                                to="/UserProfile"
-                                                className="cursor-pointer1 nav-link text-dark d-flex flex-column"
-                                                onKeyDown={(e) => e.key === 'Enter' && navigate('/UserProfile')}
-                                            >
-                                                <i className="fas fa-user" style={{ color: '#bf1b2c' }}></i> אזור אישי
+                                        <li className="nav-item">
+                                            <Link to="/UserProfile" className="cursor-pointer1 nav-link text-dark d-flex flex-column">
+                                                <i className="fas fa-user" style={{ color: '#bf1b2c' }}></i>
+                                                אזור אישי
                                             </Link>
                                         </li>
+
                                         <li className="nav-item">
-                                            <Link
-                                                to="/"
-                                                className="cursor-pointer1 nav-link text-dark d-flex flex-column"
-                                                onClick={logout_generall}
-                                                onKeyDown={(e) => e.key === 'Enter' && logout_generall()}
-                                            >
-                                                <i className="fas fa-sign-out-alt" style={{ color: '#bf1b2c' }}></i> יציאה
+                                            <Link to="/" className="cursor-pointer1 nav-link text-dark d-flex flex-column" onClick={logout_generall}>
+                                                <i className="fas fa-sign-out-alt" style={{ color: '#bf1b2c' }}></i>
+                                                יציאה
                                             </Link>
                                         </li>
+
                                         <li className="nav-item">
-                                            <Link
-                                                to="/"
-                                                className="nav-link text-dark d-flex flex-column cursor-pointer1"
-                                                onClick={() => setShow(true)}
-                                                onKeyDown={(e) => e.key === 'Enter' && setShow(true)}
-                                            >
+                                            <Link to="/" className="cursor-pointer1 nav-link text-dark d-flex flex-column" onClick={() => setShow(true)}>
                                                 <i className="fas fa-comment-dots mb-1" style={{ color: '#bf1b2c' }}></i>
                                                 <span>הודעה למערכת</span>
                                             </Link>
@@ -214,43 +193,34 @@ function NavbarHead() {
                                             <div
                                                 className="cursor-pointer1 nav-link text-dark d-flex flex-column"
                                                 onClick={addOrUpdate}
-                                                onKeyDown={(e) => e.key === 'Enter' && addOrUpdate()}
                                                 role="button"
                                                 tabIndex="0"
                                             >
                                                 <i className="fas fa-plus" style={{ color: '#bf1b2c' }}></i>
-                                                <div style={{ textAlign: 'center', width: 'fit-content', minWidth: '90px', maxWidth: '250px', lineHeight: 1.4 }}>
+                                                <div className="text-center" style={{ lineHeight: 1.4 }}>
                                                     <span style={{ fontWeight: 700, color: '#231f20' }}>
                                                         הוספת דירה<br />או עדכון
                                                     </span>
                                                 </div>
                                             </div>
                                         </li>
-                                        <li className="nav-item ">
-                                            <Link
-                                                to="/Login"
-                                                className="cursor-pointer1 nav-link text-dark d-flex flex-column"
-                                                onKeyDown={(e) => e.key === 'Enter' && navigate('/Login')}
-                                            >
-                                                <i className="fas fa-sign-in-alt" style={{ color: '#bf1b2c' }}></i> התחברות
-                                            </Link>
-                                        </li>
-                                        <li className="nav-item ">
-                                            <Link
-                                                to="/Register"
-                                                className="cursor-pointer1 nav-link text-dark d-flex flex-column"
-                                                onKeyDown={(e) => e.key === 'Enter' && navigate('/Register')}
-                                            >
-                                                <i className="fas fa-user-plus" style={{ color: '#bf1b2c' }}></i> הרשמה
-                                            </Link>
-                                        </li>
+
                                         <li className="nav-item">
-                                            <Link
-                                                to="/"
-                                                className="cursor-pointer1 nav-link text-dark d-flex flex-column"
-                                                onClick={() => setShow(true)}
-                                                onKeyDown={(e) => e.key === 'Enter' && setShow(true)}
-                                            >
+                                            <Link to="/Login" className="cursor-pointer1 nav-link text-dark d-flex flex-column">
+                                                <i className="fas fa-sign-in-alt" style={{ color: '#bf1b2c' }}></i>
+                                                התחברות
+                                            </Link>
+                                        </li>
+
+                                        <li className="nav-item">
+                                            <Link to="/Register" className="cursor-pointer1 nav-link text-dark d-flex flex-column">
+                                                <i className="fas fa-user-plus" style={{ color: '#bf1b2c' }}></i>
+                                                הרשמה
+                                            </Link>
+                                        </li>
+
+                                        <li className="nav-item">
+                                            <Link to="/" className="cursor-pointer1 nav-link text-dark d-flex flex-column" onClick={() => setShow(true)}>
                                                 <i className="fas fa-comment-dots mb-1" style={{ color: '#bf1b2c' }}></i>
                                                 <span>הודעה למערכת</span>
                                             </Link>
@@ -259,9 +229,11 @@ function NavbarHead() {
                                 )}
                             </ul>
                         </div>
+
                     </Form>
                 </Navbar.Collapse>
             </Navbar>
+
             <ApartmentForm show={ModalShow} onHide={() => dispatch(setModalShow(false))} />
             <SendMessage setShow={setShow} show={show}></SendMessage>
         </>
