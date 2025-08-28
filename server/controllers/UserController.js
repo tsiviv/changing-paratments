@@ -11,6 +11,8 @@ const crypto = require('crypto'); // כדי ליצור קוד חד-פעמי
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENTID);
 const { Op } = require('sequelize');
+const sequelize = require('../models');
+
 
 async function verifyToken(idToken) {
     const ticket = await client.verifyIdToken({
