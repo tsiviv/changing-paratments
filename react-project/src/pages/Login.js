@@ -121,7 +121,7 @@ function Login() {
                 sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    marginTop:"80px",
                     flexDirection: "column",
                     minHeight: "90vh",
                     fontFamily: "'Roboto', sans-serif",
@@ -130,22 +130,31 @@ function Login() {
                     overflow: "hidden"
                 }}
             >
-                <div className="login-page" style={{ maxWidth: "480px", width: "100%" }}> {/* רחב יותר */}
+                <div className="login-page" style={{ maxWidth: "430px", width: "100%" }}> {/* רחב יותר */}
                     <form
                         className="login-form"
                         style={{
-                            padding: "2.5em", // יותר פדינג
+                            padding: "1.5em", // פדינג מוקטן
                             background: "#fff",
-                            borderRadius: "10px",
-                            boxShadow: "0 6px 20px rgba(0, 0, 0, 0.15)",
+                            borderRadius: "8px",
+                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
                         }}
                     >
-                        <h1 style={{ textAlign: "center", marginBottom: "1.5em", color: "#231f20", fontWeight: "500", fontSize: "1.6rem" }}>
+                        <h1
+                            style={{
+                                textAlign: "center",
+                                marginBottom: "1em",
+                                color: "#231f20",
+                                letterSpacing:"1px",
+                                fontWeight: "500",
+                                fontSize: "1.6rem", // קטן יותר
+                            }}
+                        >
                             התחברות
                         </h1>
 
                         {/* שדה המייל */}
-                        <div style={{ position: "relative", marginBottom: "1.8em", textAlign: "right" }}>
+                        <div style={{ position: "relative", marginBottom: "1.2em", textAlign: "right" }}>
                             <input
                                 type="email"
                                 placeholder="מייל"
@@ -153,19 +162,28 @@ function Login() {
                                 onChange={(e) => setemail(e.target.value)}
                                 style={{
                                     width: "100%",
-                                    padding: "14px",
+                                    padding: "10px", // מוקטן
                                     border: "1px solid #ddd",
-                                    borderRadius: "6px",
-                                    fontSize: "1.3rem",
+                                    borderRadius: "5px",
+                                    fontSize: "1rem", // מוקטן
                                     textAlign: "right",
-                                    color: "#231f20"
+                                    color: "#231f20",
                                 }}
                             />
                         </div>
 
                         {/* שדה סיסמה */}
-                        <div style={{ marginBottom: "2em", textAlign: "right", position: "relative" }}>
-                            <label style={{ position: "absolute", top: "50%", left: "12px", transform: "translateY(-50%)", color: "#bf1b2c", cursor: "pointer" }}
+                        <div style={{ marginBottom: "1.5em", textAlign: "right", position: "relative" }}>
+                            <label
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "10px",
+                                    transform: "translateY(-50%)",
+                                    color: "#bf1b2c",
+                                    cursor: "pointer",
+                                    fontSize: "0.9rem",
+                                }}
                                 onClick={() => setShowPassword(!showPassword)}
                             >
                                 <i className="fas fa-lock"></i>
@@ -177,32 +195,32 @@ function Login() {
                                 onChange={(e) => setpassword(e.target.value)}
                                 style={{
                                     width: "100%",
-                                    padding: "14px",
+                                    padding: "10px",
                                     border: "1px solid #ddd",
-                                    borderRadius: "6px",
-                                    fontSize: "1.3rem",
+                                    borderRadius: "5px",
+                                    fontSize: "1rem",
                                     textAlign: "right",
-                                    color: "#231f20"
+                                    color: "#231f20",
                                 }}
                             />
                         </div>
 
                         {/* כפתור התחברות */}
-                        <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5em" }}>
+                        <div style={{ display: "flex", gap: "0.7rem", marginBottom: "1em" }}>
                             <button
                                 disabled={loading}
                                 type="button"
                                 onClick={checkuser}
                                 style={{
                                     flex: 1,
-                                    padding: "14px",
+                                    padding: "10px",
                                     backgroundColor: "#bf1b2c",
                                     color: "#fff",
                                     border: "none",
-                                    borderRadius: "6px",
+                                    borderRadius: "5px",
                                     cursor: "pointer",
-                                    fontSize: "1.3rem",
-                                    fontWeight: 700
+                                    fontSize: "1rem",
+                                    fontWeight: 600,
                                 }}
                             >
                                 התחבר
@@ -216,16 +234,28 @@ function Login() {
                                 onError={handleGoogleFailure}
                                 theme="outline"
                                 useOneTap={false}
-                                style={{ transform: "scale(1)" }} // גודל רגיל
+                                style={{ transform: "scale(0.85)" }} // הקטנה
                             />
                         </GoogleOAuthProvider>
 
                         {/* קישור הרשמה */}
-                        <p style={{ textAlign: "center", marginTop: "1.5em", fontSize: "1.1rem", color: "#231f20" }}>
+                        <p
+                            style={{
+                                textAlign: "center",
+                                marginTop: "1em",
+                                fontSize: "0.95rem",
+                                color: "#231f20",
+                            }}
+                        >
                             עדיין לא רשום?{" "}
                             <span
                                 onClick={register}
-                                style={{ color: "#bf1b2c", cursor: "pointer", textDecoration: "underline", fontWeight: 700 }}
+                                style={{
+                                    color: "#bf1b2c",
+                                    cursor: "pointer",
+                                    textDecoration: "underline",
+                                    fontWeight: 600,
+                                }}
                             >
                                 הרשמה
                             </span>
@@ -233,11 +263,20 @@ function Login() {
 
                         {/* הודעות */}
                         {message && (
-                            <p style={{ color: message.includes("לא") ? "#bf1b2c" : "#231f20", textAlign: "center", fontWeight: 700, fontSize: "1rem" }}>
+                            <p
+                                style={{
+                                    color: message.includes("לא") ? "#bf1b2c" : "#231f20",
+                                    textAlign: "center",
+                                    fontWeight: 600,
+                                    fontSize: "0.9rem",
+                                    marginTop: "0.8em",
+                                }}
+                            >
                                 {message}
                             </p>
                         )}
                     </form>
+
                 </div>
             </Box>
 
