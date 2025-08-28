@@ -123,7 +123,7 @@ function FilterableCards({ citiesOptions, users, filters, setFilters }) {
             </div>
 
             <div className="cards-wrapper">
-                {[...users,...users,...users,...users,...users,...users,...users,...users,...users,...users,...users,...users,...users,...users,...users,...users].map((user, idx) => (
+                {users.map((user, idx) => (
                     <div className={`card-box ${!user.WantedApartments?.length ? 'no-wanted-apartment' : ''}`} key={idx}>
                         <h5>{user.Apartments?.[0]?.city} - {user.Apartments?.[0]?.address}</h5>
                         <p><strong>קומה:</strong> {user.Apartments?.[0]?.floor}</p>
