@@ -43,20 +43,50 @@ function Login() {
             setModalloading(false);
         }
     };
-    const checkuser = async (e) => {
-        const user = { email, password };
-        try {
-            const response = await axios.post(`${baseURL}users/login`, user);
-            if (response.data && response.data.token) {
+    // פונקציה לטיפול בהתחברות רגילה
+    const handleLoginResponse = (response) => {
+        // טיפול אחיד בתגובות
+        if (response.status === 200) {
+            if (response.data?.token) {
                 localStorage.setItem("token", response.data.token);
                 dispatch(loginSuccess());
                 navigate("../");
+            } else {
+                setMessage(response.data?.message || "התחברות הצליחה אך לא התקבל Token");
             }
+        } else {
+            setMessage(response.data?.message || "אירעה שגיאה");
+        }
+    };
+
+    const handleGoogleSuccess = async (response) => {
+        const TokenId = response.credential;
+        try {
+            const res = await axios.post(`${baseURL}users/google-login`, { TokenId });
+            handleLoginResponse(res);
         } catch (error) {
-            if (error.response.status == 401) {
-                setMessage("שם משתמש או סיסמא לא נכונים")
-            }
-            console.error("Login failed:", error);
+            const status = error.response?.status;
+            if (status === 404) setMessage("משתמש לא קיים, הרשם קודם");
+            else if (status === 409) setMessage("המשתמש כבר קיים");
+            else if (status === 401) setMessage("סיסמה לא נכונה");
+            else setMessage(error.response?.data?.message || "אירעה שגיאה בכניסה עם Google");
+        } finally {
+            setShowModal(true);
+        }
+    };
+
+    const checkuser = async () => {
+        const user = { email, password };
+        try {
+            const res = await axios.post(`${baseURL}users/login`, user);
+            handleLoginResponse(res);
+        } catch (error) {
+            const status = error.response?.status;
+            if (status === 404) setMessage("משתמש לא קיים, הרשם קודם");
+            else if (status === 401) setMessage("שם משתמש או סיסמה לא נכונים");
+            else setMessage(error.response?.data?.message || "אירעה שגיאה בכניסה");
+        } finally {
+            setShowModal(true);
         }
     };
 
@@ -92,24 +122,6 @@ function Login() {
         setShowModal(false)
         setMessage("")
     }
-    const handleGoogleSuccess = async (response) => {
-        const TokenId = response.credential
-        console.log(response);
-        try {
-
-
-            const response = await axios.post(`${baseURL}users/google-login`, { TokenId });
-            if (response.data && response.data.token) {
-                localStorage.setItem("token", response.data.token);
-                dispatch(loginSuccess());
-                navigate("../");
-            }
-        } catch (error) {
-            if (error.response.status == 404)
-                setMessage("משתמש לא קיים, הרשם קודם")
-            console.error("Login failed:", error);
-        }
-    };
 
     const handleGoogleFailure = (error) => {
         console.error("Google Login Error:", error);
@@ -121,7 +133,7 @@ function Login() {
                 sx={{
                     display: "flex",
                     alignItems: "center",
-                    marginTop:"80px",
+                    marginTop: "80px",
                     flexDirection: "column",
                     minHeight: "90vh",
                     fontFamily: "'Roboto', sans-serif",
@@ -145,7 +157,7 @@ function Login() {
                                 textAlign: "center",
                                 marginBottom: "1em",
                                 color: "#231f20",
-                                letterSpacing:"1px",
+                                letterSpacing: "1px",
                                 fontWeight: "500",
                                 fontSize: "1.6rem", // קטן יותר
                             }}
