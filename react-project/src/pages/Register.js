@@ -21,11 +21,13 @@ function Register() {
     const baseURL = config.baseUrl;
 
     const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
+    const validatePassword = (password) => password.length >= 6;
     const validateName = (name) => name.length > 2;
 
     const validateField = (fieldName, value) => {
         switch (fieldName) {
             case "email": return validateEmail(value) ? "" : "אנא הכנס מייל תקין";
+            case "password": return validatePassword(value) ? "" : "סיסמא חייבת להיות לפחות 6 תווים";
             case "name": return validateName(value) ? "" : "שם צריך להיות לפחות 3 אותיות";
             default: return "";
         }
@@ -34,6 +36,7 @@ function Register() {
     useEffect(() => {
         setErrors({
             email: validateField("email", email),
+            password: validateField("password", password),
             name: validateField("name", name),
         });
     }, [email, password, name]);
@@ -51,7 +54,6 @@ function Register() {
         } catch (err) {
             if (err.response?.status === 409) setMessage("משתמש קיים");
             else setMessage("שגיאה בהרשמה");
-            console.log(err)
         }
     };
 
