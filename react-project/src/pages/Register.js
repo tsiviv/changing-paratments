@@ -51,6 +51,7 @@ function Register() {
         } catch (err) {
             if (err.response?.status === 409) setMessage("משתמש קיים");
             else setMessage("שגיאה בהרשמה");
+            console.log(err)
         }
     };
 
