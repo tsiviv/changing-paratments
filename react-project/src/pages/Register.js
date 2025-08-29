@@ -21,13 +21,11 @@ function Register() {
     const baseURL = config.baseUrl;
 
     const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
-    const validatePassword = (password) => password.length >= 6;
     const validateName = (name) => name.length > 2;
 
     const validateField = (fieldName, value) => {
         switch (fieldName) {
             case "email": return validateEmail(value) ? "" : "אנא הכנס מייל תקין";
-            case "password": return validatePassword(value) ? "" : "סיסמא חייבת להיות לפחות 6 תווים";
             case "name": return validateName(value) ? "" : "שם צריך להיות לפחות 3 אותיות";
             default: return "";
         }
@@ -36,7 +34,6 @@ function Register() {
     useEffect(() => {
         setErrors({
             email: validateField("email", email),
-            password: validateField("password", password),
             name: validateField("name", name),
         });
     }, [email, password, name]);
@@ -210,14 +207,8 @@ function Register() {
                         </button>
                     </div>
 
-                    <GoogleOAuthProvider clientId="YOUR_CLIENT_ID">
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={handleGoogleFailure}
-                            useOneTap={false}
-                            theme="outline"
-                            style={{ transform: "scale(0.85)" }}
-                        />
+                    <GoogleOAuthProvider clientId='482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com'>
+                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} useOneTap={false} promptMomentNotification={() => { }} theme="outline" />
                     </GoogleOAuthProvider>
 
                     {message && (

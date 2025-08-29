@@ -240,13 +240,13 @@ function Login() {
                         </div>
 
                         {/* Google Login */}
-                        <GoogleOAuthProvider clientId="YOUR_CLIENT_ID">
+                        <GoogleOAuthProvider clientId="482512567613-7sb403cnibb5576hb4oidbhpouc6su9b.apps.googleusercontent.com">
                             <GoogleLogin
                                 onSuccess={handleGoogleSuccess}
                                 onError={handleGoogleFailure}
                                 theme="outline"
-                                useOneTap={false}
-                                style={{ transform: "scale(0.85)" }} // הקטנה
+                                useOneTap={false} // מבטל התחברות אוטומטית
+                                promptMomentNotification={() => { }} // אופציונלי - מונע הצעות אוטומטיות
                             />
                         </GoogleOAuthProvider>
 
