@@ -1,94 +1,83 @@
 /* current-apartment.css */
-/* .color-body{
-    background: #f1f1f1 !important;
-} */
-
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    /* מרכז את התוכן */
-    padding: 30px;
-    /* background: #f1f1f1 !important; */
-
-    /* background: #fff  !important; */
+    max-width: 600px; /* הקטנה מרוחב 800px */
+    margin: 20px auto; /* הקטנה מרווח 50px */
+    padding: 20px; /* הקטנה מרווח פנימי */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     direction: rtl;
-    /* כיוון טקסט מימין לשמאל */
     text-align: right;
-    /* יש למרכז את כל הטקסט מימין לשמאל */
-    margin: 50px;
 }
 
 .custom-modal .modal-content {
-    height: 93vh;
-    /* גובה מלא של הדף */
-
+    height: 85vh; /* הקטנה מגובה מלא */
+    max-width: 600px; /* רוחב נמוך יותר */
+    margin: auto;
 }
 
 .header {
-    font-family: 'open sans hebrew regular';
-    font-size: 35px !important;
+    font-size: 28px !important; /* הקטנה מגודל 35px */
     color: #333;
-    margin-right: 30px;
-}
-
-.color-black {
-    background: linear-gradient(360deg, #262626 0%, #464646 100%);
-}
-
-.label {
-    font-weight: lighter !important;
+    margin-right: 20px;
 }
 
 .custom-modal .modal-body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
-}
-
-.custom-modal .modal-header,
-.custom-modal .modal-footer {
-    flex-shrink: 0;
+    justify-content: flex-start; /* הקטנה */
+    overflow-y: auto;
+    padding: 10px 15px; /* הקטנה */
 }
 
 h3 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
+    font-size: 20px; /* הקטנה */
+    margin-bottom: 15px;
 }
 
 p {
-    font-size: 16px;
-    line-height: 1.6;
-    margin: 10px 0;
-    color: #555;
+    font-size: 14px; /* הקטנה */
+    line-height: 1.4;
+    margin: 8px 0;
 }
 
-strong {
-    font-weight: bold;
-    color: #222;
+.label {
+    font-weight: lighter !important;
+    font-size: 0.9rem; /* הקטנה */
 }
 
-/* הוספת עיצוב לשדות מידע */
-p span {
-    color: #007bff;
-    font-weight: normal;
+input.text-primary,
+textarea.text-primary {
+    font-size: 0.9rem; /* הקטנה */
+    padding: 6px 8px; /* הקטנה */
 }
-.container.color-body{
-    background: #f3efef !important;
+
+.h-date {
+    font-size: 1rem; /* הקטנה */
 }
-.color-weakblack{
+
+.color-black {
+    background: linear-gradient(360deg, #262626 0%, #464646 100%);
+}
+
+.color-weakblack {
     background: #686767 !important;
 }
+
 .custom-hover:hover {
     background: #525151 !important;
 }
-input.text-primary {
-    color: blue !important;
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    border: 2px solid black !important; /* חובה ל-!important */
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
 }
-.h-date{
-    font-size: calc(1.275rem + .1vw);
-}
+

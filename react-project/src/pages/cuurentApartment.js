@@ -1,38 +1,34 @@
+/* CurrentApartment.jsx */
 import React from 'react';
-import { useSelector } from 'react-redux'; // שימוש ב-hook כדי לגשת ל-state הגלובלי
-import '../styles/ModalApartments.css'; // ייבוא קובץ ה-CSS
+import { useSelector } from 'react-redux';
+import '../styles/ModalApartments.css';
 
 const CurrentApartment = () => {
-    const Apartment = useSelector((state) => state.Apartment.Apartment)?.[0]; // השתמש ברידוסר הנכון
-    console.log(Apartment);
+    const Apartment = useSelector((state) => state.Apartment.Apartment)?.[0];
 
     return (
-        <div className="row mb-3 mt-3">
-            <div className='email '>הדירה שברשותי</div>
+        <div className="row mb-3">
+            <div className='email' style={{ fontSize: '18px', marginBottom: '6px' }}>הדירה שברשותי</div>
             <div className="col-md-6">
-                <div className="row">
-                    <div className="d-flex flex-column">
-                        <p><div>כתובת רצויה</div></p>
-                        <p className="value"><span>{Apartment?.address}</span></p>
-                        <p><div>מספר חדרים</div></p>
-                        <p className="value"><span>{Apartment?.rooms}</span></p>
-                        <p><div>קומה</div></p>
-                        <p className="value"><span>{Apartment?.floor}</span></p>
-                    </div>
+                <div className="d-flex flex-column">
+                    <div style={{ marginBottom: '6px' }}>כתובת רצויה</div>
+                    <div className="value" style={{ fontSize: '15px', marginBottom: '8px' }}>{Apartment?.address}</div>
+                    <div style={{ marginBottom: '6px' }}>מספר חדרים</div>
+                    <div className="value" style={{ fontSize: '15px', marginBottom: '8px' }}>{Apartment?.rooms}</div>
+                    <div style={{ marginBottom: '6px' }}>קומה</div>
+                    <div className="value" style={{ fontSize: '15px', marginBottom: '8px' }}>{Apartment?.floor}</div>
                 </div>
             </div>
             <div className="col-md-6">
-                <div className="row">
-                    <div className="d-flex flex-column">
-                        <p><div>עיר</div></p>
-                        <p className="value"><span>{Apartment?.city}</span></p>
-                        <p><div>מספר מיטות</div></p>
-                        <p className="value"><span>{Apartment?.beds}</span></p>
-                        <p><div>מספר מזרנים</div></p>
-                        <p className="value"><span>{Apartment?.mattresses}</span></p>
-                        <p><div>הערות</div></p>
-                        <p ><span>{Apartment?.notes}</span></p>
-                    </div>
+                <div className="d-flex flex-column">
+                    <div style={{ marginBottom: '6px' }}>עיר</div>
+                    <div className="value" style={{ fontSize: '15px', marginBottom: '8px' }}>{Apartment?.city}</div>
+                    <div style={{ marginBottom: '6px' }}>מספר מיטות</div>
+                    <div className="value" style={{ fontSize: '15px', marginBottom: '8px' }}>{Apartment?.beds}</div>
+                    <div style={{ marginBottom: '6px' }}>מספר מזרנים</div>
+                    <div className="value" style={{ fontSize: '15px', marginBottom: '8px' }}>{Apartment?.mattresses}</div>
+                    <div style={{ marginBottom: '6px' }}>הערות</div>
+                    <div className="value" style={{ fontSize: '15px', marginBottom: '8px' }}>{Apartment?.notes}</div>
                 </div>
             </div>
         </div>

@@ -135,7 +135,7 @@ function NavbarHead() {
                             <div className="text-start align-items-center ms-4"> {/* רווח מהבית ללוגו */}
                                 <img
                                     src="/logo.png"
-                                    style={{ width: "400px", height: "60px" }}
+                                    style={{ width: "390px", height: "60px" }}
                                     alt="לוגו"
                                 />
                                 <div className="header-con ms-3">

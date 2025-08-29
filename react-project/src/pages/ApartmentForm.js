@@ -387,6 +387,7 @@ const ApartmentForm = (props) => {
                 centered
                 className="custom-modal "
                 closeButton
+                // style={{ maxWidth: "600px" }}
             >
                 <Modal.Header  className='d-flex flex-column align-items-center justify-content-center' style={{ borderBottom: 'none' }}>
                     <Modal.Title className="w-100 text-center header fw-bold">
@@ -394,6 +395,7 @@ const ApartmentForm = (props) => {
                     </Modal.Title>
 
                     <div style={{
+                        marginTop:"10px",
                         backgroundColor: "#fff3cd",
                         borderColor: "#ffeeba",
                         color: "#856404",
